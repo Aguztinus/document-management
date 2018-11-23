@@ -1,11 +1,4 @@
-# laravStart
-Starter Admin For Laravel. This repo is based on practical web application development course on youtube. You can watch the videos on how we make this project or just git clone the project and start using. it. 
-
-## Tutorial Description 
-https://www.youtube.com/playlist?list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE
-
-Let's Build a Multi-Purpose Laravel + Vue Application is out now. In this series, you learn everything you need to know about Building a complete web application with Laravel and Vue js. So, I am so excited that so many of you guys like my content and keep inspiring me to create more videos. My goals is to inspire you to write better code and better applications. 
-
+# Document Management
 
 <b> Here are the things you will learn in this series and what the repo include out of the box: </b>
 
@@ -37,7 +30,8 @@ It's just like any other Laravel project. Basically here is how you use it for y
 * Run ` php artisan key:generate` to generate the app key
 * Run ` npm install ` 
 * Run ` php artisan migrate ` 
-* Done !!! Enjoy Customizing and building awesome app 
+* Run ` php artisan passport:install ` 
+* Done !!! 
 
 
 
