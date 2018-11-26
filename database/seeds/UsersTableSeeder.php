@@ -11,6 +11,13 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\User::class, 25)->create();
+        factory(App\User::class, 150)->create([
+            'unit_id' => $this->getRandomUnitId()
+        ]);
+    }
+
+    private function getRandomUnitId() {
+        $unit = \App\Units::inRandomOrder()->first();
+        return $unit->id;
     }
 }

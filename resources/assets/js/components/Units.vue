@@ -2,28 +2,27 @@
     <div class="container">
         <div class="row" v-if="$gate.isAdminOrAuthor()">
           <div class="col-md-12">
-
-             <section class="content-header">
+          <section class="content-header">
             <div class="container-fluid">
               <div class="row mb-2">
                 <div class="col-sm-6">
-                  <h1>Master Users</h1>
+                  <h1>Master Units</h1>
                 </div>
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item">
                        <router-link to="/dashboard">Home</router-link>
                     </li>
-                    <li class="breadcrumb-item active">Users</li>
+                    <li class="breadcrumb-item active">Units</li>
                   </ol>
                 </div>
               </div>
             </div><!-- /.container-fluid -->
           </section>
-
+          
             <div class="card card-primary card-outline">
               <div class="card-header">
-                <h3 class="card-title">Users Table</h3>
+                <h3 class="card-title"> <i class="fas fa-building"></i> Units Table</h3>
 
                 <div class="card-tools">
                     <button class="btn btn-success" @click="newModal">Add New <i class="fas fa-plus-circle fa-fw"></i></button>
@@ -34,29 +33,23 @@
                 <table class="table table-striped">
                   <tbody>
                     <tr>
-                        <th>ID</th>
+                        <th style="width: 10px">ID</th>
                         <th>Name</th>
-                        <th>Email</th>
-                        <th>Type</th>
+                        <th>Description</th>
                         <th style="width: 100px">Created At</th>
                         <th style="width: 130px">Modify</th>
                   </tr>
-
-
-                  <tr v-for="user in users.data" :key="user.id">
-
-                    <td>{{user.id}}</td>
-                    <td>{{user.name}}</td>
-                    <td>{{user.email}}</td>
-                    <td>{{user.type | upText}}</td>
-                    <td>{{user.created_at | myDateshort}}</td>
-
+                  <tr v-for="unit in units.data" :key="unit.id">
+                    <td>{{unit.id}}</td>
+                    <td>{{unit.name}}</td>
+                    <td>{{unit.description}}</td>
+                    <td>{{unit.created_at | myDateshort}}</td>
                     <td>
-                        <a href="#" class="btn btn-default" @click="editModal(user)">
+                        <a href="#" class="btn btn-default" @click="editModal(unit)">
                             <i class="fa fa-edit blue"></i>
                         </a>
                         
-                        <a href="#" class="btn btn-default" @click="deleteUser(user.id)">
+                        <a href="#" class="btn btn-default" @click="deleteUnit(unit.id)">
                             <i class="fa fa-trash red"></i>
                         </a>
 
@@ -66,7 +59,7 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer">
-                  <pagination :data="users" :limit=7 @pagination-change-page="getResults"></pagination>
+                  <pagination :data="units" :limit=7 @pagination-change-page="getResults"></pagination>
               </div>
             </div>
             <!-- /.card -->
@@ -83,12 +76,12 @@
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New</h5>
-                    <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update User's Info</h5>
+                    <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Unit's Info</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form @submit.prevent="editmode ? updateUser() : createUser()">
+                <form @submit.prevent="editmode ? updateUnit() : createUnit()">
                 <div class="modal-body">
                      <div class="form-group">
                         <label for="labelName">Name</label>
@@ -99,52 +92,12 @@
                     </div>
 
                      <div class="form-group">
-                        <label for="labelEmail">Email Address</label>
-                        <input v-model="form.email" type="email" name="email"
-                            placeholder="Email Address"
-                            class="form-control" :class="{ 'is-invalid': form.errors.has('email') }">
-                        <has-error :form="form" field="email"></has-error>
-                    </div>
+                        <label for="labelDescription">Description</label>
+                        <textarea v-model="form.description" name="text" id="description"
+                        placeholder="Description (Optional)"
+                        class="form-control" :class="{ 'is-invalid': form.errors.has('description') }"></textarea>
 
-                     <div class="form-group">
-                       <label for="labelBio">Bio</label>
-                        <textarea v-model="form.bio" name="bio" id="bio"
-                        placeholder="Short bio for user (Optional)"
-                        class="form-control" :class="{ 'is-invalid': form.errors.has('bio') }"></textarea>
-                        <has-error :form="form" field="bio"></has-error>
-                    </div>
-
-
-                    <div class="form-group">
-                      <label for="labelType">Role</label>
-                        <select name="type" v-model="form.type" id="type" class="form-control" :class="{ 'is-invalid': form.errors.has('type') }">
-                            <option value="">Select User Role</option>
-                            <option value="admin">Admin</option>
-                            <option value="user">Standard User</option>
-                            <option value="author">Author</option>
-                        </select>
-                        <has-error :form="form" field="type"></has-error>
-                    </div>
-
-                     <div class="form-group">
-                      <label for="labelUnit">Unit</label>
-                        <select name="unit" v-model="form.unit.id" id="unit" class="form-control" :class="{ 'is-invalid': form.errors.has('unit') }">
-                            <option value="">Select Unit</option>
-                            <option v-for="unit in units" 
-                            :key="unit.id" 
-                            :value="unit.id"
-                            :selected="unit.id==form.unit.id?true : false"
-                            >
-                              {{ unit.name }}</option>
-                        </select>
-                        <has-error :form="form" field="unit"></has-error>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="labelPassword">Password</label>
-                        <input v-model="form.password" type="password" name="password" id="password"
-                        class="form-control" :class="{ 'is-invalid': form.errors.has('password') }">
-                        <has-error :form="form" field="password"></has-error>
+                        <has-error :form="form" field="description"></has-error>
                     </div>
 
                 </div>
@@ -155,7 +108,6 @@
                 </div>
 
                 </form>
-
                 </div>
             </div>
             </div>
@@ -168,33 +120,27 @@ export default {
     return {
       editmode: false,
       visible: false,
-      users: {},
       units: {},
       form: new Form({
         id: "",
         name: "",
-        email: "",
-        password: "",
-        type: "",
-        unit: "",
-        bio: "",
-        photo: ""
+        description: ""
       })
     };
   },
   methods: {
     getResults(page = 1) {
       this.$Progress.start();
-      axios.get("api/user?page=" + page).then(response => {
-        this.users = response.data;
+      axios.get("api/unit?page=" + page).then(response => {
+        this.units = response.data;
       });
       this.$Progress.finish();
     },
-    updateUser() {
+    updateUnit() {
       this.$Progress.start();
       // console.log('Editing data');
       this.form
-        .put("api/user/" + this.form.id)
+        .put("api/unit/" + this.form.id)
         .then(() => {
           // success
           $("#addNew").modal("hide");
@@ -206,18 +152,18 @@ export default {
           this.$Progress.fail();
         });
     },
-    editModal(user) {
+    editModal(unit) {
       this.editmode = true;
       this.form.reset();
       $("#addNew").modal("show");
-      this.form.fill(user);
+      this.form.fill(unit);
     },
     newModal() {
       this.editmode = false;
       this.form.reset();
       $("#addNew").modal("show");
     },
-    deleteUser(id) {
+    deleteUnit(id) {
       swal({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -230,9 +176,9 @@ export default {
         // Send request to the server
         if (result.value) {
           this.form
-            .delete("api/user/" + id)
+            .delete("api/unit/" + id)
             .then(() => {
-              swal("Deleted!", "Your file has been deleted.", "success");
+              swal("Deleted!", "Your unit has been deleted.", "success");
               Fire.$emit("AfterCreate");
             })
             .catch(() => {
@@ -241,35 +187,23 @@ export default {
         }
       });
     },
-    loadUsers() {
-      if (this.$gate.isAdminOrAuthor()) {
-        axios.get("api/user").then(({ data }) => (this.users = data));
-      }
-    },
     loadUnits() {
       if (this.$gate.isAdminOrAuthor()) {
-        axios
-          .get("api/allUnit")
-          .then(({ data }) => (this.units = data))
-          .catch(error => {
-            if (error.response) {
-              console.log(error.response);
-            }
-            this.$Progress.fail();
-          });
+        axios.get("api/unit").then(({ data }) => (this.units = data));
       }
     },
-    createUser() {
+
+    createUnit() {
       this.$Progress.start();
       this.form
-        .post("api/user")
+        .post("api/unit")
         .then(() => {
           Fire.$emit("AfterCreate");
           $("#addNew").modal("hide");
 
           toast({
             type: "success",
-            title: "User Created in successfully"
+            title: "Unit Created in successfully"
           });
           this.$Progress.finish();
         })
@@ -285,16 +219,15 @@ export default {
     Fire.$on("searching", () => {
       let query = this.$parent.search;
       axios
-        .get("api/findUser?q=" + query)
+        .get("api/findUnit?q=" + query)
         .then(data => {
-          this.users = data.data;
+          this.units = data.data;
         })
         .catch(() => {});
     });
-    this.loadUsers();
     this.loadUnits();
     Fire.$on("AfterCreate", () => {
-      this.loadUsers();
+      this.loadUnits();
     });
     //    setInterval(() => this.loadUsers(), 3000);
   }

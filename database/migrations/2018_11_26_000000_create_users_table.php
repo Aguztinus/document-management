@@ -13,6 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
+        Schema::dropIfExists('users');
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -21,8 +22,12 @@ class CreateUsersTable extends Migration
             $table->string('type', 15)->default('user');
             $table->mediumText('bio')->nullable();
             $table->string('photo')->default('profile.png');
+            $table->integer('unit_id')->unsigned()->index();
+            $table->boolean('active')->default(1);
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('unit_id')->references('id')->on('units');
         });
     }
 

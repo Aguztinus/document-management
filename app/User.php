@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'bio', 'photo','type'
+        'name', 'email', 'password', 'bio', 'photo','type','unit_id','active'
     ];
 
     /**
@@ -27,4 +27,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function unit()
+    {
+        return $this->belongsTo('App\Units');
+    }
 }

@@ -43,6 +43,7 @@ let routes = [
     { path: "/dashboard", component: require("./components/Dashboard.vue") },
     { path: "/developer", component: require("./components/Developer.vue") },
     { path: "/users", component: require("./components/Users.vue") },
+    { path: "/units", component: require("./components/Units.vue") },
     { path: "/profile", component: require("./components/Profile.vue") },
     { path: "*", component: require("./components/NotFound.vue") }
 ];
@@ -60,6 +61,12 @@ Vue.filter("myDate", function(created) {
     return moment(created)
         .locale("id")
         .format("LL");
+});
+
+Vue.filter("myDateshort", function(created) {
+    return moment(created)
+        .locale("id")
+        .format("L");
 });
 
 window.Fire = new Vue();
