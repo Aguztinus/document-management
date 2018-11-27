@@ -3,11 +3,11 @@
         <div class="row" v-if="$gate.isAdminOrAuthor()">
           <div class="col-md-12">
 
-             <section class="content-header">
+            <section class="content-header">
             <div class="container-fluid">
               <div class="row mb-2">
                 <div class="col-sm-6">
-                  <h1>Master Users</h1>
+                  <h1> Master Users</h1>
                 </div>
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
@@ -23,7 +23,7 @@
 
             <div class="card card-primary card-outline">
               <div class="card-header">
-                <h3 class="card-title">Users Table</h3>
+                <h3 class="card-title"><i class="fas fa-users"></i> Users Table</h3>
 
                 <div class="card-tools">
                     <button class="btn btn-success" @click="newModal">Add New <i class="fas fa-plus-circle fa-fw"></i></button>
@@ -66,7 +66,7 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer">
-                  <pagination :data="users" :limit=7 @pagination-change-page="getResults"></pagination>
+                  <pagination :data="users" :limit=5 @pagination-change-page="getResults"></pagination>
               </div>
             </div>
             <!-- /.card -->
@@ -128,16 +128,16 @@
 
                      <div class="form-group">
                       <label for="labelUnit">Unit</label>
-                        <select name="unit" v-model="form.unit.id" id="unit" class="form-control" :class="{ 'is-invalid': form.errors.has('unit') }">
+                        <select name="unit" v-model="form.unit" id="unit" @change="onChange()" class="form-control" :class="{ 'is-invalid': form.errors.has('unit') }">
                             <option value="">Select Unit</option>
                             <option v-for="unit in units" 
                             :key="unit.id" 
-                            :value="unit.id"
-                            :selected="unit.id==form.unit.id?true : false"
+                            :value="unit"
                             >
                               {{ unit.name }}</option>
                         </select>
                         <has-error :form="form" field="unit"></has-error>
+                        <input v-model="form.unit_id" type="hidden" name="unit_id">
                     </div>
 
                     <div class="form-group">
@@ -150,8 +150,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button v-show="editmode" type="submit" class="btn btn-success">Update</button>
-                    <button v-show="!editmode" type="submit" class="btn btn-primary">Create</button>
+                    <button v-show="editmode" v-bind:class="{ disabled: isDisabled }" type="submit" class="btn btn-success" >Update</button>
+                    <button v-show="!editmode" v-bind:class="{ disabled: isDisabled }" type="submit" class="btn btn-primary">Create</button>
                 </div>
 
                 </form>
@@ -167,6 +167,7 @@ export default {
   data() {
     return {
       editmode: false,
+      isDisabled: false,
       visible: false,
       users: {},
       units: {},
@@ -183,6 +184,9 @@ export default {
     };
   },
   methods: {
+    onChange() {
+      this.form.unit_id = this.form.unit.id;
+    },
     getResults(page = 1) {
       this.$Progress.start();
       axios.get("api/user?page=" + page).then(response => {
@@ -261,6 +265,7 @@ export default {
     },
     createUser() {
       this.$Progress.start();
+      this.isDisabled = true;
       this.form
         .post("api/user")
         .then(() => {
@@ -279,6 +284,7 @@ export default {
           }
           this.$Progress.fail();
         });
+      this.isDisabled = false;
     }
   },
   created() {

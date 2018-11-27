@@ -52,7 +52,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="user-panel mt-3 mb-3 d-flex">
         <div class="image">
           <img src="{{asset('img/profile.png')}}" class="img-circle elevation-2" alt="User Image">
         </div>
@@ -145,7 +145,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+  <div class="content-wrapper" style="min-height: 325px;">
 
     <!-- Main content -->
     <div class="content">

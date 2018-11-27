@@ -36,7 +36,7 @@ import VueProgressBar from "vue-progressbar";
 Vue.use(VueProgressBar, {
     color: "rgb(143, 255, 199)",
     failedColor: "red",
-    height: "3px"
+    height: "5px"
 });
 
 let routes = [
@@ -45,6 +45,7 @@ let routes = [
     { path: "/users", component: require("./components/Users.vue") },
     { path: "/units", component: require("./components/Units.vue") },
     { path: "/profile", component: require("./components/Profile.vue") },
+    { path: "/document", component: require("./components/Document.vue") },
     { path: "*", component: require("./components/NotFound.vue") }
 ];
 
