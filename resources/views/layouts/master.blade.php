@@ -28,7 +28,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </ul>
 
     <!-- SEARCH FORM -->
-      <div class="input-group input-group-sm">
+    <div class="form-inline ml-3">
+    <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar" @keyup="searchit" v-model="search" type="search" placeholder="Search" aria-label="Search">
         <div class="input-group-append">
           <button class="btn btn-navbar" @click="searchit">
@@ -36,7 +37,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </button>
         </div>
       </div>
-
+    </div>
   </nav>
   <!-- /.navbar -->
 
@@ -52,14 +53,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Sidebar -->
     <div class="sidebar">
       <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 mb-3 d-flex">
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
           <img src="{{asset('img/profile.png')}}" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
           <a href="#" class="d-block">
-              {{Auth::user()->name}}
-              <p>{{Auth::user()->type}}</p>
+              {{Auth::user()->name}} -
+              {{Auth::user()->type}}
           </a>
         </div>
       </div>
@@ -72,10 +73,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <li class="nav-item">
             <router-link to="/dashboard" class="nav-link">
-                <i class="nav-icon fas fa-tachometer-alt blue"></i>
+                <i class="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                 Dashboard
-
                 </p>
             </router-link>
             </li>
@@ -83,7 +83,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             @can('isAdmin')
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fa fa-cog green"></i>
+              <i class="nav-icon fa fa-cog "></i>
               <p>
                 Management
                 <i class="right fa fa-angle-left"></i>
@@ -116,7 +116,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
          @endcan
           <li class="nav-item">
                 <router-link to="/profile" class="nav-link">
-                    <i class="nav-icon fas fa-user orange"></i>
+                    <i class="nav-icon fas fa-user"></i>
                     <p>
                         Profile
                     </p>
@@ -164,7 +164,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <footer class="main-footer">
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
-      Anything you want
+      V.1.0-beta
     </div>
     <!-- Default to the left -->
     <strong>Copyright &copy; 2014-2018 Idm</strong> All rights reserved.
