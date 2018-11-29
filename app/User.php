@@ -32,4 +32,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Units');
     }
+
+    public function document()
+    {
+        return $this->belongsToMany(Document::class);
+    }
 }

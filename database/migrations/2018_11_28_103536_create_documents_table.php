@@ -18,16 +18,17 @@ class CreateDocumentsTable extends Migration
             $table->string('name')->unique();
             $table->string('description')->nullable();
             $table->string('file_ext');
+            $table->string('url');
             $table->string('size');
             $table->integer('size_int');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('status');
-            $table->integer('user_id')->unsigned()->index();
+            $table->integer('owner_id')->unsigned()->index();
             $table->integer('document_type_id')->unsigned()->index();
             $table->integer('unit_id')->unsigned()->index();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('owner_id')->references('id')->on('users');
             $table->foreign('document_type_id')->references('id')->on('document_types');
             $table->foreign('unit_id')->references('id')->on('units');
         });
@@ -40,6 +41,9 @@ class CreateDocumentsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('document_user');
+        Schema::dropIfExists('document_reference');
+        Schema::dropIfExists('document_history');
         Schema::dropIfExists('documents');
     }
 }

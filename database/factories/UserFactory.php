@@ -21,6 +21,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         'type' => 'admin',
         'bio' => $faker->text($maxNbChars = 150),
         'photo' => 'profile.png',
+        'unit_id' => App\Units::all()->random()->id,
         'remember_token' => str_random(10),
     ];
 });

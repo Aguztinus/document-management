@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserDocumentTable extends Migration
+class CreateDocumentRef extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateUserDocumentTable extends Migration
      */
     public function up()
     {
-        Schema::create('document_user', function (Blueprint $table) {
+        Schema::create('document_reference', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id')->unsigned()->index();
             $table->integer('document_id')->unsigned()->index();
+            $table->integer('document_id_detail')->unsigned()->index();
             
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('document_id_detail')->references('id')->on('documents');
             $table->foreign('document_id')->references('id')->on('documents');
         });
     }
@@ -30,6 +30,6 @@ class CreateUserDocumentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('document_user');
+        Schema::dropIfExists('document_reference');
     }
 }

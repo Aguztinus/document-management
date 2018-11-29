@@ -7,4 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class DocumentType extends Model
 {
     //
+
+    public function document()
+    {
+        return $this->hasMany('App\Document','document_type_id','id');
+    }
 }
