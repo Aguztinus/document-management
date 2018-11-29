@@ -7,16 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Document extends Model
 {
     //
-    
+    protected $fillable = [
+        'name', 'description', 'file_ext', 'url', 'size','size_int','slug','status','owner_id','document_type_id','unit_id'
+    ];
 
     public function documenttype()
     {
         return $this->belongsTo('App\DocumentType');
     }
 
-    public function user()
+    public function userowner()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo('App\User','owner_id','id');
+    }
+
+    public function unit()
+    {
+        return $this->belongsTo('App\Units');
     }
 
     public function reference(){

@@ -33,6 +33,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Units');
     }
 
+    public function owndocument()
+    {
+        return $this->hasMany('App\Document','owner_id','id');
+    }
+
     public function document()
     {
         return $this->belongsToMany(Document::class);

@@ -17,4 +17,9 @@ class Units extends Model
     {
         return $this->hasMany('App\User','unit_id','id');
     }
+
+    public function document()
+    {
+        return $this->hasMany('App\Document','unit_id','id');
+    }
 }

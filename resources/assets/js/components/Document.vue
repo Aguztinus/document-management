@@ -75,7 +75,7 @@
       </div>
 
       <div class="dok" v-bind:class="[visible ? ' col-md-9' : ' col-md-12']">
-        <div class="card" v-on:click="clikfile">
+        <div class="card" v-for="doc in documents.data" :key="doc.id" v-on:click="clikfile(doc)">
           <svg
             version="1.1"
             preserveAspectRatio="xMidYMid meet"
@@ -100,225 +100,18 @@
           </svg>
           <div class="card-body">
             <div class="filename">
-              <a href="#">File Name.doc</a>
+              <a href="#">{{doc.name}}</a>
             </div>
             <div class="filedate">
-              <small class="text-muted">27 Ags 2018, by Agustinus</small>
+              <small class="text-muted">{{doc.created_at | myDateshort}}, by {{doc.userowner.name}}</small>
             </div>
             <div class="filesize">
-              <small class="text-muted">378kb</small>
+              <small class="text-muted">{{doc.size}}</small>
             </div>
           </div>
         </div>
-        <div class="card">
-          <svg
-            version="1.1"
-            preserveAspectRatio="xMidYMid meet"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 32 32"
-            width="32"
-            height="32"
-            enable-background="new 0 0 32 32"
-            xml:space="preserve"
-            role="img"
-          >
-            <path fill="#fff" d="M25 27H7V5h13l5 5v17"></path>
-            <path
-              d="M20 4H7a1 1 0 0 0-1 1v22a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9.89zm5 23H7V5h13v4a1 1 0 0 0 1 1h4z"
-              fill="#e33d55"
-            ></path>
-            <path
-              d="M21.53 20.17a2 2 0 0 0-1.76-.93 10 10 0 0 0-1.54.11 4.77 4.77 0 0 0 3.13.81 1 1 0 0 1-.84.86 2.4 2.4 0 0 1-1.52-.21 17.59 17.59 0 0 1-1.73-1 .55.55 0 0 0-.54-.09l-2.58.93a.85.85 0 0 0-.37.3c-1.29 1.95-2.44 3-2.93 3.06s-1.13-.18-.86-1.37 1.23-1.49 2.29-1.74c-1.08.8-1.5 1.42-1.41 2.1a.83.83 0 0 0 .13-.14 24.24 24.24 0 0 0 3.8-5.45.4.4 0 0 0 0-.41 6.94 6.94 0 0 1-.9-3.66c.26-2.53 2.55-1.55 2 .38a1.87 1.87 0 0 0-.51-1.1c-.29-.22-.54-.12-.59.23a5.77 5.77 0 0 0 .51 3.35 5.46 5.46 0 0 0 .46-2.2.9.9 0 0 1 .52.62 2.8 2.8 0 0 1-.08 1.62c-.08.28-.2.56-.28.84a.34.34 0 0 0 0 .27c.37.42.75.82 1.15 1.22a.36.36 0 0 0 .3 0 7.22 7.22 0 0 1 2.11-.44 1.82 1.82 0 0 1 2 1.62zm-6-2.12l-1 1.84 1.9-.88z"
-              fill="#e33d55"
-            ></path>
-          </svg>
-          <div class="card-body">
-            <div class="filename">
-              <a href="#">File Name.doc</a>
-            </div>
-            <div class="filedate">
-              <small class="text-muted">27 Ags 2018, by Agustinus</small>
-            </div>
-            <div class="filesize">
-              <small class="text-muted">378kb</small>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <svg
-            version="1.1"
-            preserveAspectRatio="xMidYMid meet"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 32 32"
-            width="32"
-            height="32"
-            enable-background="new 0 0 32 32"
-            xml:space="preserve"
-            role="img"
-          >
-            <path fill="#fff" d="M25 27H7V5h13l5 5v17"></path>
-            <path
-              d="M20 4H7a1 1 0 0 0-1 1v22a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9.89zm5 23H7V5h13v4a1 1 0 0 0 1 1h4z"
-              fill="#e33d55"
-            ></path>
-            <path
-              d="M21.53 20.17a2 2 0 0 0-1.76-.93 10 10 0 0 0-1.54.11 4.77 4.77 0 0 0 3.13.81 1 1 0 0 1-.84.86 2.4 2.4 0 0 1-1.52-.21 17.59 17.59 0 0 1-1.73-1 .55.55 0 0 0-.54-.09l-2.58.93a.85.85 0 0 0-.37.3c-1.29 1.95-2.44 3-2.93 3.06s-1.13-.18-.86-1.37 1.23-1.49 2.29-1.74c-1.08.8-1.5 1.42-1.41 2.1a.83.83 0 0 0 .13-.14 24.24 24.24 0 0 0 3.8-5.45.4.4 0 0 0 0-.41 6.94 6.94 0 0 1-.9-3.66c.26-2.53 2.55-1.55 2 .38a1.87 1.87 0 0 0-.51-1.1c-.29-.22-.54-.12-.59.23a5.77 5.77 0 0 0 .51 3.35 5.46 5.46 0 0 0 .46-2.2.9.9 0 0 1 .52.62 2.8 2.8 0 0 1-.08 1.62c-.08.28-.2.56-.28.84a.34.34 0 0 0 0 .27c.37.42.75.82 1.15 1.22a.36.36 0 0 0 .3 0 7.22 7.22 0 0 1 2.11-.44 1.82 1.82 0 0 1 2 1.62zm-6-2.12l-1 1.84 1.9-.88z"
-              fill="#e33d55"
-            ></path>
-          </svg>
-          <div class="card-body">
-            <div class="filename">
-              <a href="#">File Name.doc</a>
-            </div>
-            <div class="filedate">
-              <small class="text-muted">27 Ags 2018, by Agustinus</small>
-            </div>
-            <div class="filesize">
-              <small class="text-muted">378kb</small>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <svg
-            version="1.1"
-            preserveAspectRatio="xMidYMid meet"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 32 32"
-            width="32"
-            height="32"
-            enable-background="new 0 0 32 32"
-            xml:space="preserve"
-            role="img"
-          >
-            <path fill="#fff" d="M25 27H7V5h13l5 5v17"></path>
-            <path
-              d="M20 4H7a1 1 0 0 0-1 1v22a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9.89zm5 23H7V5h13v4a1 1 0 0 0 1 1h4z"
-              fill="#e33d55"
-            ></path>
-            <path
-              d="M21.53 20.17a2 2 0 0 0-1.76-.93 10 10 0 0 0-1.54.11 4.77 4.77 0 0 0 3.13.81 1 1 0 0 1-.84.86 2.4 2.4 0 0 1-1.52-.21 17.59 17.59 0 0 1-1.73-1 .55.55 0 0 0-.54-.09l-2.58.93a.85.85 0 0 0-.37.3c-1.29 1.95-2.44 3-2.93 3.06s-1.13-.18-.86-1.37 1.23-1.49 2.29-1.74c-1.08.8-1.5 1.42-1.41 2.1a.83.83 0 0 0 .13-.14 24.24 24.24 0 0 0 3.8-5.45.4.4 0 0 0 0-.41 6.94 6.94 0 0 1-.9-3.66c.26-2.53 2.55-1.55 2 .38a1.87 1.87 0 0 0-.51-1.1c-.29-.22-.54-.12-.59.23a5.77 5.77 0 0 0 .51 3.35 5.46 5.46 0 0 0 .46-2.2.9.9 0 0 1 .52.62 2.8 2.8 0 0 1-.08 1.62c-.08.28-.2.56-.28.84a.34.34 0 0 0 0 .27c.37.42.75.82 1.15 1.22a.36.36 0 0 0 .3 0 7.22 7.22 0 0 1 2.11-.44 1.82 1.82 0 0 1 2 1.62zm-6-2.12l-1 1.84 1.9-.88z"
-              fill="#e33d55"
-            ></path>
-          </svg>
-          <div class="card-body">
-            <div class="filename">
-              <a href="#">File Name.doc</a>
-            </div>
-            <div class="filedate">
-              <small class="text-muted">27 Ags 2018, by Agustinus</small>
-            </div>
-            <div class="filesize">
-              <small class="text-muted">378kb</small>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <svg
-            version="1.1"
-            preserveAspectRatio="xMidYMid meet"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 32 32"
-            width="32"
-            height="32"
-            enable-background="new 0 0 32 32"
-            xml:space="preserve"
-            role="img"
-          >
-            <path fill="#fff" d="M25 27H7V5h13l5 5v17"></path>
-            <path
-              d="M20 4H7a1 1 0 0 0-1 1v22a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9.89zm5 23H7V5h13v4a1 1 0 0 0 1 1h4z"
-              fill="#e33d55"
-            ></path>
-            <path
-              d="M21.53 20.17a2 2 0 0 0-1.76-.93 10 10 0 0 0-1.54.11 4.77 4.77 0 0 0 3.13.81 1 1 0 0 1-.84.86 2.4 2.4 0 0 1-1.52-.21 17.59 17.59 0 0 1-1.73-1 .55.55 0 0 0-.54-.09l-2.58.93a.85.85 0 0 0-.37.3c-1.29 1.95-2.44 3-2.93 3.06s-1.13-.18-.86-1.37 1.23-1.49 2.29-1.74c-1.08.8-1.5 1.42-1.41 2.1a.83.83 0 0 0 .13-.14 24.24 24.24 0 0 0 3.8-5.45.4.4 0 0 0 0-.41 6.94 6.94 0 0 1-.9-3.66c.26-2.53 2.55-1.55 2 .38a1.87 1.87 0 0 0-.51-1.1c-.29-.22-.54-.12-.59.23a5.77 5.77 0 0 0 .51 3.35 5.46 5.46 0 0 0 .46-2.2.9.9 0 0 1 .52.62 2.8 2.8 0 0 1-.08 1.62c-.08.28-.2.56-.28.84a.34.34 0 0 0 0 .27c.37.42.75.82 1.15 1.22a.36.36 0 0 0 .3 0 7.22 7.22 0 0 1 2.11-.44 1.82 1.82 0 0 1 2 1.62zm-6-2.12l-1 1.84 1.9-.88z"
-              fill="#e33d55"
-            ></path>
-          </svg>
-          <div class="card-body">
-            <div class="filename">
-              <a href="#">File Name.doc</a>
-            </div>
-            <div class="filedate">
-              <small class="text-muted">27 Ags 2018, by Agustinus</small>
-            </div>
-            <div class="filesize">
-              <small class="text-muted">378kb</small>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <svg
-            version="1.1"
-            preserveAspectRatio="xMidYMid meet"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 32 32"
-            width="32"
-            height="32"
-            enable-background="new 0 0 32 32"
-            xml:space="preserve"
-            role="img"
-          >
-            <path fill="#fff" d="M25 27H7V5h13l5 5v17"></path>
-            <path
-              d="M20 4H7a1 1 0 0 0-1 1v22a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9.89zm5 23H7V5h13v4a1 1 0 0 0 1 1h4z"
-              fill="#e33d55"
-            ></path>
-            <path
-              d="M21.53 20.17a2 2 0 0 0-1.76-.93 10 10 0 0 0-1.54.11 4.77 4.77 0 0 0 3.13.81 1 1 0 0 1-.84.86 2.4 2.4 0 0 1-1.52-.21 17.59 17.59 0 0 1-1.73-1 .55.55 0 0 0-.54-.09l-2.58.93a.85.85 0 0 0-.37.3c-1.29 1.95-2.44 3-2.93 3.06s-1.13-.18-.86-1.37 1.23-1.49 2.29-1.74c-1.08.8-1.5 1.42-1.41 2.1a.83.83 0 0 0 .13-.14 24.24 24.24 0 0 0 3.8-5.45.4.4 0 0 0 0-.41 6.94 6.94 0 0 1-.9-3.66c.26-2.53 2.55-1.55 2 .38a1.87 1.87 0 0 0-.51-1.1c-.29-.22-.54-.12-.59.23a5.77 5.77 0 0 0 .51 3.35 5.46 5.46 0 0 0 .46-2.2.9.9 0 0 1 .52.62 2.8 2.8 0 0 1-.08 1.62c-.08.28-.2.56-.28.84a.34.34 0 0 0 0 .27c.37.42.75.82 1.15 1.22a.36.36 0 0 0 .3 0 7.22 7.22 0 0 1 2.11-.44 1.82 1.82 0 0 1 2 1.62zm-6-2.12l-1 1.84 1.9-.88z"
-              fill="#e33d55"
-            ></path>
-          </svg>
-          <div class="card-body">
-            <div class="filename">
-              <a href="#">File Name.doc</a>
-            </div>
-            <div class="filedate">
-              <small class="text-muted">27 Ags 2018, by Agustinus</small>
-            </div>
-            <div class="filesize">
-              <small class="text-muted">378kb</small>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <svg
-            version="1.1"
-            preserveAspectRatio="xMidYMid meet"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 32 32"
-            width="32"
-            height="32"
-            enable-background="new 0 0 32 32"
-            xml:space="preserve"
-            role="img"
-          >
-            <path fill="#fff" d="M25 27H7V5h13l5 5v17"></path>
-            <path
-              d="M20 4H7a1 1 0 0 0-1 1v22a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9.89zm5 23H7V5h13v4a1 1 0 0 0 1 1h4z"
-              fill="#e33d55"
-            ></path>
-            <path
-              d="M21.53 20.17a2 2 0 0 0-1.76-.93 10 10 0 0 0-1.54.11 4.77 4.77 0 0 0 3.13.81 1 1 0 0 1-.84.86 2.4 2.4 0 0 1-1.52-.21 17.59 17.59 0 0 1-1.73-1 .55.55 0 0 0-.54-.09l-2.58.93a.85.85 0 0 0-.37.3c-1.29 1.95-2.44 3-2.93 3.06s-1.13-.18-.86-1.37 1.23-1.49 2.29-1.74c-1.08.8-1.5 1.42-1.41 2.1a.83.83 0 0 0 .13-.14 24.24 24.24 0 0 0 3.8-5.45.4.4 0 0 0 0-.41 6.94 6.94 0 0 1-.9-3.66c.26-2.53 2.55-1.55 2 .38a1.87 1.87 0 0 0-.51-1.1c-.29-.22-.54-.12-.59.23a5.77 5.77 0 0 0 .51 3.35 5.46 5.46 0 0 0 .46-2.2.9.9 0 0 1 .52.62 2.8 2.8 0 0 1-.08 1.62c-.08.28-.2.56-.28.84a.34.34 0 0 0 0 .27c.37.42.75.82 1.15 1.22a.36.36 0 0 0 .3 0 7.22 7.22 0 0 1 2.11-.44 1.82 1.82 0 0 1 2 1.62zm-6-2.12l-1 1.84 1.9-.88z"
-              fill="#e33d55"
-            ></path>
-          </svg>
-          <div class="card-body">
-            <div class="filename">
-              <a href="#">File Name.doc</a>
-            </div>
-            <div class="filedate">
-              <small class="text-muted">27 Ags 2018, by Agustinus</small>
-            </div>
-            <div class="filesize">
-              <small class="text-muted">378kb</small>
-            </div>
-          </div>
+        <div class="col-md-12">
+          <pagination :data="documents" :limit="4" @pagination-change-page="getResults"></pagination>
         </div>
       </div>
 
@@ -333,16 +126,14 @@
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">File name</h6>
-              <small class="text-muted">Brief description</small>
+              <small class="text-muted">{{ detail.name }}</small>
             </div>
           </li>
           <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
               <h6 class="my-0">File Description</h6>
               <p>
-                <small
-                  class="text-muted"
-                >Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat, excepturi.</small>
+                <small class="text-muted">{{ detail.description }}</small>
               </p>
             </div>
           </li>
@@ -350,19 +141,19 @@
             <div>
               <h6 class="my-0">Owner</h6>
               <p>
-                <small class="text-muted">Agustinus</small>
+                <small class="text-muted">{{ userowner }}</small>
               </p>
               <h6 class="my-0">Created</h6>
               <p>
-                <small class="text-muted">Dec 10, 2013, 12:54 PM</small>
+                <small class="text-muted">{{ detail.created_at }}</small>
               </p>
               <h6 class="my-0">Modified</h6>
               <p>
-                <small class="text-muted">Dec 10, 2013, 12:54 PM</small>
+                <small class="text-muted">{{ detail.updated_at }}</small>
               </p>
               <h6 class="my-0">Size</h6>
               <p>
-                <small class="text-muted">2MB</small>
+                <small class="text-muted">{{ detail.size }}</small>
               </p>
             </div>
           </li>
@@ -377,16 +168,49 @@ export default {
   data() {
     return {
       visible: false,
-      dokumen: {}
+      documents: {},
+      detail: {},
+      userowner: ""
     };
   },
   methods: {
-    clikfile() {
+    getResults(page = 1) {
+      this.$Progress.start();
+      axios.get("api/document?page=" + page).then(response => {
+        this.documents = response.data;
+      });
+      this.$Progress.finish();
+    },
+    clikfile(doc) {
       this.visible = true;
+      this.detail = doc;
+      this.userowner = doc.userowner.name;
+      console.log(this.userowner);
     },
     closeside() {
       this.visible = false;
+    },
+    loadDocs() {
+      this.$Progress.start();
+      axios.get("api/document").then(({ data }) => (this.documents = data));
+      this.$Progress.finish();
     }
+  },
+  created() {
+    Fire.$on("searching", () => {
+      let query = this.$parent.search;
+      axios
+        .get("api/findUnit?q=" + query)
+        .then(data => {
+          this.units = data.data;
+        })
+        .catch(() => {});
+    });
+    this.loadDocs();
+    Fire.$on("AfterCreate", () => {
+      this.loadDocs();
+    });
+    //    setInterval(() => this.loadUsers(), 3000);
   }
 };
 </script>
@@ -412,9 +236,9 @@ h4 {
 
   .card {
     margin-left: 1rem;
-    width: 29%;
-    min-width: 12rem;
-    max-width: 14rem;
+    width: 30%;
+    min-width: 11rem;
+    max-width: 14.5rem;
 
     svg {
       height: 50%;
