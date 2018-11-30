@@ -16,7 +16,9 @@ $fa-font-path: "../webfonts";
     background-color: $blue;
     color: #fff !important;
 }
-
+.content-header h1 {
+    font-size: 1.6rem;
+}
 @media print {
     .nav.nav-tabs li:not(.active) {
         display: none;

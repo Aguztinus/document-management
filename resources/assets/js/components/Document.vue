@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-12" v-bind:class="[scrolled ? ' fixed-header' : '']">
         <section class="content-header">
           <div class="container-fluid">
             <div class="row mb-2">
@@ -33,45 +33,50 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="btn-group float-sm-right">
-                  <button type="button" class="btn btn-primary">Upload</button>
-                  <button
-                    type="button"
-                    class="btn btn-primary dropdown-toggle"
-                    data-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                  </button>
-                  <div
-                    class="dropdown-menu"
-                    role="menu"
-                    x-placement="bottom-start"
-                    style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(67px, 38px, 0px);"
-                  >
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Separated link</a>
+                <div v-show="!visible">
+                  <div class="btn-group float-sm-right">
+                    <button type="button" class="btn btn-primary">Upload</button>
+                    <button
+                      type="button"
+                      class="btn btn-primary dropdown-toggle"
+                      data-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <span class="caret"></span>
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div
+                      class="dropdown-menu"
+                      role="menu"
+                      x-placement="bottom-start"
+                      style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(67px, 38px, 0px);"
+                    >
+                      <a class="dropdown-item" href="#">File</a>
+                      <a class="dropdown-item" href="#">Foleder</a>
+                    </div>
                   </div>
                 </div>
-                <button type="button" class="btn btn-secondary float-sm-right mr-2">
-                  <i class="fas fa-arrow-circle-down"></i> Download
-                </button>
-                <button type="button" class="btn btn-secondary float-sm-right mr-2">
-                  <i class="fas fa-trash"></i> Delete
-                </button>
-                <button type="button" class="btn btn-secondary float-sm-right mr-2">
-                  <i class="fas fa-envelope"></i> Email
-                </button>
+
+                <div v-show="visible">
+                  <button type="button" class="btn btn-primary float-sm-right mr-2">
+                    <i class="fas fa-file"></i> Upload New Version
+                  </button>
+                  <button type="button" class="btn btn-secondary float-sm-right mr-2">
+                    <i class="fas fa-arrow-circle-down"></i> Download
+                  </button>
+                  <button type="button" class="btn btn-secondary float-sm-right mr-2">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                  <button type="button" class="btn btn-secondary float-sm-right mr-2">
+                    <i class="fas fa-envelope"></i> Email
+                  </button>
+                </div>
               </div>
             </div>
           </div>
           <!-- /.container-fluid -->
         </section>
-        <hr>
+        <hr v-show="!scrolled">
       </div>
 
       <div class="dok" v-bind:class="[visible ? ' col-md-9' : ' col-md-12']">
@@ -115,7 +120,7 @@
         </div>
       </div>
 
-      <div class="col-md-3" v-show="visible">
+      <div class="col-md-3 position-fixed side-detail" v-show="visible">
         <h4 class="d-flex justify-content-between align-items-center">
           <span class="text-muted detail-head">Detail File</span>
           <button type="button" class="btn btn-tool" data-widget="remove" v-on:click="closeside">
@@ -170,7 +175,8 @@ export default {
       visible: false,
       documents: {},
       detail: {},
-      userowner: ""
+      userowner: "",
+      scrolled: false
     };
   },
   methods: {
@@ -194,9 +200,15 @@ export default {
       this.$Progress.start();
       axios.get("api/document").then(({ data }) => (this.documents = data));
       this.$Progress.finish();
+    },
+    handleScroll() {
+      this.scrolled = window.scrollY > 0;
+      console.log(this.scrolled);
     }
   },
   created() {
+    this.loadDocs();
+    window.addEventListener("scroll", this.handleScroll);
     Fire.$on("searching", () => {
       let query = this.$parent.search;
       axios
@@ -206,16 +218,43 @@ export default {
         })
         .catch(() => {});
     });
-    this.loadDocs();
+
     Fire.$on("AfterCreate", () => {
       this.loadDocs();
     });
     //    setInterval(() => this.loadUsers(), 3000);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #343a40;
+  color: rgb(194, 199, 208);
+  height: 65px;
+  width: 100%;
+  z-index: 20;
+}
+.side-detail {
+  top: 135px;
+  right: 0;
+  padding: 0 40px 0 30px;
+}
+
+@media (min-width: 1px) and (max-width: 1024px) {
+  //CSS
+  .fixed-header {
+    margin-left: 0;
+    width: calc(100%);
+  }
+}
+
 .content-header {
   padding-bottom: 0;
 }

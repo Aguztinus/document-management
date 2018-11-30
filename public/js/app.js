@@ -75681,7 +75681,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n.content-header[data-v-c64e1bdc] {\n  padding-bottom: 0;\n}\nhr[data-v-c64e1bdc] {\n  margin-left: 15px;\n}\nh4 .detail-head[data-v-c64e1bdc] {\n  font-size: 1.05rem;\n}\nh4 .btn[data-v-c64e1bdc] {\n  padding-right: 0;\n}\n.dok[data-v-c64e1bdc] {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n}\n.dok .card[data-v-c64e1bdc] {\n    margin-left: 1rem;\n    width: 30%;\n    min-width: 11rem;\n    max-width: 14.5rem;\n}\n.dok .card svg[data-v-c64e1bdc] {\n      height: 50%;\n      opacity: 1;\n      -webkit-transition: opacity 0.2s ease-in;\n      transition: opacity 0.2s ease-in;\n      width: 50%;\n      margin: auto;\n      padding-top: 1.35rem;\n}\n.dok .card a[data-v-c64e1bdc] {\n      color: #474747;\n}\n.dok .card[data-v-c64e1bdc]:hover {\n      opacity: 0.7;\n      border-color: #0964af;\n      -webkit-transition: all 0.4s ease 0s;\n      transition: all 0.4s ease 0s;\n}\n", ""]);
+exports.push([module.i, "\n.fixed-header[data-v-c64e1bdc] {\n  position: fixed;\n  top: 0;\n  left: 0;\n  background-color: #343a40;\n  color: #c2c7d0;\n  height: 65px;\n  width: 100%;\n  z-index: 20;\n}\n.side-detail[data-v-c64e1bdc] {\n  top: 135px;\n  right: 0;\n  padding: 0 40px 0 30px;\n}\n@media (min-width: 1px) and (max-width: 1024px) {\n.fixed-header[data-v-c64e1bdc] {\n    margin-left: 0;\n    width: calc(100%);\n}\n}\n.content-header[data-v-c64e1bdc] {\n  padding-bottom: 0;\n}\nhr[data-v-c64e1bdc] {\n  margin-left: 15px;\n}\nh4 .detail-head[data-v-c64e1bdc] {\n  font-size: 1.05rem;\n}\nh4 .btn[data-v-c64e1bdc] {\n  padding-right: 0;\n}\n.dok[data-v-c64e1bdc] {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap;\n}\n.dok .card[data-v-c64e1bdc] {\n    margin-left: 1rem;\n    width: 30%;\n    min-width: 11rem;\n    max-width: 14.5rem;\n}\n.dok .card svg[data-v-c64e1bdc] {\n      height: 50%;\n      opacity: 1;\n      -webkit-transition: opacity 0.2s ease-in;\n      transition: opacity 0.2s ease-in;\n      width: 50%;\n      margin: auto;\n      padding-top: 1.35rem;\n}\n.dok .card a[data-v-c64e1bdc] {\n      color: #474747;\n}\n.dok .card[data-v-c64e1bdc]:hover {\n      opacity: 0.7;\n      border-color: #0964af;\n      -webkit-transition: all 0.4s ease 0s;\n      transition: all 0.4s ease 0s;\n}\n", ""]);
 
 // exports
 
@@ -75857,6 +75857,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -75864,7 +75869,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       visible: false,
       documents: {},
       detail: {},
-      userowner: ""
+      userowner: "",
+      scrolled: false
     };
   },
 
@@ -75898,22 +75904,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return _this2.documents = data;
       });
       this.$Progress.finish();
+    },
+    handleScroll: function handleScroll() {
+      this.scrolled = window.scrollY > 0;
+      console.log(this.scrolled);
     }
   },
   created: function created() {
     var _this3 = this;
 
+    this.loadDocs();
+    window.addEventListener("scroll", this.handleScroll);
     Fire.$on("searching", function () {
       var query = _this3.$parent.search;
       axios.get("api/findUnit?q=" + query).then(function (data) {
         _this3.units = data.data;
       }).catch(function () {});
     });
-    this.loadDocs();
+
     Fire.$on("AfterCreate", function () {
       _this3.loadDocs();
     });
     //    setInterval(() => this.loadUsers(), 3000);
+  },
+  destroyed: function destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   }
 });
 
@@ -75927,7 +75942,75 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row" }, [
-      _vm._m(0),
+      _c(
+        "div",
+        {
+          staticClass: "col-md-12",
+          class: [_vm.scrolled ? " fixed-header" : ""]
+        },
+        [
+          _c("section", { staticClass: "content-header" }, [
+            _c("div", { staticClass: "container-fluid" }, [
+              _c("div", { staticClass: "row mb-2" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _vm._m(1),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !_vm.visible,
+                          expression: "!visible"
+                        }
+                      ]
+                    },
+                    [_vm._m(2)]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.visible,
+                          expression: "visible"
+                        }
+                      ]
+                    },
+                    [
+                      _vm._m(3),
+                      _vm._v(" "),
+                      _vm._m(4),
+                      _vm._v(" "),
+                      _vm._m(5),
+                      _vm._v(" "),
+                      _vm._m(6)
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("hr", {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.scrolled,
+                expression: "!scrolled"
+              }
+            ]
+          })
+        ]
+      ),
       _vm._v(" "),
       _c(
         "div",
@@ -76041,7 +76124,7 @@ var render = function() {
               expression: "visible"
             }
           ],
-          staticClass: "col-md-3"
+          staticClass: "col-md-3 position-fixed side-detail"
         },
         [
           _c(
@@ -76158,189 +76241,185 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-12" }, [
-      _c("section", { staticClass: "content-header" }, [
-        _c("div", { staticClass: "container-fluid" }, [
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-md-3" }, [
-              _c("h1", [_vm._v("My Documents")])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-sm-3" }, [
-              _c("div", { staticClass: "btn-group" }, [
-                _c(
-                  "button",
-                  { staticClass: "btn btn-default", attrs: { type: "button" } },
-                  [_vm._v("Sort By")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-default dropdown-toggle",
-                    attrs: {
-                      type: "button",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [
-                    _c("span", { staticClass: "caret" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "sr-only" }, [
-                      _vm._v("Toggle Dropdown")
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "dropdown-menu",
-                    staticStyle: {
-                      position: "absolute",
-                      transform: "translate3d(67px, 38px, 0px)",
-                      top: "0px",
-                      left: "0px",
-                      "will-change": "transform"
-                    },
-                    attrs: { role: "menu", "x-placement": "bottom-start" }
-                  },
-                  [
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Action")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Another action")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Something else here")]
-                    )
-                  ]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-md-6" }, [
-              _c("div", { staticClass: "btn-group float-sm-right" }, [
-                _c(
-                  "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "button" } },
-                  [_vm._v("Upload")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-primary dropdown-toggle",
-                    attrs: {
-                      type: "button",
-                      "data-toggle": "dropdown",
-                      "aria-expanded": "false"
-                    }
-                  },
-                  [
-                    _c("span", { staticClass: "caret" }),
-                    _vm._v(" "),
-                    _c("span", { staticClass: "sr-only" }, [
-                      _vm._v("Toggle Dropdown")
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "dropdown-menu",
-                    staticStyle: {
-                      position: "absolute",
-                      "will-change": "transform",
-                      top: "0px",
-                      left: "0px",
-                      transform: "translate3d(67px, 38px, 0px)"
-                    },
-                    attrs: { role: "menu", "x-placement": "bottom-start" }
-                  },
-                  [
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Action")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Another action")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Something else here")]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "dropdown-divider" }),
-                    _vm._v(" "),
-                    _c(
-                      "a",
-                      { staticClass: "dropdown-item", attrs: { href: "#" } },
-                      [_vm._v("Separated link")]
-                    )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-secondary float-sm-right mr-2",
-                  attrs: { type: "button" }
-                },
-                [
-                  _c("i", { staticClass: "fas fa-arrow-circle-down" }),
-                  _vm._v(" Download\n              ")
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-secondary float-sm-right mr-2",
-                  attrs: { type: "button" }
-                },
-                [
-                  _c("i", { staticClass: "fas fa-trash" }),
-                  _vm._v(" Delete\n              ")
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-secondary float-sm-right mr-2",
-                  attrs: { type: "button" }
-                },
-                [
-                  _c("i", { staticClass: "fas fa-envelope" }),
-                  _vm._v(" Email\n              ")
-                ]
-              )
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("hr")
+    return _c("div", { staticClass: "col-md-3" }, [
+      _c("h1", [_vm._v("My Documents")])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-3" }, [
+      _c("div", { staticClass: "btn-group" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-default", attrs: { type: "button" } },
+          [_vm._v("Sort By")]
+        ),
+        _vm._v(" "),
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-default dropdown-toggle",
+            attrs: {
+              type: "button",
+              "data-toggle": "dropdown",
+              "aria-expanded": "false"
+            }
+          },
+          [
+            _c("span", { staticClass: "caret" }),
+            _vm._v(" "),
+            _c("span", { staticClass: "sr-only" }, [_vm._v("Toggle Dropdown")])
+          ]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass: "dropdown-menu",
+            staticStyle: {
+              position: "absolute",
+              transform: "translate3d(67px, 38px, 0px)",
+              top: "0px",
+              left: "0px",
+              "will-change": "transform"
+            },
+            attrs: { role: "menu", "x-placement": "bottom-start" }
+          },
+          [
+            _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
+              _vm._v("Action")
+            ]),
+            _vm._v(" "),
+            _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
+              _vm._v("Another action")
+            ]),
+            _vm._v(" "),
+            _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
+              _vm._v("Something else here")
+            ])
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "btn-group float-sm-right" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "button" } },
+        [_vm._v("Upload")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary dropdown-toggle",
+          attrs: {
+            type: "button",
+            "data-toggle": "dropdown",
+            "aria-expanded": "false"
+          }
+        },
+        [
+          _c("span", { staticClass: "caret" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "sr-only" }, [_vm._v("Toggle Dropdown")])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "dropdown-menu",
+          staticStyle: {
+            position: "absolute",
+            "will-change": "transform",
+            top: "0px",
+            left: "0px",
+            transform: "translate3d(67px, 38px, 0px)"
+          },
+          attrs: { role: "menu", "x-placement": "bottom-start" }
+        },
+        [
+          _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
+            _vm._v("File")
+          ]),
+          _vm._v(" "),
+          _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
+            _vm._v("Foleder")
+          ])
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "btn btn-primary float-sm-right mr-2",
+        attrs: { type: "button" }
+      },
+      [
+        _c("i", { staticClass: "fas fa-file" }),
+        _vm._v(" Upload New Version\n                ")
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "btn btn-secondary float-sm-right mr-2",
+        attrs: { type: "button" }
+      },
+      [
+        _c("i", { staticClass: "fas fa-arrow-circle-down" }),
+        _vm._v(" Download\n                ")
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "btn btn-secondary float-sm-right mr-2",
+        attrs: { type: "button" }
+      },
+      [
+        _c("i", { staticClass: "fas fa-trash" }),
+        _vm._v(" Delete\n                ")
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "btn btn-secondary float-sm-right mr-2",
+        attrs: { type: "button" }
+      },
+      [
+        _c("i", { staticClass: "fas fa-envelope" }),
+        _vm._v(" Email\n                ")
+      ]
+    )
   }
 ]
 render._withStripped = true
