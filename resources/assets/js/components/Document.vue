@@ -51,7 +51,7 @@
                       x-placement="bottom-start"
                       style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(67px, 38px, 0px);"
                     >
-                      <a class="dropdown-item" href="#">File</a>
+                      <a class="dropdown-item" @click="Upload">File</a>
                       <a class="dropdown-item" href="#">Foleder</a>
                     </div>
                   </div>
@@ -165,6 +165,27 @@
         </ul>
       </div>
     </div>
+    <div
+      class="modal fade"
+      id="addNew"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addNewLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="upload">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNewLabel">Upload</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">Tes</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -186,6 +207,9 @@ export default {
         this.documents = response.data;
       });
       this.$Progress.finish();
+    },
+    Upload() {
+      $("#addNew").modal("show");
     },
     clikfile(doc) {
       this.visible = true;

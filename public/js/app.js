@@ -81213,6 +81213,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -81236,6 +81257,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         _this.documents = response.data;
       });
       this.$Progress.finish();
+    },
+    Upload: function Upload() {
+      $("#addNew").modal("show");
     },
     clikfile: function clikfile(doc) {
       this.visible = true;
@@ -81320,7 +81344,57 @@ var render = function() {
                         }
                       ]
                     },
-                    [_vm._m(2)]
+                    [
+                      _c("div", { staticClass: "btn-group float-sm-right" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary",
+                            attrs: { type: "button" }
+                          },
+                          [_vm._v("Upload")]
+                        ),
+                        _vm._v(" "),
+                        _vm._m(2),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass: "dropdown-menu",
+                            staticStyle: {
+                              position: "absolute",
+                              "will-change": "transform",
+                              top: "0px",
+                              left: "0px",
+                              transform: "translate3d(67px, 38px, 0px)"
+                            },
+                            attrs: {
+                              role: "menu",
+                              "x-placement": "bottom-start"
+                            }
+                          },
+                          [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "dropdown-item",
+                                on: { click: _vm.Upload }
+                              },
+                              [_vm._v("File")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "a",
+                              {
+                                staticClass: "dropdown-item",
+                                attrs: { href: "#" }
+                              },
+                              [_vm._v("Foleder")]
+                            )
+                          ]
+                        )
+                      ])
+                    ]
                   ),
                   _vm._v(" "),
                   _c(
@@ -81584,7 +81658,9 @@ var render = function() {
           ])
         ]
       )
-    ])
+    ]),
+    _vm._v(" "),
+    _vm._m(7)
   ])
 }
 var staticRenderFns = [
@@ -81659,54 +81735,22 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "btn-group float-sm-right" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "button" } },
-        [_vm._v("Upload")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary dropdown-toggle",
-          attrs: {
-            type: "button",
-            "data-toggle": "dropdown",
-            "aria-expanded": "false"
-          }
-        },
-        [
-          _c("span", { staticClass: "caret" }),
-          _vm._v(" "),
-          _c("span", { staticClass: "sr-only" }, [_vm._v("Toggle Dropdown")])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "dropdown-menu",
-          staticStyle: {
-            position: "absolute",
-            "will-change": "transform",
-            top: "0px",
-            left: "0px",
-            transform: "translate3d(67px, 38px, 0px)"
-          },
-          attrs: { role: "menu", "x-placement": "bottom-start" }
-        },
-        [
-          _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-            _vm._v("File")
-          ]),
-          _vm._v(" "),
-          _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
-            _vm._v("Foleder")
-          ])
-        ]
-      )
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "btn btn-primary dropdown-toggle",
+        attrs: {
+          type: "button",
+          "data-toggle": "dropdown",
+          "aria-expanded": "false"
+        }
+      },
+      [
+        _c("span", { staticClass: "caret" }),
+        _vm._v(" "),
+        _c("span", { staticClass: "sr-only" }, [_vm._v("Toggle Dropdown")])
+      ]
+    )
   },
   function() {
     var _vm = this
@@ -81769,6 +81813,63 @@ var staticRenderFns = [
       [
         _c("i", { staticClass: "fas fa-envelope" }),
         _vm._v(" Email\n                ")
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "addNew",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "addNewLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered",
+            attrs: { role: "upload" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h5",
+                  { staticClass: "modal-title", attrs: { id: "addNewLabel" } },
+                  [_vm._v("Upload")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "close",
+                    attrs: {
+                      type: "button",
+                      "data-dismiss": "modal",
+                      "aria-label": "Close"
+                    }
+                  },
+                  [
+                    _c("span", { attrs: { "aria-hidden": "true" } }, [
+                      _vm._v("×")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [_vm._v("Tes")])
+            ])
+          ]
+        )
       ]
     )
   }
@@ -81939,6 +82040,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -82042,23 +82146,26 @@ var render = function() {
                                 [_vm._v(_vm._s(file.status))]
                               ),
                               _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "progress progress-xs" },
-                                [
-                                  _c("div", {
-                                    staticClass:
-                                      "progress-bar bg-primary progress-bar-striped",
-                                    style: { width: file.progress + "%" },
-                                    attrs: {
-                                      role: "progressbar",
-                                      "aria-valuenow": "20",
-                                      "aria-valuemin": "0",
-                                      "aria-valuemax": "100"
-                                    }
-                                  })
-                                ]
-                              )
+                              file.status !== "error" &&
+                              file.status !== "success"
+                                ? _c(
+                                    "div",
+                                    { staticClass: "progress progress-xs" },
+                                    [
+                                      _c("div", {
+                                        staticClass:
+                                          "progress-bar bg-primary progress-bar-striped",
+                                        style: { width: file.progress + "%" },
+                                        attrs: {
+                                          role: "progressbar",
+                                          "aria-valuenow": "20",
+                                          "aria-valuemin": "0",
+                                          "aria-valuemax": "100"
+                                        }
+                                      })
+                                    ]
+                                  )
+                                : _vm._e()
                             ])
                           ])
                         ]

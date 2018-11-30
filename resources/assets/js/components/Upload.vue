@@ -35,7 +35,10 @@
                     </span>
                   </a>
                   <span class="product-description">{{ file.status }}</span>
-                  <div class="progress progress-xs">
+                  <div
+                    class="progress progress-xs"
+                    v-if="file.status !== 'error' && file.status !=='success'"
+                  >
                     <div
                       class="progress-bar bg-primary progress-bar-striped"
                       role="progressbar"
