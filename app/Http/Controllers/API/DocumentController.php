@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 use App\Document;
 
 class DocumentController extends Controller
@@ -32,6 +35,22 @@ class DocumentController extends Controller
     public function store(Request $request)
     {
         //
+    }
+
+     public function upload(Request $request)
+    {
+        $file = $request->file('file');
+        $filename = $file->getClientOriginalName();
+
+        if (Storage::putFileAs('/public/uploads/' . $this->getUserDir() . '/', $file, $filename)) {
+
+            return response()->json([
+                'success' => true
+            ], 200);
+        }
+        return response()->json([
+            'success' => false
+        ], 500);
     }
 
     /**
@@ -74,5 +93,10 @@ class DocumentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function getUserDir()
+    {
+            return Auth::id();
     }
 }

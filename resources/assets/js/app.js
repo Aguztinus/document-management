@@ -27,6 +27,9 @@ window.Form = Form;
 Vue.component(HasError.name, HasError);
 Vue.component(AlertError.name, AlertError);
 
+import VueClip from "vue-clip";
+Vue.use(VueClip);
+
 Vue.component("pagination", require("laravel-vue-pagination"));
 
 import VueRouter from "vue-router";
@@ -46,6 +49,8 @@ let routes = [
     { path: "/units", component: require("./components/Units.vue") },
     { path: "/profile", component: require("./components/Profile.vue") },
     { path: "/document", component: require("./components/Document.vue") },
+    { path: "/upload", component: require("./components/Upload.vue") },
+    { path: "/tes", component: require("./components/Tes.vue") },
     { path: "*", component: require("./components/NotFound.vue") }
 ];
 

@@ -29,4 +29,5 @@ Route::get('allUnit', 'API\UnitController@allUnit');
 Route::put('profile', 'API\UserController@updateProfile');
 
 Route::get('getref/{id}', 'API\DocumentController@getref');
+Route::post('upload', 'API\DocumentController@upload')->name('upload');
 
