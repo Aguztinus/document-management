@@ -82489,18 +82489,19 @@ var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(244)
+  __webpack_require__(246)
 }
 var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(205)
 /* template */
-var __vue_template__ = __webpack_require__(206)
+var __vue_template__ = __webpack_require__(248)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = null
+var __vue_scopeId__ = "data-v-2822230a"
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -82608,12 +82609,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     limitText: function limitText(count) {
-      return "and " + count + " other countries";
+      return "and " + count + " other ";
     },
     asyncFind: function asyncFind(query) {
+      var _this = this;
+
       this.isLoading = true;
       axios.get("api/findUser?q=" + query).then(function (data) {
-        console.log(Object.values(data));
+        console.log(data.data.data);
+        _this.countries = data.data.data;
+        _this.isLoading = false;
       }).catch(function () {});
       this.isLoading = false;
     },
@@ -82624,146 +82629,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 206 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container" }, [
-    _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-8" }, [
-        _c("div", { staticClass: "card card-default" }, [
-          _c("div", { staticClass: "card-header" }, [
-            _vm._v("Search Multiselect Component")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c(
-              "div",
-              { staticClass: "row" },
-              [
-                _c(
-                  "label",
-                  { staticClass: "typo__label", attrs: { for: "ajax" } },
-                  [_vm._v("Async multiselect")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "multiselect",
-                  {
-                    attrs: {
-                      id: "ajax",
-                      label: "name",
-                      "track-by": "code",
-                      placeholder: "Type to search",
-                      "open-direction": "bottom",
-                      options: _vm.countries,
-                      multiple: true,
-                      searchable: true,
-                      loading: _vm.isLoading,
-                      "internal-search": false,
-                      "clear-on-select": false,
-                      "close-on-select": false,
-                      "options-limit": 30,
-                      limit: 3,
-                      "limit-text": _vm.limitText,
-                      "max-height": 600,
-                      "show-no-results": false,
-                      "hide-selected": true
-                    },
-                    on: { "search-change": _vm.asyncFind },
-                    scopedSlots: _vm._u([
-                      {
-                        key: "tag",
-                        fn: function(ref) {
-                          var option = ref.option
-                          var remove = ref.remove
-                          return [
-                            _c("span", { staticClass: "custom__tag" }, [
-                              _c("span", [_vm._v(_vm._s(option.name))]),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                {
-                                  staticClass: "custom__remove",
-                                  on: {
-                                    click: function($event) {
-                                      remove(option)
-                                    }
-                                  }
-                                },
-                                [_vm._v("❌")]
-                              )
-                            ])
-                          ]
-                        }
-                      },
-                      {
-                        key: "clear",
-                        fn: function(props) {
-                          return [
-                            _vm.selectedCountries.length
-                              ? _c("div", {
-                                  staticClass: "multiselect__clear",
-                                  on: {
-                                    mousedown: function($event) {
-                                      $event.preventDefault()
-                                      $event.stopPropagation()
-                                      _vm.clearAll(props.search)
-                                    }
-                                  }
-                                })
-                              : _vm._e()
-                          ]
-                        }
-                      }
-                    ]),
-                    model: {
-                      value: _vm.selectedCountries,
-                      callback: function($$v) {
-                        _vm.selectedCountries = $$v
-                      },
-                      expression: "selectedCountries"
-                    }
-                  },
-                  [
-                    _c(
-                      "span",
-                      { attrs: { slot: "noResult" }, slot: "noResult" },
-                      [
-                        _vm._v(
-                          "Oops! No elements found. Consider changing the search query."
-                        )
-                      ]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c("pre", { staticClass: "language-json" }, [
-                  _c("code", [_vm._v(_vm._s(_vm.selectedCountries))])
-                ])
-              ],
-              1
-            )
-          ])
-        ])
-      ])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-2822230a", module.exports)
-  }
-}
-
-/***/ }),
+/* 206 */,
 /* 207 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -86841,6 +86707,186 @@ exports.push([module.i, "\nfieldset[disabled] .multiselect{pointer-events:none\n
 
 // exports
 
+
+/***/ }),
+/* 246 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(247);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(4)("528437e2", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2822230a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./Tes.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-2822230a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./Tes.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 247 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.custom__tag[data-v-2822230a] {\n  display: inline-block;\n  padding: 3px 12px;\n  background: #41b883;\n  margin-right: 8px;\n  margin-bottom: 8px;\n  border-radius: 10px;\n  cursor: pointer;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 248 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("Search Multiselect Component")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "div",
+              { staticClass: "row" },
+              [
+                _c(
+                  "label",
+                  { staticClass: "typo__label", attrs: { for: "ajax" } },
+                  [_vm._v("Async multiselect")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "multiselect",
+                  {
+                    attrs: {
+                      id: "ajax",
+                      label: "name",
+                      "track-by": "code",
+                      placeholder: "Type to search",
+                      "open-direction": "bottom",
+                      options: _vm.countries,
+                      multiple: true,
+                      searchable: true,
+                      loading: _vm.isLoading,
+                      "internal-search": false,
+                      "clear-on-select": false,
+                      "close-on-select": false,
+                      "options-limit": 300,
+                      limit: 3,
+                      "limit-text": _vm.limitText,
+                      "max-height": 600,
+                      "show-no-results": false,
+                      "hide-selected": true
+                    },
+                    on: { "search-change": _vm.asyncFind },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "tag",
+                        fn: function(ref) {
+                          var option = ref.option
+                          var remove = ref.remove
+                          return [
+                            _c("span", { staticClass: "custom__tag" }, [
+                              _c("span", [_vm._v(_vm._s(option.name))]),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  staticClass: "custom__remove",
+                                  on: {
+                                    click: function($event) {
+                                      remove(option)
+                                    }
+                                  }
+                                },
+                                [_vm._v("❌")]
+                              )
+                            ])
+                          ]
+                        }
+                      },
+                      {
+                        key: "clear",
+                        fn: function(props) {
+                          return [
+                            _vm.selectedCountries.length
+                              ? _c("div", {
+                                  staticClass: "multiselect__clear",
+                                  on: {
+                                    mousedown: function($event) {
+                                      $event.preventDefault()
+                                      $event.stopPropagation()
+                                      _vm.clearAll(props.search)
+                                    }
+                                  }
+                                })
+                              : _vm._e()
+                          ]
+                        }
+                      }
+                    ]),
+                    model: {
+                      value: _vm.selectedCountries,
+                      callback: function($$v) {
+                        _vm.selectedCountries = $$v
+                      },
+                      expression: "selectedCountries"
+                    }
+                  },
+                  [
+                    _c(
+                      "span",
+                      { attrs: { slot: "noResult" }, slot: "noResult" },
+                      [
+                        _vm._v(
+                          "Oops! No elements found. Consider changing the search query."
+                        )
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("pre", { staticClass: "language-json" }, [
+                  _c("code", [_vm._v(_vm._s(_vm.selectedCountries))])
+                ])
+              ],
+              1
+            )
+          ])
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2822230a", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

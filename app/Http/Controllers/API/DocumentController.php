@@ -30,7 +30,7 @@ class DocumentController extends Controller
     {
         //
         if ($search = \Request::get('q')) {
-            $doc = Document::where(function($query) use ($search){
+            $doc = Document::select('name', 'id As code')->where(function($query) use ($search){
                 $query->where('name','LIKE',"%$search%");
             })->paginate(30);
         }

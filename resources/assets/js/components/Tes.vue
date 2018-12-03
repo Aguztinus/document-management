@@ -21,7 +21,7 @@
                 :internal-search="false"
                 :clear-on-select="false"
                 :close-on-select="false"
-                :options-limit="30"
+                :options-limit="300"
                 :limit="3"
                 :limit-text="limitText"
                 :max-height="600"
@@ -67,14 +67,16 @@ export default {
   },
   methods: {
     limitText(count) {
-      return `and ${count} other countries`;
+      return `and ${count} other `;
     },
     asyncFind(query) {
       this.isLoading = true;
       axios
         .get("api/findUser?q=" + query)
         .then(data => {
-          console.log(Object.values(data));
+          console.log(data.data.data);
+          this.countries = data.data.data;
+          this.isLoading = false;
         })
         .catch(() => {});
       this.isLoading = false;
@@ -87,3 +89,16 @@ export default {
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+<style lang="scss" scoped>
+.custom__tag {
+  display: inline-block;
+  padding: 3px 12px;
+  background: #41b883;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+</style>
+
