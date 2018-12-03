@@ -221,7 +221,7 @@ export default {
       let file = e.target.files[0];
       let reader = new FileReader();
 
-      let limit = 1024 * 1024 * 2;
+      let limit = 1024 * 1024 * 2; //2mb
       if (file["size"] > limit) {
         swal({
           type: "error",

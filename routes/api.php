@@ -27,6 +27,7 @@ Route::get('profile', 'API\UserController@profile');
 Route::get('findUser', 'API\UserController@search');
 Route::get('allUnit', 'API\UnitController@allUnit');
 Route::put('profile', 'API\UserController@updateProfile');
+Route::get('findDoc', 'API\DocumentController@searchDoc');
 
 Route::get('getref/{id}', 'API\DocumentController@getref');
 Route::post('upload', 'API\DocumentController@upload')->name('upload');

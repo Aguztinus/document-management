@@ -26,6 +26,17 @@ class DocumentController extends Controller
         return Document::with('userowner')->latest()->paginate(12);
     }
 
+    public function searchDoc()
+    {
+        //
+        if ($search = \Request::get('q')) {
+            $doc = Document::where(function($query) use ($search){
+                $query->where('name','LIKE',"%$search%");
+            })->paginate(30);
+        }
+        return $doc;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -93,10 +104,19 @@ class DocumentController extends Controller
     public function destroy($id)
     {
         //
+        if (Storage::delete('/public/uploads/' . $this->getUserDir() . '/' . $id)) {
+
+            return response()->json([
+                'success' => true
+            ], 200);
+        }
+        return response()->json([
+            'success' => false
+        ], 500);
     }
 
     private function getUserDir()
     {
-            return Auth::id();
+        return Auth::id();
     }
 }
