@@ -8,21 +8,21 @@
             <div class="row">
               <label class="typo__label" for="ajax">Async multiselect</label>
               <multiselect
-                v-model="selectedCountries"
+                v-model="selectedDocuments"
                 id="ajax"
                 label="name"
                 track-by="code"
                 placeholder="Type to search"
                 open-direction="bottom"
-                :options="countries"
+                :options="Multidocuments"
                 :multiple="true"
                 :searchable="true"
                 :loading="isLoading"
                 :internal-search="false"
                 :clear-on-select="false"
                 :close-on-select="false"
-                :options-limit="300"
-                :limit="3"
+                :options-limit="50"
+                :limit="5"
                 :limit-text="limitText"
                 :max-height="600"
                 :show-no-results="false"
@@ -38,13 +38,13 @@
                 <template slot="clear" slot-scope="props">
                   <div
                     class="multiselect__clear"
-                    v-if="selectedCountries.length"
+                    v-if="selectedDocuments.length"
                     @mousedown.prevent.stop="clearAll(props.search)"
                   ></div>
                 </template>
                 <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
               </multiselect>
-              <pre class="language-json"><code>{{ selectedCountries  }}</code></pre>
+              <pre class="language-json"><code>{{ selectedDocuments  }}</code></pre>
             </div>
           </div>
         </div>
@@ -60,8 +60,8 @@ export default {
   },
   data() {
     return {
-      selectedCountries: [],
-      countries: [],
+      selectedDocuments: [],
+      Multidocuments: [],
       isLoading: false
     };
   },
@@ -69,20 +69,32 @@ export default {
     limitText(count) {
       return `and ${count} other `;
     },
-    asyncFind(query) {
+    asyncFind: _.debounce(function(e) {
       this.isLoading = true;
       axios
-        .get("api/findUser?q=" + query)
+        .get("api/findDoc?q=" + e)
         .then(data => {
           console.log(data.data.data);
-          this.countries = data.data.data;
+          this.Multidocuments = data.data.data;
           this.isLoading = false;
         })
         .catch(() => {});
       this.isLoading = false;
-    },
+    }, 700),
+    // asyncFind(query) {
+    //   this.isLoading = true;
+    //   axios
+    //     .get("api/findUser?q=" + query)
+    //     .then(data => {
+    //       console.log(data.data.data);
+    //       this.countries = data.data.data;
+    //       this.isLoading = false;
+    //     })
+    //     .catch(() => {});
+    //   this.isLoading = false;
+    // },
     clearAll() {
-      this.selectedCountries = [];
+      this.selectedDocuments = [];
     }
   }
 };
@@ -95,10 +107,17 @@ export default {
   display: inline-block;
   padding: 3px 12px;
   background: #41b883;
+  color: #fff;
   margin-right: 8px;
   margin-bottom: 8px;
   border-radius: 10px;
   cursor: pointer;
+}
+
+.custom__remove {
+  padding: 0;
+  font-size: 10px;
+  margin-left: 5px;
 }
 </style>
 

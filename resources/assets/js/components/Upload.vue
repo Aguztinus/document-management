@@ -119,6 +119,8 @@ export default {
       // the file.
       //file.addAttribute('id', xhr.response.id)
       let filename = file.name;
+      console.log(file);
+
       //console.log(file.dataUrl);
       if (file.status !== "error") {
         let text = "File " + filename + " has been successfully uploaded";

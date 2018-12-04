@@ -173,7 +173,7 @@
       aria-labelledby="addNewLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-dialog-centered" role="upload">
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="upload">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="addNewLabel">Upload</h5>
@@ -182,62 +182,141 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
-            <vue-clip ref="vc" :options="options" :on-complete="complete">
-              <template slot="clip-uploader-action">
-                <div class="upload-zone text-center">
-                  <div class="dz-message">
-                    <h4>Click or Drag and Drop files here upload</h4>
+          <form @submit.prevent="saveit()">
+            <div class="modal-body">
+              <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-6">
+                    <vue-clip ref="vc" :options="options" :on-complete="complete">
+                      <template slot="clip-uploader-action">
+                        <div class="upload-zone text-center">
+                          <div class="dz-message">
+                            <h4>Click or Drag and Drop files here upload</h4>
+                          </div>
+                        </div>
+                      </template>
+
+                      <template slot="clip-uploader-body" slot-scope="props" class="ml-4 mr-4">
+                        <ul
+                          v-for="file in props.files"
+                          :key="file.name"
+                          class="products-list product-list-in-card pl-2 pr-2"
+                        >
+                          <li class="item ml-4 mr-4">
+                            <div class="product-img">
+                              <img
+                                v-bind:src="file.dataUrl == ''? 'img/file.png' : file.dataUrl"
+                                class="img-size-50"
+                              >
+                            </div>
+                            <div class="product-info">
+                              <a href="javascript:void(0)" class="product-title">{{ file.name }}</a>
+                              <span class="badge float-right">
+                                <button
+                                  type="button"
+                                  class="btn btn-block btn-sm"
+                                  @click="removeFile(file)"
+                                >
+                                  <i class="fa fa-times"></i>
+                                </button>
+                              </span>
+                              <span class="product-description">{{ file.status }}</span>
+                              <div
+                                class="progress progress-xxs"
+                                v-if="file.status !== 'error' && file.status !=='success'"
+                              >
+                                <div
+                                  class="progress-bar bg-primary progress-bar-striped"
+                                  role="progressbar"
+                                  aria-valuenow="10"
+                                  aria-valuemin="0"
+                                  aria-valuemax="100"
+                                  v-bind:style="{width: file.progress + '%'}"
+                                ></div>
+                                {{ file.progress }}
+                              </div>
+                            </div>
+                          </li>
+                          <!-- /.item -->
+                        </ul>
+                      </template>
+                    </vue-clip>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="labelUnit">Document Type</label>
+                      <select
+                        name="documentType"
+                        v-model="form.docTypes"
+                        id="documentType"
+                        @change="onChangeDoc()"
+                        class="form-control"
+                        style="width: 100%;"
+                        tabindex="-1"
+                        aria-hidden="true"
+                        :class="{ 'is-invalid': form.errors.has('documentType') }"
+                      >
+                        <option selected="selected">Select Document Type</option>
+                        <option
+                          v-for="doct in docTypes"
+                          :key="doct.id"
+                          :value="doct"
+                        >{{ doct.name }}</option>
+                      </select>
+                      <has-error :form="form" field="documentType"></has-error>
+                      <input v-model="form.docType_id" type="hidden" name="docType_id">
+                    </div>
+                    <div class="form-group">
+                      <label class="typo__label" for="ajax">Document Refrence</label>
+                      <multiselect
+                        v-model="selectedDocuments"
+                        id="ajax"
+                        label="name"
+                        track-by="code"
+                        placeholder="Type to search"
+                        open-direction="bottom"
+                        :options="Multidocuments"
+                        :multiple="true"
+                        :searchable="true"
+                        :loading="isLoading"
+                        :internal-search="false"
+                        :clear-on-select="false"
+                        :close-on-select="false"
+                        :options-limit="50"
+                        :limit="5"
+                        :limit-text="limitText"
+                        :max-height="600"
+                        :show-no-results="false"
+                        :hide-selected="true"
+                        @search-change="asyncFind"
+                      >
+                        <template slot="tag" slot-scope="{ option, remove }">
+                          <span class="custom__tag">
+                            <span>{{ option.name }}</span>
+                            <span class="custom__remove" @click="remove(option)">❌</span>
+                          </span>
+                        </template>
+                        <template slot="clear" slot-scope="props">
+                          <div
+                            class="multiselect__clear"
+                            v-if="selectedDocuments.length"
+                            @mousedown.prevent.stop="clearAll(props.search)"
+                          ></div>
+                        </template>
+                        <span
+                          slot="noResult"
+                        >Oops! No elements found. Consider changing the search query.</span>
+                      </multiselect>
+                    </div>
                   </div>
                 </div>
-              </template>
-
-              <template slot="clip-uploader-body" slot-scope="props" class="ml-4 mr-4">
-                <ul
-                  v-for="file in props.files"
-                  :key="file.name"
-                  class="products-list product-list-in-card pl-2 pr-2"
-                >
-                  <li class="item ml-4 mr-4">
-                    <div class="product-img">
-                      <img
-                        v-bind:src="file.dataUrl == ''? 'img/file.png' : file.dataUrl"
-                        class="img-size-50"
-                      >
-                    </div>
-                    <div class="product-info">
-                      <a href="javascript:void(0)" class="product-title">{{ file.name }}</a>
-                      <span class="badge float-right">
-                        <button
-                          type="button"
-                          class="btn btn-block btn-sm"
-                          @click="removeFile(file)"
-                        >
-                          <i class="fa fa-times"></i>
-                        </button>
-                      </span>
-                      <span class="product-description">{{ file.status }}</span>
-                      <div
-                        class="progress progress-xxs"
-                        v-if="file.status !== 'error' && file.status !=='success'"
-                      >
-                        <div
-                          class="progress-bar bg-primary progress-bar-striped"
-                          role="progressbar"
-                          aria-valuenow="10"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                          v-bind:style="{width: file.progress + '%'}"
-                        ></div>
-                        {{ file.progress }}
-                      </div>
-                    </div>
-                  </li>
-                  <!-- /.item -->
-                </ul>
-              </template>
-            </vue-clip>
-          </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -250,9 +329,19 @@ export default {
     return {
       visible: false,
       documents: {},
+      selectedDocuments: [],
+      Multidocuments: [],
+      isLoading: false,
       detail: {},
+      docTypes: {},
       userowner: "",
       scrolled: false,
+      form: new Form({
+        id: "",
+        docType_id: 0,
+        uploadDoc: [],
+        refDoc: []
+      }),
       options: {
         url: "api/upload",
         paramName: "file",
@@ -293,9 +382,11 @@ export default {
       this.$Progress.finish();
     },
     Upload() {
+      //popup modal upload
       $("#addNew").modal("show");
     },
     clikfile(doc) {
+      //click event user click document di list
       this.visible = true;
       this.detail = doc;
       this.userowner = doc.userowner.name;
@@ -304,16 +395,60 @@ export default {
     closeside() {
       this.visible = false;
     },
+    saveit() {
+      this.form.refDoc = this.selectedDocuments;
+      //console.log(this.form.refDoc);
+      this.$Progress.start();
+      this.form
+        .post("api/document")
+        .then(() => {
+          this.clearAll();
+          this.loadDocs();
+          $("#addNew").modal("hide");
+          toast({
+            type: "success",
+            title: "Document Created in successfully"
+          });
+
+          this.$Progress.finish();
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response);
+          }
+          this.$Progress.fail();
+        });
+    },
     loadDocs() {
+      //load semua document di list depan
       this.$Progress.start();
       axios.get("api/document").then(({ data }) => (this.documents = data));
       this.$Progress.finish();
     },
+    loadDocTypes() {
+      //load dropdown document type
+      this.$Progress.start();
+      axios
+        .get("api/allDocTypes")
+        .then(({ data }) => (this.docTypes = data))
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response);
+          }
+          this.$Progress.fail();
+        });
+      this.$Progress.finish();
+    },
+    onChangeDoc() {
+      //untuk change dropdown document type
+      this.form.docType_id = this.form.docTypes.id;
+    },
     handleScroll() {
       this.scrolled = window.scrollY > 0;
-      console.log(this.scrolled);
+      //console.log(this.scrolled);
     },
     removeFile(file) {
+      //remove file di document upload
       console.log(file.name);
       axios
         .delete("api/document/" + file.name)
@@ -326,11 +461,14 @@ export default {
       this.$refs.vc.files.splice(index, 1);
     },
     complete(file, status, xhr) {
+      //complete event document upload
       // Adding server id to be used for deleting
       // the file.
       //file.addAttribute('id', xhr.response.id)
       let filename = file.name;
-      //console.log(file.dataUrl);
+      this.form.uploadDoc.push(Object.assign({}, file));
+      console.log(file);
+
       if (file.status !== "error") {
         let text = "File " + filename + " has been successfully uploaded";
         toast({
@@ -348,17 +486,42 @@ export default {
           title: text
         });
       }
+    },
+    limitText(count) {
+      //limit text di multiselect document
+      return `and ${count} other `;
+    },
+    asyncFind: _.debounce(function(e) {
+      //serach get data di multiselect document
+      this.isLoading = true;
+      axios
+        .get("api/findDoc?q=" + e)
+        .then(data => {
+          console.log(data.data.data);
+          this.Multidocuments = data.data.data;
+          this.isLoading = false;
+        })
+        .catch(() => {});
+      this.isLoading = false;
+    }, 700),
+    clearAll() {
+      //clear all  multiselect document
+      this.$refs.vc.files = [];
+      this.selectedDocuments = [];
+      this.form.docTypes = null;
+      this.form.docTypes_id = null;
     }
   },
   created() {
     this.loadDocs();
+    this.loadDocTypes();
     window.addEventListener("scroll", this.handleScroll);
     Fire.$on("searching", () => {
       let query = this.$parent.search;
       axios
-        .get("api/findUnit?q=" + query)
+        .get("api/searchDoc?q=" + query)
         .then(data => {
-          this.units = data.data;
+          this.documents = data.data;
         })
         .catch(() => {});
     });
@@ -373,8 +536,26 @@ export default {
   }
 };
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss" scoped>
+.custom__tag {
+  display: inline-block;
+  padding: 3px 12px;
+  background: #41b883;
+  color: #fff;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.custom__remove {
+  padding: 0;
+  font-size: 10px;
+  margin-left: 5px;
+}
+
 .fixed-header {
   position: fixed;
   top: 0;
