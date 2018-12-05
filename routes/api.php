@@ -35,6 +35,7 @@ Route::get('allDocTypes', 'API\DocumentController@allDocTypes');
 Route::get('getref/{id}', 'API\DocumentController@getref');
 Route::get('getdocumentref/{id}', 'API\DocumentController@getdocumentref');
 Route::get('download/{id}', 'API\DocumentController@download');
+Route::delete('deletefile/{id}', 'API\DocumentController@deletefile');
 
 Route::post('upload', 'API\DocumentController@upload')->name('upload');
 

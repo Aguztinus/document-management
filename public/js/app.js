@@ -81594,94 +81594,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       isEdit: false,
+      judul: "Upload File",
       visible: false,
       documents: {},
       selectedDocuments: [],
@@ -81695,29 +81613,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         id: 0,
         name: "",
         description: "",
+        isUploadNew: 0,
         docType_id: 0,
         uploadDoc: [],
         refDoc: []
       }),
       options: {
         url: "api/upload",
-        paramName: "file",
-        acceptedFiles: {
-          extensions: ["image/*", "application/pdf", "text/plain", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "application/vnd.ms-access", "application/x-rar-compressed", "application/rtf", "application/x-tar", "application/zip", "application/x-7z-compressed"],
-          message: "You are uploading an invalid file"
-        },
-        headers: window.axios.defaults.headers.common,
-        maxFilesize: {
-          limit: 5,
-          message: "file Size is greater than the 5mb"
-        },
-        maxFiles: {
-          limit: 1,
-          message: "You can only upload a max of 1 files"
-        }
-      },
-      optionsNew: {
-        url: "api/uploadNew",
         paramName: "file",
         acceptedFiles: {
           extensions: ["image/*", "application/pdf", "text/plain", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "application/vnd.ms-access", "application/x-rar-compressed", "application/rtf", "application/x-tar", "application/zip", "application/x-7z-compressed"],
@@ -81750,12 +81652,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     Upload: function Upload() {
       //popup modal upload
+      this.clearAll();
+      this.judul = "Upload File";
       this.isEdit = false;
+      this.form.isUploadNew = 0;
       $("#addNew").modal("show");
     },
     UploadNew: function UploadNew() {
-      //popup modal upload
-      $("#addNewFile").modal("show");
+      var _this2 = this;
+
+      this.isEdit = true;
+      this.judul = "Upload New File";
+      this.form.isUploadNew = 1; //bedanya sm edit
+      this.$Progress.start();
+      axios.get("api/getdocumentref/" + this.form.id).then(function (response) {
+        //console.log(response.data);
+        _this2.selectedDocuments = response.data;
+      });
+      this.$Progress.finish();
+      $("#addNew").modal("show");
+    },
+    Edit: function Edit() {
+      var _this3 = this;
+
+      this.isEdit = true;
+      this.judul = "Edit File";
+      this.form.isUploadNew = 0;
+      //this.form.reset();
+      this.$Progress.start();
+      axios.get("api/getdocumentref/" + this.form.id).then(function (response) {
+        //console.log(response.data);
+        _this3.selectedDocuments = response.data;
+      });
+      this.$Progress.finish();
+      $("#addNew").modal("show");
     },
     clikfile: function clikfile(doc) {
       //click event user click document di list
@@ -81773,94 +81703,104 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.visible = false;
     },
     saveit: function saveit() {
-      var _this2 = this;
+      var _this4 = this;
 
       this.form.refDoc = this.selectedDocuments;
       //console.log(this.form.refDoc);
       this.$Progress.start();
       this.form.post("api/document").then(function () {
-        _this2.clearAll();
-        _this2.loadDocs();
+        _this4.clearAll();
+        _this4.loadDocs();
         $("#addNew").modal("hide");
         toast({
           type: "success",
           title: "Document Created in successfully"
         });
 
-        _this2.$Progress.finish();
+        _this4.$Progress.finish();
       }).catch(function (error) {
         if (error.response) {
           console.log(error.response);
         }
-        _this2.$Progress.fail();
+        _this4.$Progress.fail();
       });
     },
     updateit: function updateit() {
-      var _this3 = this;
+      var _this5 = this;
 
       this.form.refDoc = this.selectedDocuments;
 
       this.$Progress.start();
       this.form.put("api/document/" + this.form.id).then(function () {
         // success
-        _this3.clearAll();
-        _this3.loadDocs();
+        _this5.clearAll();
+        _this5.loadDocs();
         $("#addNew").modal("hide");
         toast({
           type: "success",
           title: "Document Created in successfully"
         });
 
-        _this3.$Progress.finish();
+        _this5.$Progress.finish();
       }).catch(function (error) {
         if (error.response) {
           console.log(error.response);
         }
-        _this3.$Progress.fail();
+        _this5.$Progress.fail();
       });
-    },
-    Edit: function Edit() {
-      var _this4 = this;
-
-      this.isEdit = true;
-      //this.form.reset();
-      this.$Progress.start();
-      axios.get("api/getdocumentref/" + this.form.id).then(function (response) {
-        //console.log(response.data);
-        _this4.selectedDocuments = response.data;
-      });
-      this.$Progress.finish();
-      $("#addNew").modal("show");
     },
     geturl: function geturl() {
       var url = "storage/uploads/" + this.detail.owner_id + "/" + this.detail.name;
       return url;
     },
-    Delete: function Delete() {},
+    Delete: function Delete() {
+      var _this6 = this;
+
+      swal({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        // Send request to the server
+        if (result.value) {
+          _this6.form.delete("api/deletefile/" + _this6.form.id).then(function () {
+            swal("Deleted!", "Your file has been deleted.", "success");
+            _this6.clearAll();
+            _this6.loadDocs();
+          }).catch(function () {
+            swal("Failed!", "There was something wronge.", "warning");
+          });
+        }
+      });
+    },
     loadDocs: function loadDocs() {
-      var _this5 = this;
+      var _this7 = this;
 
       //load semua document di list depan
       this.$Progress.start();
       axios.get("api/document").then(function (_ref) {
         var data = _ref.data;
-        return _this5.documents = data;
+        return _this7.documents = data;
       });
       this.$Progress.finish();
     },
     loadDocTypes: function loadDocTypes() {
-      var _this6 = this;
+      var _this8 = this;
 
       //load dropdown document type
       this.$Progress.start();
       axios.get("api/allDocTypes").then(function (_ref2) {
         var data = _ref2.data;
-        return _this6.docTypes = data;
+        return _this8.docTypes = data;
       }).catch(function (error) {
         if (error.response) {
           console.log(error.response);
         }
-        _this6.$Progress.fail();
+        _this8.$Progress.fail();
       });
       this.$Progress.finish();
     },
@@ -81911,39 +81851,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         });
       }
     },
-    completeNew: function completeNew(file, status, xhr) {
-      var filename = file.name;
-      this.form.uploadDoc.push(Object.assign({}, file));
-      console.log(file);
-
-      if (file.status !== "error") {
-        var text = "File " + filename + " has been successfully uploaded";
-        toast({
-          type: "success",
-          title: text
-        });
-      } else {
-        var _text2 = "File " + filename + " has been not successfully uploaded, " + file.errorMessage;
-        toast({
-          type: "error",
-          title: _text2
-        });
-      }
-    },
     limitText: function limitText(count) {
       //limit text di multiselect document
       return "and " + count + " other ";
     },
 
     asyncFind: _.debounce(function (e) {
-      var _this7 = this;
+      var _this9 = this;
 
       //serach get data di multiselect document
       this.isLoading = true;
       axios.get("api/findDoc?q=" + e).then(function (data) {
         console.log(data.data.data);
-        _this7.Multidocuments = data.data.data;
-        _this7.isLoading = false;
+        _this9.Multidocuments = data.data.data;
+        _this9.isLoading = false;
       }).catch(function () {});
       this.isLoading = false;
     }, 700),
@@ -81953,23 +81874,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.selectedDocuments = [];
       this.form.docTypes = null;
       this.form.docTypes_id = null;
+      this.form.reset();
     }
   },
   created: function created() {
-    var _this8 = this;
+    var _this10 = this;
 
     this.loadDocs();
     this.loadDocTypes();
     window.addEventListener("scroll", this.handleScroll);
     Fire.$on("searching", function () {
-      var query = _this8.$parent.search;
+      var query = _this10.$parent.search;
       axios.get("api/findDochome?q=" + query).then(function (data) {
-        _this8.documents = data.data;
+        _this10.documents = data.data;
       }).catch(function () {});
     });
 
     Fire.$on("AfterCreate", function () {
-      _this8.loadDocs();
+      _this10.loadDocs();
     });
     //    setInterval(() => this.loadUsers(), 3000);
   },
@@ -82098,6 +82020,19 @@ var render = function() {
                       ),
                       _vm._v(" "),
                       _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary float-sm-right mr-2",
+                          attrs: { type: "button" },
+                          on: { click: _vm.Edit }
+                        },
+                        [
+                          _c("i", { staticClass: "fas fa-edit" }),
+                          _vm._v(" Edit\n                ")
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
                         "a",
                         {
                           staticClass: "btn btn-secondary float-sm-right mr-2",
@@ -82119,19 +82054,6 @@ var render = function() {
                         [
                           _c("i", { staticClass: "fas fa-trash" }),
                           _vm._v("\n                  Delete\n                ")
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn btn-primary float-sm-right mr-2",
-                          attrs: { type: "button" },
-                          on: { click: _vm.Edit }
-                        },
-                        [
-                          _c("i", { staticClass: "fas fa-edit" }),
-                          _vm._v(" Edit\n                ")
                         ]
                       )
                     ]
@@ -82652,36 +82574,8 @@ var render = function() {
               _c("div", { staticClass: "modal-header" }, [
                 _c(
                   "h5",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: !_vm.isEdit,
-                        expression: "!isEdit"
-                      }
-                    ],
-                    staticClass: "modal-title",
-                    attrs: { id: "addNewLabel" }
-                  },
-                  [_vm._v("Upload File")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "h5",
-                  {
-                    directives: [
-                      {
-                        name: "show",
-                        rawName: "v-show",
-                        value: _vm.isEdit,
-                        expression: "isEdit"
-                      }
-                    ],
-                    staticClass: "modal-title",
-                    attrs: { id: "addNewLabel" }
-                  },
-                  [_vm._v("Edit File")]
+                  { staticClass: "modal-title", attrs: { id: "addNewLabel" } },
+                  [_vm._v(_vm._s(_vm.judul))]
                 ),
                 _vm._v(" "),
                 _vm._m(4)
@@ -83232,207 +83126,6 @@ var render = function() {
           ]
         )
       ]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "modal fade",
-        attrs: {
-          id: "addNewFile",
-          tabindex: "-1",
-          role: "dialog",
-          "aria-labelledby": "addNewLabel",
-          "aria-hidden": "true"
-        }
-      },
-      [
-        _c(
-          "div",
-          {
-            staticClass: "modal-dialog modal-dialog-centered",
-            attrs: { role: "upload" }
-          },
-          [
-            _c("div", { staticClass: "modal-content" }, [
-              _vm._m(6),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-body" }, [
-                _c("div", { staticClass: "container-fluid" }, [
-                  _c("div", { staticClass: "row" }, [
-                    _c(
-                      "div",
-                      { staticClass: "col-md-12" },
-                      [
-                        _c(
-                          "vue-clip",
-                          {
-                            ref: "new",
-                            attrs: {
-                              options: _vm.optionsNew,
-                              "on-complete": _vm.completeNew
-                            },
-                            scopedSlots: _vm._u([
-                              {
-                                key: "clip-uploader-body",
-                                fn: function(props) {
-                                  return _vm._l(props.files, function(file) {
-                                    return _c(
-                                      "ul",
-                                      {
-                                        key: file.name,
-                                        staticClass:
-                                          "products-list product-list-in-card pl-2 pr-2"
-                                      },
-                                      [
-                                        _c(
-                                          "li",
-                                          { staticClass: "item ml-4 mr-4" },
-                                          [
-                                            _c(
-                                              "div",
-                                              { staticClass: "product-img" },
-                                              [
-                                                _c("img", {
-                                                  staticClass: "img-size-50",
-                                                  attrs: {
-                                                    src:
-                                                      file.dataUrl == ""
-                                                        ? "img/file.png"
-                                                        : file.dataUrl
-                                                  }
-                                                })
-                                              ]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "div",
-                                              { staticClass: "product-info" },
-                                              [
-                                                _c(
-                                                  "a",
-                                                  {
-                                                    staticClass:
-                                                      "product-title",
-                                                    attrs: {
-                                                      href: "javascript:void(0)"
-                                                    }
-                                                  },
-                                                  [_vm._v(_vm._s(file.name))]
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "span",
-                                                  {
-                                                    staticClass:
-                                                      "badge float-right"
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "button",
-                                                      {
-                                                        staticClass:
-                                                          "btn btn-block btn-sm",
-                                                        attrs: {
-                                                          type: "button"
-                                                        },
-                                                        on: {
-                                                          click: function(
-                                                            $event
-                                                          ) {
-                                                            _vm.removeFile(file)
-                                                          }
-                                                        }
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "fa fa-times"
-                                                        })
-                                                      ]
-                                                    )
-                                                  ]
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "span",
-                                                  {
-                                                    staticClass:
-                                                      "product-description"
-                                                  },
-                                                  [_vm._v(_vm._s(file.status))]
-                                                ),
-                                                _vm._v(" "),
-                                                file.status !== "error" &&
-                                                file.status !== "success"
-                                                  ? _c(
-                                                      "div",
-                                                      {
-                                                        staticClass:
-                                                          "progress progress-xxs"
-                                                      },
-                                                      [
-                                                        _c("div", {
-                                                          staticClass:
-                                                            "progress-bar bg-primary progress-bar-striped",
-                                                          style: {
-                                                            width:
-                                                              file.progress +
-                                                              "%"
-                                                          },
-                                                          attrs: {
-                                                            role: "progressbar",
-                                                            "aria-valuenow":
-                                                              "10",
-                                                            "aria-valuemin":
-                                                              "0",
-                                                            "aria-valuemax":
-                                                              "100"
-                                                          }
-                                                        })
-                                                      ]
-                                                    )
-                                                  : _vm._e()
-                                              ]
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  })
-                                }
-                              }
-                            ])
-                          },
-                          [
-                            _c("template", { slot: "clip-uploader-action" }, [
-                              _c(
-                                "div",
-                                { staticClass: "upload-zone text-center" },
-                                [
-                                  _c("div", { staticClass: "dz-message" }, [
-                                    _c("h4", [
-                                      _vm._v(
-                                        "Click or Drag and Drop files here upload"
-                                      )
-                                    ])
-                                  ])
-                                ]
-                              )
-                            ])
-                          ],
-                          2
-                        )
-                      ],
-                      1
-                    )
-                  ])
-                ])
-              ])
-            ])
-          ]
-        )
-      ]
     )
   ])
 }
@@ -83576,29 +83269,6 @@ var staticRenderFns = [
         "button",
         { staticClass: "btn btn-primary", attrs: { type: "submit" } },
         [_vm._v("Save changes")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title", attrs: { id: "addNewLabel" } }, [
-        _vm._v("Upload New Version")
-      ]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       )
     ])
   }

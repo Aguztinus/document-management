@@ -69,6 +69,9 @@
                   >
                     <i class="fas fa-file"></i> Upload New Version
                   </button>
+                  <button type="button" class="btn btn-primary float-sm-right mr-2" @click="Edit">
+                    <i class="fas fa-edit"></i> Edit
+                  </button>
                   
                   <a class="btn btn-secondary float-sm-right mr-2" v-bind:href="geturl()" download>
                     <i class="fas fa-arrow-circle-down"></i> download
@@ -76,9 +79,6 @@
                   <button type="button" class="btn btn-danger float-sm-right mr-2" @click="Delete">
                     <i class="fas fa-trash"></i>
                     Delete
-                  </button>
-                  <button type="button" class="btn btn-primary float-sm-right mr-2" @click="Edit">
-                    <i class="fas fa-edit"></i> Edit
                   </button>
                 </div>
               </div>
@@ -336,8 +336,7 @@
       <div class="modal-dialog modal-lg modal-dialog-centered" role="upload">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" v-show="!isEdit" id="addNewLabel">Upload File</h5>
-            <h5 class="modal-title" v-show="isEdit" id="addNewLabel">Edit File</h5>
+            <h5 class="modal-title" id="addNewLabel">{{ judul }}</h5>
 
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -496,88 +495,6 @@
         </div>
       </div>
     </div>
-
-    <div
-      class="modal fade"
-      id="addNewFile"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="addNewLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered" role="upload">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="addNewLabel">Upload New Version</h5>
-
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-md-12">
-                  <vue-clip ref="new" :options="optionsNew" :on-complete="completeNew">
-                    <template slot="clip-uploader-action">
-                      <div class="upload-zone text-center">
-                        <div class="dz-message">
-                          <h4>Click or Drag and Drop files here upload</h4>
-                        </div>
-                      </div>
-                    </template>
-
-                    <template slot="clip-uploader-body" slot-scope="props" class="ml-4 mr-4">
-                      <ul
-                        v-for="file in props.files"
-                        :key="file.name"
-                        class="products-list product-list-in-card pl-2 pr-2"
-                      >
-                        <li class="item ml-4 mr-4">
-                          <div class="product-img">
-                            <img
-                              v-bind:src="file.dataUrl == ''? 'img/file.png' : file.dataUrl"
-                              class="img-size-50"
-                            >
-                          </div>
-                          <div class="product-info">
-                            <a href="javascript:void(0)" class="product-title">{{ file.name }}</a>
-                            <span class="badge float-right">
-                              <button
-                                type="button"
-                                class="btn btn-block btn-sm"
-                                @click="removeFile(file)"
-                              >
-                                <i class="fa fa-times"></i>
-                              </button>
-                            </span>
-                            <span class="product-description">{{ file.status }}</span>
-                            <div
-                              class="progress progress-xxs"
-                              v-if="file.status !== 'error' && file.status !=='success'"
-                            >
-                              <div
-                                class="progress-bar bg-primary progress-bar-striped"
-                                role="progressbar"
-                                aria-valuenow="10"
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                                v-bind:style="{width: file.progress + '%'}"
-                              ></div>
-                            </div>
-                          </div>
-                        </li>
-                        <!-- /.item -->
-                      </ul>
-                    </template>
-                  </vue-clip>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -586,6 +503,7 @@ export default {
   data() {
     return {
       isEdit: false,
+      judul: "Upload File",
       visible: false,
       documents: {},
       selectedDocuments: [],
@@ -599,45 +517,13 @@ export default {
         id: 0,
         name: "",
         description: "",
+        isUploadNew: 0,
         docType_id: 0,
         uploadDoc: [],
         refDoc: []
       }),
       options: {
         url: "api/upload",
-        paramName: "file",
-        acceptedFiles: {
-          extensions: [
-            "image/*",
-            "application/pdf",
-            "text/plain",
-            "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "application/vnd.ms-excel",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "application/vnd.ms-powerpoint",
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-            "application/vnd.ms-access",
-            "application/x-rar-compressed",
-            "application/rtf",
-            "application/x-tar",
-            "application/zip",
-            "application/x-7z-compressed"
-          ],
-          message: "You are uploading an invalid file"
-        },
-        headers: window.axios.defaults.headers.common,
-        maxFilesize: {
-          limit: 5,
-          message: "file Size is greater than the 5mb"
-        },
-        maxFiles: {
-          limit: 1,
-          message: "You can only upload a max of 1 files"
-        }
-      },
-      optionsNew: {
-        url: "api/uploadNew",
         paramName: "file",
         acceptedFiles: {
           extensions: [
@@ -681,12 +567,36 @@ export default {
     },
     Upload() {
       //popup modal upload
+      this.clearAll();
+      this.judul = "Upload File";
       this.isEdit = false;
+      this.form.isUploadNew = 0;
       $("#addNew").modal("show");
     },
     UploadNew() {
-      //popup modal upload
-      $("#addNewFile").modal("show");
+      this.isEdit = true;
+      this.judul = "Upload New File";
+      this.form.isUploadNew = 1; //bedanya sm edit
+      this.$Progress.start();
+      axios.get("api/getdocumentref/" + this.form.id).then(response => {
+        //console.log(response.data);
+        this.selectedDocuments = response.data;
+      });
+      this.$Progress.finish();
+      $("#addNew").modal("show");
+    },
+    Edit() {
+      this.isEdit = true;
+      this.judul = "Edit File";
+      this.form.isUploadNew = 0;
+      //this.form.reset();
+      this.$Progress.start();
+      axios.get("api/getdocumentref/" + this.form.id).then(response => {
+        //console.log(response.data);
+        this.selectedDocuments = response.data;
+      });
+      this.$Progress.finish();
+      $("#addNew").modal("show");
     },
     clikfile(doc) {
       //click event user click document di list
@@ -752,23 +662,36 @@ export default {
           this.$Progress.fail();
         });
     },
-    Edit() {
-      this.isEdit = true;
-      //this.form.reset();
-      this.$Progress.start();
-      axios.get("api/getdocumentref/" + this.form.id).then(response => {
-        //console.log(response.data);
-        this.selectedDocuments = response.data;
-      });
-      this.$Progress.finish();
-      $("#addNew").modal("show");
-    },
     geturl() {
       let url =
         "storage/uploads/" + this.detail.owner_id + "/" + this.detail.name;
       return url;
     },
-    Delete() {},
+    Delete() {
+      swal({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(result => {
+        // Send request to the server
+        if (result.value) {
+          this.form
+            .delete("api/deletefile/" + this.form.id)
+            .then(() => {
+              swal("Deleted!", "Your file has been deleted.", "success");
+              this.clearAll();
+              this.loadDocs();
+            })
+            .catch(() => {
+              swal("Failed!", "There was something wronge.", "warning");
+            });
+        }
+      });
+    },
     loadDocs() {
       //load semua document di list depan
       this.$Progress.start();
@@ -840,29 +763,6 @@ export default {
         });
       }
     },
-    completeNew(file, status, xhr) {
-      let filename = file.name;
-      this.form.uploadDoc.push(Object.assign({}, file));
-      console.log(file);
-
-      if (file.status !== "error") {
-        let text = "File " + filename + " has been successfully uploaded";
-        toast({
-          type: "success",
-          title: text
-        });
-      } else {
-        let text =
-          "File " +
-          filename +
-          " has been not successfully uploaded, " +
-          file.errorMessage;
-        toast({
-          type: "error",
-          title: text
-        });
-      }
-    },
     limitText(count) {
       //limit text di multiselect document
       return `and ${count} other `;
@@ -886,6 +786,7 @@ export default {
       this.selectedDocuments = [];
       this.form.docTypes = null;
       this.form.docTypes_id = null;
+      this.form.reset();
     }
   },
   created() {

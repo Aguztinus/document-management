@@ -167,36 +167,77 @@ class DocumentController extends Controller
         $user = User::findOrFail($this->getUserDir());
         $dokTypeId=$request['docType_id'];
 
-        if($request['uploadDoc'] != null){
-            foreach($request['uploadDoc'] as $data)
-            {
-                $splitName = explode('.',  $data['name'], 2);
-                $formatsize = $this->formatSizeUnits($data['size']);
-                $slug = str_slug($splitName[0], '-');
-                $slugFin = $slug . '.' . $splitName[1];
-                $unitid = $user->unit_id;
-                
-                $doc->name = $data['name'];
+        if($request['isUploadNew'] == 0){ // jika edit file
+            if($request['uploadDoc'] != null){
+                Storage::delete('/public/uploads/' . $this->getUserDir() . '/' . $doc->name);
+                foreach($request['uploadDoc'] as $data)
+                {
+                    $splitName = explode('.',  $data['name'], 2);
+                    $formatsize = $this->formatSizeUnits($data['size']);
+                    $slug = str_slug($splitName[0], '-');
+                    $slugFin = $slug . '.' . $splitName[1];
+                    $unitid = $user->unit_id;
+                    
+                    $doc->name = $data['name'];
+                    $doc->description = $request['description'];
+                    $doc->file_ext = $splitName[1];
+                    $doc->url = $data['name'];
+                    $doc->size = $formatsize;
+                    $doc->size_int =  $data['size'];
+                    $doc->slug =  $slugFin;
+                    $doc->document_type_id = $dokTypeId;
+                    $doc->save();
+                }
+            }else { //jika tidak upload file baru
                 $doc->description = $request['description'];
-                $doc->file_ext = $splitName[1];
-                $doc->url = $data['name'];
-                $doc->size = $formatsize;
-                $doc->size_int =  $data['size'];
-                $doc->slug =  $slugFin;
                 $doc->document_type_id = $dokTypeId;
                 $doc->save();
             }
-        }else {
-            $doc->description = $request['description'];
-            $doc->document_type_id = $dokTypeId;
-            $doc->save();
-        }
+    
+            foreach($request['refDoc'] as $dataref)
+            {
+                $arr[] = $dataref['code'];
+            }
+            $doc->reference()->sync($arr);
 
-        foreach($request['refDoc'] as $dataref)
-        {
-            $arr[] = $dataref['code'];
+        }else{ // jika upload new version
+
+            if($request['uploadDoc'] == null){ // jika user tidak upload file
+                return response()->json([
+                    'success' => false,
+                    'msg' => 'File Harus dipilih'
+                ], 500);
+            }else{
+                foreach($request['uploadDoc'] as $datanew)
+                {
+                    $splitName = explode('.',  $datanew['name'], 2);
+                    $formatsize = $this->formatSizeUnits($datanew['size']);
+                    $slug = str_slug($splitName[0], '-');
+                    $slugFin = $slug . '.' . $splitName[1];
+                    $unitid = $user->unit_id;
+                    
+                    $docnew = new Document([
+                        'name' => $datanew['name'],
+                        'description' => $request['description'],
+                        'file_ext' => $splitName[1],
+                        'url' => $datanew['name'],
+                        'size' => $formatsize,
+                        'size_int' =>  $datanew['size'],
+                        'slug' =>  $slugFin,
+                        'status' => 'new',
+                        'owner_id' => $this->getUserDir(),
+                        'document_type_id' => $dokTypeId,
+                        'unit_id' => $unitid
+                    ]);
+                    $docnew->save();
+                    foreach($request['refDoc'] as $dataref)
+                    {
+                        $docnew->reference()->attach($dataref['code']);
+                    }
+                    $docnew->history()->attach($id);
+                }
+            }    
         }
-        $doc->reference()->sync($arr);
 
         return ['message' => 'Updated the doc info'];
     }
@@ -211,6 +252,25 @@ class DocumentController extends Controller
     {
         //
         if (Storage::delete('/public/uploads/' . $this->getUserDir() . '/' . $id)) {
+
+            return response()->json([
+                'success' => true
+            ], 200);
+        }
+        return response()->json([
+            'success' => false
+        ], 500);
+    }
+
+    public function deletefile($id)
+    {
+        //
+        $doc = Document::findOrFail($id);
+        if (Storage::delete('/public/uploads/' . $this->getUserDir() . '/' . $doc->name)) {
+            
+            $doc->history()->detach();
+            $doc->reference()->detach();
+            $doc->delete();
 
             return response()->json([
                 'success' => true
