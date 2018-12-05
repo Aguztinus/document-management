@@ -32,10 +32,11 @@
                   </div>
                 </div>
               </div>
+              <!-- Tombol Header -->
               <div class="col-md-6">
                 <div v-show="!visible">
                   <div class="btn-group float-sm-right">
-                    <button type="button" class="btn btn-primary">Upload</button>
+                    <button type="button" class="btn btn-primary" @click="Upload">Upload</button>
                     <button
                       type="button"
                       class="btn btn-primary dropdown-toggle"
@@ -52,23 +53,32 @@
                       style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(67px, 38px, 0px);"
                     >
                       <a class="dropdown-item" @click="Upload">File</a>
-                      <a class="dropdown-item" href="#">Foleder</a>
+                      <a class="dropdown-item" href="#">Folder</a>
                     </div>
                   </div>
+                  <button type="button" class="btn btn-secondary float-sm-right mr-2">
+                    <i class="fas fa-envelope"></i> Email
+                  </button>
                 </div>
 
                 <div v-show="visible">
-                  <button type="button" class="btn btn-primary float-sm-right mr-2">
+                  <button
+                    type="button"
+                    class="btn btn-primary float-sm-right mr-2"
+                    @click="UploadNew"
+                  >
                     <i class="fas fa-file"></i> Upload New Version
                   </button>
-                  <button type="button" class="btn btn-secondary float-sm-right mr-2">
-                    <i class="fas fa-arrow-circle-down"></i> Download
+                  
+                  <a class="btn btn-secondary float-sm-right mr-2" v-bind:href="geturl()" download>
+                    <i class="fas fa-arrow-circle-down"></i> download
+                  </a>
+                  <button type="button" class="btn btn-danger float-sm-right mr-2" @click="Delete">
+                    <i class="fas fa-trash"></i>
+                    Delete
                   </button>
-                  <button type="button" class="btn btn-secondary float-sm-right mr-2">
-                    <i class="fas fa-trash"></i> Delete
-                  </button>
-                  <button type="button" class="btn btn-secondary float-sm-right mr-2">
-                    <i class="fas fa-envelope"></i> Email
+                  <button type="button" class="btn btn-primary float-sm-right mr-2" @click="Edit">
+                    <i class="fas fa-edit"></i> Edit
                   </button>
                 </div>
               </div>
@@ -79,9 +89,11 @@
         <hr v-show="!scrolled">
       </div>
 
+      <!-- List Document -->
       <div class="dok" v-bind:class="[visible ? ' col-md-9' : ' col-md-12']">
         <div class="card" v-for="doc in documents.data" :key="doc.id" v-on:click="clikfile(doc)">
           <svg
+            v-if="doc.file_ext == 'pdf'"
             version="1.1"
             preserveAspectRatio="xMidYMid meet"
             xmlns="http://www.w3.org/2000/svg"
@@ -103,6 +115,154 @@
               fill="#e33d55"
             ></path>
           </svg>
+          <svg
+            v-else-if="doc.file_ext == 'zip' || doc.file_ext == 'rar' || doc.file_ext == '7z' "
+            version="1.1"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 32 32"
+            width="32"
+            height="32"
+            enable-background="new 0 0 32 32"
+            xml:space="preserve"
+            role="img"
+          >
+            <path fill="#fff" d="M25 27H7V5h13l5 5v17z"></path>
+            <path
+              fill="#737f8b"
+              d="M11 25h1v1h-1zM11 23h1v1h-1zM11 21h1v1h-1zM11 19h1v1h-1zM11 17h1v1h-1zM11 15h1v1h-1zM11 13h1v1h-1zM11 11h1v1h-1zM11 9h1v1h-1zM11 7h1v1h-1zM11 5h1v1h-1zM12 24h1v1h-1zM12 22h1v1h-1zM12 20h1v1h-1zM12 18h1v1h-1zM12 16h1v1h-1zM12 14h1v1h-1zM12 12h1v1h-1zM12 10h1v1h-1zM12 8h1v1h-1zM12 6h1v1h-1z"
+            ></path>
+            <path
+              d="M20 4H7a.94.94 0 0 0-1 1v22a.94.94 0 0 0 1 1h18a.94.94 0 0 0 1-1V9.9zm5 23H7V5h13v4a.94.94 0 0 0 1 1h4z"
+              fill="#737f8b"
+            ></path>
+            <path fill="#737f8b" d="M12 26h1v1h-1z"></path>
+          </svg>
+          <svg
+            v-else-if="doc.file_ext == 'xls' || doc.file_ext == 'xlsx' "
+            version="1.1"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 32 32"
+            width="32"
+            height="32"
+            enable-background="new 0 0 32 32"
+            xml:space="preserve"
+            role="img"
+          >
+            <path d="M25 27H7V5h13l5 5z" fill="#FFFFFF"></path>
+            <path
+              d="M20 4H7c-.6 0-1 .4-1 1v22c0 .6.4 1 1 1h18c.6 0 1-.4 1-1V9.9L20 4zm5 23H7V5h13v4c0 .6.4 1 1 1h4v17z"
+              fill="#207245"
+            ></path>
+            <path
+              d="M10 13h3v2h-3zm4 0h3v2h-3zm4 0h3v2h-3zm-8 3h3v2h-3zm4 0h3v2h-3zm4 0h3v2h-3zm-8 3h3v2h-3zm4 0h3v2h-3zm4 0h3v2h-3zm-8 3h3v2h-3zm4 0h3v2h-3zm4 0h3v2h-3z"
+              fill="#207245"
+            ></path>
+          </svg>
+          <svg
+            v-else-if="doc.file_ext == 'png' || doc.file_ext == 'jpg' || doc.file_ext == 'gif'"
+            version="1.1"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 32 32"
+            width="32"
+            height="32"
+            enable-background="new 0 0 32 32"
+            xml:space="preserve"
+            role="img"
+          >
+            <path fill="#fff" d="M25 27H7V5h13l5 5v17z"></path>
+            <path
+              d="M20 4H7a1 1 0 0 0-1 1v22a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9.89zm5 23H7V5h13v4a1 1 0 0 0 1 1h4z"
+              fill="#3fb87f"
+            ></path>
+            <path
+              d="M18 17a2 2 0 1 1 2-2 2 2 0 0 1-2 2zm-.6 4.09l-3.12-3.71a.41.41 0 0 0-.58-.06l-.06.06L9 23h13l-2.72-3.6a.35.35 0 0 0-.6 0z"
+              fill="#3fb87f"
+            ></path>
+          </svg>
+          <svg
+            v-else-if="doc.file_ext == 'txt' || doc.file_ext == 'doc' || doc.file_ext == 'docx'"
+            version="1.1"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 32 32"
+            width="32"
+            height="32"
+            enable-background="new 0 0 32 32"
+            xml:space="preserve"
+            role="img"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              fill="#3464AF"
+              d="M24.5,27.5h-17c-0.6,0-1-0.4-1-1v-21c0-0.6,0.4-1,1-1h12l6,6v16 C25.5,27.1,25.1,27.5,24.5,27.5z"
+            ></path>
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              fill="#FFFFFF"
+              d="M24,26.5H8c-0.3,0-0.5-0.2-0.5-0.5V6c0-0.3,0.2-0.5,0.5-0.5h11.5 l5,5V26C24.5,26.3,24.3,26.5,24,26.5z"
+            ></path>
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              fill="#3464AF"
+              d="M19.5,4.5l6,6h-5c-0.6,0-1-0.4-1-1V4.5z"
+            ></path>
+            <rect
+              x="10.5"
+              y="14.5"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              fill="#3464AF"
+              width="11"
+              height="1"
+            ></rect>
+            <rect
+              x="10.5"
+              y="17.5"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              fill="#3464AF"
+              width="11"
+              height="1"
+            ></rect>
+            <rect
+              x="10.5"
+              y="20.5"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              fill="#3464AF"
+              width="8"
+              height="1"
+            ></rect>
+          </svg>
+          <svg
+            v-else
+            version="1.1"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            viewBox="0 0 32 32"
+            width="32"
+            height="32"
+            enable-background="new 0 0 32 32"
+            xml:space="preserve"
+            role="img"
+          >
+            <path fill="#fff" d="M25 27H7V5h13l5 5v17z"></path>
+            <path
+              d="M20 4H7a1 1 0 0 0-1 1v22a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V9.89zm5 23H7V5h13v4a1 1 0 0 0 1 1h4z"
+              fill="#737f8b"
+            ></path>
+          </svg>
           <div class="card-body">
             <div class="filename">
               <a href="#">{{doc.name}}</a>
@@ -119,7 +279,7 @@
           <pagination :data="documents" :limit="4" @pagination-change-page="getResults"></pagination>
         </div>
       </div>
-
+      <!-- Detail samping -->
       <div class="col-md-3 position-fixed side-detail" v-show="visible">
         <h4 class="d-flex justify-content-between align-items-center">
           <span class="text-muted detail-head">Detail File</span>
@@ -176,13 +336,14 @@
       <div class="modal-dialog modal-lg modal-dialog-centered" role="upload">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="addNewLabel">Upload</h5>
+            <h5 class="modal-title" v-show="!isEdit" id="addNewLabel">Upload File</h5>
+            <h5 class="modal-title" v-show="isEdit" id="addNewLabel">Edit File</h5>
 
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <form @submit.prevent="saveit()">
+          <form @submit.prevent="isEdit? updateit() : saveit()">
             <div class="modal-body">
               <div class="container-fluid">
                 <div class="row">
@@ -233,7 +394,6 @@
                                   aria-valuemax="100"
                                   v-bind:style="{width: file.progress + '%'}"
                                 ></div>
-                                {{ file.progress }}
                               </div>
                             </div>
                           </li>
@@ -243,6 +403,23 @@
                     </vue-clip>
                   </div>
                   <div class="col-md-6">
+                    <div class="form-group">
+                      <label>File Name</label>
+                      <input type="text" class="form-control" v-model="form.name" disabled>
+                      <input type="hidden" class="form-control" v-model="form.id">
+                    </div>
+                    <div class="form-group">
+                      <label for="labelDescription">Description</label>
+                      <textarea
+                        v-model="form.description"
+                        name="description"
+                        id="description"
+                        placeholder="Short description for document (Optional)"
+                        class="form-control"
+                        :class="{ 'is-invalid': form.errors.has('description') }"
+                      ></textarea>
+                      <has-error :form="form" field="description"></has-error>
+                    </div>
                     <div class="form-group">
                       <label for="labelUnit">Document Type</label>
                       <select
@@ -256,7 +433,6 @@
                         aria-hidden="true"
                         :class="{ 'is-invalid': form.errors.has('documentType') }"
                       >
-                        <option selected="selected">Select Document Type</option>
                         <option
                           v-for="doct in docTypes"
                           :key="doct.id"
@@ -320,6 +496,88 @@
         </div>
       </div>
     </div>
+
+    <div
+      class="modal fade"
+      id="addNewFile"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addNewLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered" role="upload">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNewLabel">Upload New Version</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <vue-clip ref="new" :options="optionsNew" :on-complete="completeNew">
+                    <template slot="clip-uploader-action">
+                      <div class="upload-zone text-center">
+                        <div class="dz-message">
+                          <h4>Click or Drag and Drop files here upload</h4>
+                        </div>
+                      </div>
+                    </template>
+
+                    <template slot="clip-uploader-body" slot-scope="props" class="ml-4 mr-4">
+                      <ul
+                        v-for="file in props.files"
+                        :key="file.name"
+                        class="products-list product-list-in-card pl-2 pr-2"
+                      >
+                        <li class="item ml-4 mr-4">
+                          <div class="product-img">
+                            <img
+                              v-bind:src="file.dataUrl == ''? 'img/file.png' : file.dataUrl"
+                              class="img-size-50"
+                            >
+                          </div>
+                          <div class="product-info">
+                            <a href="javascript:void(0)" class="product-title">{{ file.name }}</a>
+                            <span class="badge float-right">
+                              <button
+                                type="button"
+                                class="btn btn-block btn-sm"
+                                @click="removeFile(file)"
+                              >
+                                <i class="fa fa-times"></i>
+                              </button>
+                            </span>
+                            <span class="product-description">{{ file.status }}</span>
+                            <div
+                              class="progress progress-xxs"
+                              v-if="file.status !== 'error' && file.status !=='success'"
+                            >
+                              <div
+                                class="progress-bar bg-primary progress-bar-striped"
+                                role="progressbar"
+                                aria-valuenow="10"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                v-bind:style="{width: file.progress + '%'}"
+                              ></div>
+                            </div>
+                          </div>
+                        </li>
+                        <!-- /.item -->
+                      </ul>
+                    </template>
+                  </vue-clip>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -327,6 +585,7 @@
 export default {
   data() {
     return {
+      isEdit: false,
       visible: false,
       documents: {},
       selectedDocuments: [],
@@ -337,7 +596,9 @@ export default {
       userowner: "",
       scrolled: false,
       form: new Form({
-        id: "",
+        id: 0,
+        name: "",
+        description: "",
         docType_id: 0,
         uploadDoc: [],
         refDoc: []
@@ -369,6 +630,43 @@ export default {
         maxFilesize: {
           limit: 5,
           message: "file Size is greater than the 5mb"
+        },
+        maxFiles: {
+          limit: 1,
+          message: "You can only upload a max of 1 files"
+        }
+      },
+      optionsNew: {
+        url: "api/uploadNew",
+        paramName: "file",
+        acceptedFiles: {
+          extensions: [
+            "image/*",
+            "application/pdf",
+            "text/plain",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.ms-excel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            "application/vnd.ms-access",
+            "application/x-rar-compressed",
+            "application/rtf",
+            "application/x-tar",
+            "application/zip",
+            "application/x-7z-compressed"
+          ],
+          message: "You are uploading an invalid file"
+        },
+        headers: window.axios.defaults.headers.common,
+        maxFilesize: {
+          limit: 5,
+          message: "file Size is greater than the 5mb"
+        },
+        maxFiles: {
+          limit: 1,
+          message: "You can only upload a max of 1 files"
         }
       }
     };
@@ -383,14 +681,24 @@ export default {
     },
     Upload() {
       //popup modal upload
+      this.isEdit = false;
       $("#addNew").modal("show");
+    },
+    UploadNew() {
+      //popup modal upload
+      $("#addNewFile").modal("show");
     },
     clikfile(doc) {
       //click event user click document di list
+      this.form.reset();
       this.visible = true;
       this.detail = doc;
+      this.form.id = doc.id;
+      this.form.name = doc.name;
+      this.form.description = doc.description;
+      this.form.docTypes = doc.documenttype;
       this.userowner = doc.userowner.name;
-      console.log(this.userowner);
+      console.log(doc.id);
     },
     closeside() {
       this.visible = false;
@@ -419,6 +727,48 @@ export default {
           this.$Progress.fail();
         });
     },
+    updateit() {
+      this.form.refDoc = this.selectedDocuments;
+
+      this.$Progress.start();
+      this.form
+        .put("api/document/" + this.form.id)
+        .then(() => {
+          // success
+          this.clearAll();
+          this.loadDocs();
+          $("#addNew").modal("hide");
+          toast({
+            type: "success",
+            title: "Document Created in successfully"
+          });
+
+          this.$Progress.finish();
+        })
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response);
+          }
+          this.$Progress.fail();
+        });
+    },
+    Edit() {
+      this.isEdit = true;
+      //this.form.reset();
+      this.$Progress.start();
+      axios.get("api/getdocumentref/" + this.form.id).then(response => {
+        //console.log(response.data);
+        this.selectedDocuments = response.data;
+      });
+      this.$Progress.finish();
+      $("#addNew").modal("show");
+    },
+    geturl() {
+      let url =
+        "storage/uploads/" + this.detail.owner_id + "/" + this.detail.name;
+      return url;
+    },
+    Delete() {},
     loadDocs() {
       //load semua document di list depan
       this.$Progress.start();
@@ -465,6 +815,32 @@ export default {
       // Adding server id to be used for deleting
       // the file.
       //file.addAttribute('id', xhr.response.id)
+      let filename = file.name;
+      this.form.uploadDoc.push(Object.assign({}, file));
+
+      if (file.status !== "error") {
+        let text = "File " + filename + " has been successfully uploaded";
+        toast({
+          type: "success",
+          title: text
+        });
+      } else {
+        this.$refs.vc.removeFile(file);
+        var index = this.$refs.vc.files.indexOf(file);
+        this.$refs.vc.files.splice(index, 1);
+        let errmsg = file.errorMessage;
+        if (file.errorMessage.massage) {
+          errmsg = file.errorMessage.massage;
+        }
+        let text =
+          "File " + filename + " has been not successfully uploaded, " + errmsg;
+        toast({
+          type: "error",
+          title: text
+        });
+      }
+    },
+    completeNew(file, status, xhr) {
       let filename = file.name;
       this.form.uploadDoc.push(Object.assign({}, file));
       console.log(file);
@@ -519,7 +895,7 @@ export default {
     Fire.$on("searching", () => {
       let query = this.$parent.search;
       axios
-        .get("api/searchDoc?q=" + query)
+        .get("api/findDochome?q=" + query)
         .then(data => {
           this.documents = data.data;
         })

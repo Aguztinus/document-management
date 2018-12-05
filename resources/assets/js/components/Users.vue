@@ -114,7 +114,6 @@
                         <has-error :form="form" field="bio"></has-error>
                     </div>
 
-
                     <div class="form-group">
                       <label for="labelType">Role</label>
                         <select name="type" v-model="form.type" id="type" class="form-control" :class="{ 'is-invalid': form.errors.has('type') }">

@@ -24,12 +24,17 @@ Route::apiResources([
 ]);
 
 Route::get('profile', 'API\UserController@profile');
-Route::get('findUser', 'API\UserController@search');
-Route::get('allUnit', 'API\UnitController@allUnit');
 Route::put('profile', 'API\UserController@updateProfile');
+Route::get('findUser', 'API\UserController@search');
+
+Route::get('allUnit', 'API\UnitController@allUnit');
+
+Route::get('findDochome', 'API\DocumentController@searchDochome');
 Route::get('findDoc', 'API\DocumentController@searchDoc');
 Route::get('allDocTypes', 'API\DocumentController@allDocTypes');
-
 Route::get('getref/{id}', 'API\DocumentController@getref');
+Route::get('getdocumentref/{id}', 'API\DocumentController@getdocumentref');
+Route::get('download/{id}', 'API\DocumentController@download');
+
 Route::post('upload', 'API\DocumentController@upload')->name('upload');
 

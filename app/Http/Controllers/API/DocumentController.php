@@ -25,9 +25,23 @@ class DocumentController extends Controller
     public function index()
     {
         //return Document::with(['unit','userowner'])->latest()->paginate(12);
-        return Document::with('userowner')->latest()->paginate(12);
+        return Document::with('userowner')->with('documenttype')->latest()->paginate(12);
     }
 
+    public function searchDochome()
+    {
+        //
+        if ($search = \Request::get('q')) {
+            $doc =Document::with('userowner')->with('documenttype')->where(function($query) use ($search){
+                $query->where('name','LIKE',"%$search%");
+            })->paginate(12);
+        }else {
+            $doc = Document::with('userowner')->with('documenttype')->latest()->paginate(12);
+        }
+        return $doc;
+    }
+
+    //serach documnet di multiselect
     public function searchDoc()
     {
         //
@@ -38,6 +52,13 @@ class DocumentController extends Controller
         }else {
             $doc = Document::latest()->paginate(20);
         }
+        return $doc;
+    }
+
+    public function getdocumentref($id)
+    {
+        //
+        $doc =Document::find($id)->reference()->select('documents.name', 'documents.id As code')->get();
         return $doc;
     }
 
@@ -68,7 +89,7 @@ class DocumentController extends Controller
                 $unitid = $user->unit_id;
                 $doc = new Document([
                     'name' => $data['name'],
-                    'description' => $data['name'],
+                    'description' => $request['description'],
                     'file_ext' => $splitName[1],
                     'url' => $data['name'],
                     'size' => $formatsize,
@@ -97,7 +118,8 @@ class DocumentController extends Controller
         $filename = $file->getClientOriginalName();
         if (Document::where('name', $filename)->exists()) {
             return response()->json([
-                'success' => false
+                'success' => false,
+                'massage' => 'File Already Exists' 
             ], 500);
          }
 
@@ -141,6 +163,42 @@ class DocumentController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $doc = Document::findOrFail($id);
+        $user = User::findOrFail($this->getUserDir());
+        $dokTypeId=$request['docType_id'];
+
+        if($request['uploadDoc'] != null){
+            foreach($request['uploadDoc'] as $data)
+            {
+                $splitName = explode('.',  $data['name'], 2);
+                $formatsize = $this->formatSizeUnits($data['size']);
+                $slug = str_slug($splitName[0], '-');
+                $slugFin = $slug . '.' . $splitName[1];
+                $unitid = $user->unit_id;
+                
+                $doc->name = $data['name'];
+                $doc->description = $request['description'];
+                $doc->file_ext = $splitName[1];
+                $doc->url = $data['name'];
+                $doc->size = $formatsize;
+                $doc->size_int =  $data['size'];
+                $doc->slug =  $slugFin;
+                $doc->document_type_id = $dokTypeId;
+                $doc->save();
+            }
+        }else {
+            $doc->description = $request['description'];
+            $doc->document_type_id = $dokTypeId;
+            $doc->save();
+        }
+
+        foreach($request['refDoc'] as $dataref)
+        {
+            $arr[] = $dataref['code'];
+        }
+        $doc->reference()->sync($arr);
+
+        return ['message' => 'Updated the doc info'];
     }
 
     /**
@@ -163,7 +221,12 @@ class DocumentController extends Controller
         ], 500);
     }
 
-    
+    public function download($id)
+    {
+        //
+        $doc = Document::findOrFail($id);
+        return response()->download(storage_path('/public/uploads/' . $this->getUserDir() . '/' . $doc->name));
+    }
     // Document Type
     public function allDocTypes()
     {

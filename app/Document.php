@@ -13,7 +13,7 @@ class Document extends Model
 
     public function documenttype()
     {
-        return $this->belongsTo('App\DocumentType');
+        return $this->belongsTo('App\DocumentType','document_type_id','id');
     }
 
     public function userowner()
