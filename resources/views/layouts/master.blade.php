@@ -103,6 +103,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <p>Units</p>
                 </router-link>
               </li>
+              <li class="nav-item">
+                <router-link to="/documenttype" class="nav-link">
+                  <i class="fas fa-file-alt nav-icon"></i>
+                  <p>Document Type</p>
+                </router-link>
+              </li>
             </ul>
           </li>
 

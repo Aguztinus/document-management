@@ -4,50 +4,42 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Units;
+use App\DocumentType;
 
-class UnitController extends Controller
+class DocumentTypeController extends Controller
 {
-
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+    
     public function index()
     {
-        //
         if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
-            return Units::latest()->paginate(5);
-        }
-    }
-
-    public function allUnit()
-    {
-        //
-        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
-            return Units::all();
+            return DocumentType::latest()->paginate(5);
         }
     }
 
     public function search(){
 
         if ($search = \Request::get('q')) {
-            $unit = Units::where(function($query) use ($search){
+            $doctype = DocumentType::where(function($query) use ($search){
                 $query->where('name','LIKE',"%$search%")
                         ->orWhere('description','LIKE',"%$search%");
             })->paginate(20);
         }else{
-            $unit = Units::latest()->paginate(5);
+            $doctype = DocumentType::latest()->paginate(5);
         }
 
-        return $unit;
+        return $doctype;
 
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -56,13 +48,12 @@ class UnitController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $this->validate($request,[
             'name' => 'required|string|max:191|unique:units',
-            'description' => 'nullable|string|max:191'
+            'description' => 'required|string|max:191'
         ]);
 
-        return Units::create([
+        return DocumentType::create([
             'name' => $request['name'],
             'description' => $request['description']
         ]);
@@ -89,15 +80,15 @@ class UnitController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $unit = Units::findOrFail($id);
+        $unit = DocumentType::findOrFail($id);
 
         $this->validate($request,[
-            'name' => 'required|string|max:191|unique:units,name,'.$unit->id,
-            'description' => 'nullable|string|max:191'
+            'name' => 'required|string|max:191|unique:document_types,name,'.$unit->id,
+            'description' => 'required|string|max:191'
         ]);
 
         $unit->update($request->all());
-        return ['message' => 'Updated the unit info'];
+        return ['message' => 'Updated the Document Type info'];
     }
 
     /**
@@ -111,7 +102,7 @@ class UnitController extends Controller
         //
         $this->authorize('isAdmin');
 
-        $unit = Units::findOrFail($id);
+        $unit = DocumentType::findOrFail($id);
         // delete the user
 
         $unit->delete();

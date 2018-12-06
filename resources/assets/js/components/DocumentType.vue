@@ -6,14 +6,14 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1>Master Units</h1>
+                <h1>Master Document Type</h1>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                   <li class="breadcrumb-item">
                     <router-link to="/dashboard">Home</router-link>
                   </li>
-                  <li class="breadcrumb-item active">Units</li>
+                  <li class="breadcrumb-item active">Document Type</li>
                 </ol>
               </div>
             </div>
@@ -25,11 +25,12 @@
           <div class="card-header">
             <h3 class="card-title">
               <!-- <i class="fas fa-building"></i> Units Table -->
-              Units Table
+              Document Type Table
             </h3>
 
             <div class="card-tools">
-              <button class="btn btn-success" @click="newModal">Add New
+              <button class="btn btn-success" @click="newModal">
+                Add New
                 <i class="fas fa-plus-circle fa-fw"></i>
               </button>
             </div>
@@ -89,7 +90,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New</h5>
-            <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Unit's Info</h5>
+            <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Document Type's Info</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -152,7 +153,7 @@ export default {
   methods: {
     getResults(page = 1) {
       this.$Progress.start();
-      axios.get("api/unit?page=" + page).then(response => {
+      axios.get("api/documenttype?page=" + page).then(response => {
         this.units = response.data;
       });
       this.$Progress.finish();
@@ -161,7 +162,7 @@ export default {
       this.$Progress.start();
       // console.log('Editing data');
       this.form
-        .put("api/unit/" + this.form.id)
+        .put("api/documenttype/" + this.form.id)
         .then(() => {
           // success
           $("#addNew").modal("hide");
@@ -197,7 +198,7 @@ export default {
         // Send request to the server
         if (result.value) {
           this.form
-            .delete("api/unit/" + id)
+            .delete("api/documenttype/" + id)
             .then(() => {
               swal("Deleted!", "Your unit has been deleted.", "success");
               Fire.$emit("AfterCreate");
@@ -210,21 +211,21 @@ export default {
     },
     loadUnits() {
       if (this.$gate.isAdminOrAuthor()) {
-        axios.get("api/unit").then(({ data }) => (this.units = data));
+        axios.get("api/documenttype").then(({ data }) => (this.units = data));
       }
     },
 
     createUnit() {
       this.$Progress.start();
       this.form
-        .post("api/unit")
+        .post("api/documenttype")
         .then(() => {
           Fire.$emit("AfterCreate");
           $("#addNew").modal("hide");
 
           toast({
             type: "success",
-            title: "Unit Created in successfully"
+            title: "Document Type Created in successfully"
           });
           this.$Progress.finish();
         })
@@ -240,7 +241,7 @@ export default {
     Fire.$on("searching", () => {
       let query = this.$parent.search;
       axios
-        .get("api/findUnit?q=" + query)
+        .get("api/findDocType?q=" + query)
         .then(data => {
           this.units = data.data;
         })

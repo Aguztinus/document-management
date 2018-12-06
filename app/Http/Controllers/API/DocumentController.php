@@ -25,19 +25,66 @@ class DocumentController extends Controller
     public function index()
     {
         //return Document::with(['unit','userowner'])->latest()->paginate(12);
-        return Document::with('userowner')->with('documenttype')->latest()->paginate(12);
+        $user = User::findOrFail($this->getUserDir());
+        $query = Document::with('userowner')->with('documenttype');
+        if ($user->type != 'admin') {
+            $query->where('unit_id',$user->unit_id); 
+        }
+        $doc = $query->latest()->paginate(12);
+        return $doc;
     }
 
     public function searchDochome()
     {
         //
+        $user = User::findOrFail($this->getUserDir());
+        $queryh = Document::with('userowner')->with('documenttype');
+
         if ($search = \Request::get('q')) {
-            $doc =Document::with('userowner')->with('documenttype')->where(function($query) use ($search){
-                $query->where('name','LIKE',"%$search%");
-            })->paginate(12);
-        }else {
-            $doc = Document::with('userowner')->with('documenttype')->latest()->paginate(12);
+            $queryh->where('name','LIKE',"%$search%");
         }
+
+        if ($user->type != 'admin') {
+            $queryh->where('unit_id',$user->unit_id); 
+        }
+
+        $doc = $queryh->latest()->paginate(12);
+        return $doc;
+    }
+
+    public function sortDoc()
+    {
+        //
+        $user = User::findOrFail($this->getUserDir());
+        $query = Document::with('userowner')->with('documenttype');
+
+        if ($user->type != 'admin') {
+            $query->where('unit_id',$user->unit_id); 
+        }
+
+        if ($order = \Request::get('sort')) {
+            $query->orderBy($order);
+        }else {
+            $query->latest();
+        }
+
+        $doc = $query->paginate(12);
+        return $doc;
+    }
+
+    public function filterDoc()
+    {
+        //
+        $user = User::findOrFail($this->getUserDir());
+        $query = Document::with('userowner')->with('documenttype');
+
+        if ($filter = \Request::get('filter')) {
+            $query->where('document_type_id', $filter);
+        }
+        if ($user->type != 'admin') {
+            $query->where('unit_id',$user->unit_id); 
+        }
+        $doc = $query->latest()->paginate(12);
         return $doc;
     }
 
@@ -72,8 +119,8 @@ class DocumentController extends Controller
     {
         //
         $this->validate($request,[
-            'name' => 'required|string|max:191|unique:documents,name',
-            'document_type_id' => 'required',
+            'name' => 'required|string|max:191',
+            'docType_id' => 'required',
         ]);
 
         $user = User::findOrFail($this->getUserDir());
@@ -186,11 +233,13 @@ class DocumentController extends Controller
                     $doc->size_int =  $data['size'];
                     $doc->slug =  $slugFin;
                     $doc->document_type_id = $dokTypeId;
+                    $doc->status = 'edited';
                     $doc->save();
                 }
             }else { //jika tidak upload file baru
                 $doc->description = $request['description'];
                 $doc->document_type_id = $dokTypeId;
+                $doc->status = 'edited';
                 $doc->save();
             }
     
@@ -235,6 +284,9 @@ class DocumentController extends Controller
                         $docnew->reference()->attach($dataref['code']);
                     }
                     $docnew->history()->attach($id);
+
+                    $doc->status = 'old';
+                    $doc->save();
                 }
             }    
         }
@@ -266,12 +318,12 @@ class DocumentController extends Controller
     {
         //
         $doc = Document::findOrFail($id);
+       
         if (Storage::delete('/public/uploads/' . $this->getUserDir() . '/' . $doc->name)) {
-            
             $doc->history()->detach();
             $doc->reference()->detach();
             $doc->delete();
-
+           
             return response()->json([
                 'success' => true
             ], 200);

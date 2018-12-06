@@ -8,8 +8,8 @@
               <div class="col-md-3">
                 <h1>My Documents</h1>
               </div>
-              <div class="col-sm-3">
-                <div class="btn-group">
+              <div class="col-sm-3 d-flex flex-row">
+                <div class="btn-group mr-2">
                   <button type="button" class="btn btn-default">Sort By</button>
                   <button
                     type="button"
@@ -26,9 +26,31 @@
                     x-placement="bottom-start"
                     style="position: absolute; transform: translate3d(67px, 38px, 0px); top: 0px; left: 0px; will-change: transform;"
                   >
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                    <a class="dropdown-item" @click="sortResults('name')">Name</a>
+                    <a class="dropdown-item" @click="sortResults('created_at')">Created</a>
+                    <a class="dropdown-item" @click="sortResults('size_int')">Size</a>
+                  </div>
+                </div>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default">Filter By</button>
+                  <button
+                    type="button"
+                    class="btn btn-default dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <div
+                    class="dropdown-menu"
+                    role="menu"
+                    x-placement="bottom-start"
+                    style="position: absolute; transform: translate3d(67px, 38px, 0px); top: 0px; left: 0px; will-change: transform;"
+                  >
+                    <div v-for="doct in docTypes" :key="doct.id" :value="doct">
+                      <a class="dropdown-item" @click="filterResults(doct.id)">{{ doct.name }}</a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -66,17 +88,28 @@
                     type="button"
                     class="btn btn-primary float-sm-right mr-2"
                     @click="UploadNew"
+                    v-show="isMine"
                   >
                     <i class="fas fa-file"></i> Upload New Version
                   </button>
-                  <button type="button" class="btn btn-primary float-sm-right mr-2" @click="Edit">
+                  <button
+                    type="button"
+                    v-show="isMine"
+                    class="btn btn-primary float-sm-right mr-2"
+                    @click="Edit"
+                  >
                     <i class="fas fa-edit"></i> Edit
                   </button>
                   
                   <a class="btn btn-secondary float-sm-right mr-2" v-bind:href="geturl()" download>
                     <i class="fas fa-arrow-circle-down"></i> download
                   </a>
-                  <button type="button" class="btn btn-danger float-sm-right mr-2" @click="Delete">
+                  <button
+                    type="button"
+                    v-show="isMine"
+                    class="btn btn-danger float-sm-right mr-2"
+                    @click="Delete"
+                  >
                     <i class="fas fa-trash"></i>
                     Delete
                   </button>
@@ -88,7 +121,6 @@
         </section>
         <hr v-show="!scrolled">
       </div>
-
       <!-- List Document -->
       <div class="dok" v-bind:class="[visible ? ' col-md-9' : ' col-md-12']">
         <div class="card" v-for="doc in documents.data" :key="doc.id" v-on:click="clikfile(doc)">
@@ -280,7 +312,11 @@
         </div>
       </div>
       <!-- Detail samping -->
-      <div class="col-md-3 position-fixed side-detail" v-show="visible">
+      <div
+        class="col-md-3 position-fixed"
+        v-show="visible"
+        :class="[scrolled ? ' side-detail-scroll' : ' side-detail']"
+      >
         <h4 class="d-flex justify-content-between align-items-center">
           <span class="text-muted detail-head">Detail File</span>
           <button type="button" class="btn btn-tool" data-widget="remove" v-on:click="closeside">
@@ -499,10 +535,16 @@
 </template>
 
 <script>
+import { directive as onClickaway } from "vue-clickaway";
+
 export default {
+  directives: {
+    onClickaway: onClickaway
+  },
   data() {
     return {
       isEdit: false,
+      isMine: false,
       judul: "Upload File",
       visible: false,
       documents: {},
@@ -565,6 +607,20 @@ export default {
       });
       this.$Progress.finish();
     },
+    sortResults(qry = "name") {
+      this.$Progress.start();
+      axios.get("api/sortDoc?sort=" + qry).then(response => {
+        this.documents = response.data;
+      });
+      this.$Progress.finish();
+    },
+    filterResults(filter) {
+      this.$Progress.start();
+      axios.get("api/filterDoc?filter=" + filter).then(response => {
+        this.documents = response.data;
+      });
+      this.$Progress.finish();
+    },
     Upload() {
       //popup modal upload
       this.clearAll();
@@ -601,6 +657,7 @@ export default {
     clikfile(doc) {
       //click event user click document di list
       this.form.reset();
+      this.isMine = doc.is_mine;
       this.visible = true;
       this.detail = doc;
       this.form.id = doc.id;
@@ -609,6 +666,10 @@ export default {
       this.form.docTypes = doc.documenttype;
       this.userowner = doc.userowner.name;
       console.log(doc.id);
+    },
+    away: function() {
+      console.log("clicked away");
+      this.visible = false;
     },
     closeside() {
       this.visible = false;
@@ -633,6 +694,10 @@ export default {
         .catch(error => {
           if (error.response) {
             console.log(error.response);
+            toast({
+              type: "error",
+              title: "There was something wrong"
+            });
           }
           this.$Progress.fail();
         });
@@ -687,7 +752,7 @@ export default {
               this.loadDocs();
             })
             .catch(() => {
-              swal("Failed!", "There was something wronge.", "warning");
+              swal("Failed!", "There was something wrong.", "warning");
             });
         }
       });
@@ -742,6 +807,7 @@ export default {
       this.form.uploadDoc.push(Object.assign({}, file));
 
       if (file.status !== "error") {
+        this.form.name = filename;
         let text = "File " + filename + " has been successfully uploaded";
         toast({
           type: "success",
@@ -838,13 +904,21 @@ export default {
   top: 0;
   left: 0;
   background-color: #343a40;
-  color: rgb(194, 199, 208);
+  //color: rgb(194, 199, 208);
+  color: #343a40;
   height: 65px;
   width: 100%;
   z-index: 20;
+  opacity: 0.9;
 }
 .side-detail {
   top: 135px;
+  right: 0;
+  padding: 0 40px 0 30px;
+}
+
+.side-detail-scroll {
+  top: 75px;
   right: 0;
   padding: 0 40px 0 30px;
 }

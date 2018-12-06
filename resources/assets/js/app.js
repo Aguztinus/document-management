@@ -52,6 +52,7 @@ let routes = [
     { path: "/units", component: require("./components/Units.vue") },
     { path: "/profile", component: require("./components/Profile.vue") },
     { path: "/document", component: require("./components/Document.vue") },
+    { path: "/documenttype", component: require("./components/DocumentType.vue") },
     { path: "/upload", component: require("./components/Upload.vue") },
     { path: "/tes", component: require("./components/Tes.vue") },
     { path: "*", component: require("./components/NotFound.vue") }
