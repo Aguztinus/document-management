@@ -1,15 +1,18 @@
 <template>
-    <div class="container">
-        <div class="row justify-content-center">
-            <not-found></not-found>
-        </div>
-    </div>
+  <div>
+    <Document></Document>
+  </div>
 </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
-    }
+import Document from "./Document";
+
+export default {
+  mounted() {
+    console.log("Component mounted.");
+  },
+  components: {
+    Document
+  }
+};
 </script>

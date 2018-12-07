@@ -196,7 +196,7 @@ class DocumentController extends Controller
     {
         //
         $doc = Document::findOrFail($id);
-        return $doc->reference()->get();
+        return $doc->reference()->with('userowner')->with('documenttype')->paginate(6);
     }
 
 

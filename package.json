@@ -25,6 +25,7 @@
         "laravel-vue-pagination": "^2.1.0",
         "moment": "^2.22.2",
         "sweetalert2": "^7.26.12",
+        "v-tooltip": "^2.0.0-rc.33",
         "vform": "^1.0.0",
         "vue-clickaway": "^2.2.2",
         "vue-clip": "^1.0.0",
