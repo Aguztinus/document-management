@@ -38,6 +38,7 @@ Route::get('sortDoc', 'API\DocumentController@sortDoc');
 Route::get('filterDoc', 'API\DocumentController@filterDoc');
 Route::get('allDocTypes', 'API\DocumentController@allDocTypes');
 Route::get('getref/{id}', 'API\DocumentController@getref');
+Route::get('gethistory/{id}', 'API\DocumentController@gethistory');
 Route::get('getdocumentref/{id}', 'API\DocumentController@getdocumentref');
 Route::get('download/{id}', 'API\DocumentController@download');
 Route::delete('deletefile/{id}', 'API\DocumentController@deletefile');

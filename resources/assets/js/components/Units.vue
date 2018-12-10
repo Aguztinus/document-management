@@ -29,7 +29,8 @@
             </h3>
 
             <div class="card-tools">
-              <button class="btn btn-success" @click="newModal">Add New
+              <button class="btn btn-success" @click="newModal">
+                Add New
                 <i class="fas fa-plus-circle fa-fw"></i>
               </button>
             </div>
@@ -209,9 +210,11 @@ export default {
       });
     },
     loadUnits() {
+      this.$Progress.start();
       if (this.$gate.isAdminOrAuthor()) {
         axios.get("api/unit").then(({ data }) => (this.units = data));
       }
+      this.$Progress.finish();
     },
 
     createUnit() {

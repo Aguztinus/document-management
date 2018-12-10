@@ -210,9 +210,11 @@ export default {
       });
     },
     loadUnits() {
+      this.$Progress.start();
       if (this.$gate.isAdminOrAuthor()) {
         axios.get("api/documenttype").then(({ data }) => (this.units = data));
       }
+      this.$Progress.finish();
     },
 
     createUnit() {

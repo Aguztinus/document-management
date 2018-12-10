@@ -290,12 +290,15 @@ export default {
       });
     },
     loadUsers() {
+      this.$Progress.start();
       if (this.$gate.isAdminOrAuthor()) {
         axios.get("api/user").then(({ data }) => (this.users = data));
       }
+      this.$Progress.finish();
     },
     loadUnits() {
       if (this.$gate.isAdminOrAuthor()) {
+        this.$Progress.start();
         axios
           .get("api/allUnit")
           .then(({ data }) => (this.units = data))
@@ -305,6 +308,7 @@ export default {
             }
             this.$Progress.fail();
           });
+        this.$Progress.finish();
       }
     },
     createUser() {

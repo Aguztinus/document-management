@@ -199,6 +199,13 @@ class DocumentController extends Controller
         return $doc->reference()->with('userowner')->with('documenttype')->paginate(6);
     }
 
+    public function gethistory($id)
+    {
+        //
+        $doc = Document::findOrFail($id);
+        return $doc->history()->with('userowner')->with('documenttype')->paginate(6);
+    }
+
 
     /**
      * Update the specified resource in storage.

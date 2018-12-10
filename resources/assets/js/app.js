@@ -45,7 +45,12 @@ import VueProgressBar from "vue-progressbar";
 Vue.use(VueProgressBar, {
     color: "#3490dc",
     failedColor: "red",
-    height: "5px"
+    height: "5px",
+    transition: {
+        speed: "0.2s",
+        opacity: "0.6s",
+        termination: 300
+    }
 });
 
 let routes = [

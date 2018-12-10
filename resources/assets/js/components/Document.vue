@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="row">
       <div class="col-md-12" v-bind:class="[scrolled ? ' fixed-header' : '']">
         <section class="content-header">
@@ -78,7 +78,11 @@
                       <a class="dropdown-item" href="#">Folder</a>
                     </div>
                   </div>
-                  <button type="button" class="btn btn-secondary float-sm-right mr-2">
+                  <button
+                    type="button"
+                    @click="clikEmail"
+                    class="btn btn-secondary float-sm-right mr-2"
+                  >
                     <i class="fas fa-envelope"></i> Email
                   </button>
                 </div>
@@ -100,6 +104,10 @@
                   >
                     <i class="fas fa-edit"></i> Edit
                   </button>
+                  
+                  <a class="btn btn-secondary float-sm-right mr-2" @click="SeeDetail">
+                    <i class="fas fa-arrow-circle-down"></i> See
+                  </a>
                   
                   <a class="btn btn-secondary float-sm-right mr-2" v-bind:href="geturl()" download>
                     <i class="fas fa-arrow-circle-down"></i> download
@@ -428,8 +436,106 @@
                       <h3 class="card-title">Document History</h3>
                     </div>
                     <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0">Tes History</div>
+                    <div class="card-body table-responsive p-0">
+                      <div class="doksmall mt-3">
+                        <div
+                          class="card"
+                          v-for="dochis in documentshis.data"
+                          :key="dochis.id"
+                          v-on:click="clikfile(dochis)"
+                        >
+                          <DocItem :doc="dochis"></DocItem>
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="moreEmail"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="moreDetaillabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="upload">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNewLabel">Email</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <input class="form-control" placeholder="To:">
+                  </div>
+                  <div class="form-group">
+                    <input class="form-control" placeholder="Subject:">
+                  </div>
+                  <div class="form-group">
+                    <textarea id="compose-textarea" class="form-control" style="height: 300px"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <div class="btn btn-default btn-file">
+                      <i class="fa fa-paperclip"></i> Attachment
+                      <input type="file" name="attachment">
+                    </div>
+                    <p class="help-block">Max. 32MB</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="reset" class="btn btn-default">
+              <i class="fa fa-times"></i> Discard
+            </button>
+            <div class="float-right">
+              <button type="submit" class="btn btn-primary">
+                <i class="fa fa-envelope-o"></i> Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="seeDoc"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="moreDetaillabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="upload">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNewLabel">Document</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <PreviewDoc :jenis="detail.file_ext" :url="geturl()"></PreviewDoc>
                 </div>
               </div>
             </div>
@@ -443,13 +549,15 @@
 <script>
 import { directive as onClickaway } from "vue-clickaway";
 import DocItem from "./documents/DocumentItem";
+import PreviewDoc from "./documents/DocumentPreview";
 
 export default {
   directives: {
     onClickaway: onClickaway
   },
   components: {
-    DocItem
+    DocItem,
+    PreviewDoc
   },
   data() {
     return {
@@ -465,6 +573,7 @@ export default {
       isLoading: false,
       detail: {},
       docTypes: {},
+      tampfile: {},
       userowner: "",
       scrolled: false,
       form: new Form({
@@ -501,8 +610,8 @@ export default {
         },
         headers: window.axios.defaults.headers.common,
         maxFilesize: {
-          limit: 5,
-          message: "file Size is greater than the 5mb"
+          limit: 15,
+          message: "file Size is greater than the 15mb"
         },
         maxFiles: {
           limit: 1,
@@ -533,15 +642,19 @@ export default {
       });
       this.$Progress.finish();
     },
+    clikEmail() {
+      $("#moreEmail").modal("show");
+    },
     Upload() {
       //popup modal upload
-      this.clearAll();
+      //this.clearAll();
       this.judul = "Upload File";
       this.isEdit = false;
       this.form.isUploadNew = 0;
       $("#addNew").modal("show");
     },
     UploadNew() {
+      //upload new version
       this.isEdit = true;
       this.judul = "Upload New File";
       this.form.isUploadNew = 1; //bedanya sm edit
@@ -554,11 +667,20 @@ export default {
       $("#addNew").modal("show");
     },
     MoreDetail() {
+      this.$Progress.start();
       axios.get("api/getref/" + this.form.id).then(response => {
         //console.log(response.data);
         this.documentsref = response.data;
       });
+      axios.get("api/gethistory/" + this.form.id).then(response2 => {
+        //console.log(response2.data);
+        this.documentshis = response2.data;
+      });
+      this.$Progress.finish();
       $("#moreDetail").modal("show");
+    },
+    SeeDetail() {
+      $("#seeDoc").modal("show");
     },
     Edit() {
       this.isEdit = true;
@@ -623,7 +745,8 @@ export default {
     },
     updateit() {
       this.form.refDoc = this.selectedDocuments;
-
+      this.form.docType_id = this.form.docTypes.id;
+      //console.log(this.form.docType_id);
       this.$Progress.start();
       this.form
         .put("api/document/" + this.form.id)
@@ -649,6 +772,7 @@ export default {
     geturl() {
       let url =
         "storage/uploads/" + this.detail.owner_id + "/" + this.detail.name;
+      console.log(url);
       return url;
     },
     Delete() {
@@ -723,6 +847,7 @@ export default {
       // the file.
       //file.addAttribute('id', xhr.response.id)
       let filename = file.name;
+      this.tampfile = file;
       this.form.uploadDoc.push(Object.assign({}, file));
 
       if (file.status !== "error") {
@@ -767,7 +892,10 @@ export default {
     }, 700),
     clearAll() {
       //clear all  multiselect document
-      this.$refs.vc.files = [];
+      if (this.tampfile) {
+        this.$refs.vc.removeFile(this.tampfile);
+        this.$refs.vc.files = [];
+      }
       this.selectedDocuments = [];
       this.form.docTypes = null;
       this.form.docTypes_id = null;
