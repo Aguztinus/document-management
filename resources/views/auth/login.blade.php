@@ -13,11 +13,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body class="hold-transition login-page">
-    
+<body id="bg-img" class="hold-transition login-page">
+<div class="overlay"></div>
+
 <div class="login-box" id="app">
   <div class="login-logo">
-     <b>Document </b>Storage</a>
+  <img src="{{asset('img/doc.png')}}" alt=" Logo"
+           style="opacity: .8"> <b>Document </b>Storage
   </div>
   <!-- /.login-logo -->
   <div class="card">

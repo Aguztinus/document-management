@@ -14150,7 +14150,7 @@ a.text-muted:hover {
 }
 
 .pink {
-  color: #f66D9b;
+  color: #f66d9b;
 }
 
 .red {
@@ -14188,7 +14188,7 @@ a.text-muted:hover {
   --blue: #3490dc;
   --indigo: #6574cd;
   --purple: #9561e2;
-  --pink: #f66D9b;
+  --pink: #f66d9b;
   --red: #e3342f;
   --orange: #f6993f;
   --yellow: #ffed4a;
@@ -14722,7 +14722,7 @@ mark,
 
 code {
   font-size: 87.5%;
-  color: #f66D9b;
+  color: #f66d9b;
   word-break: break-word;
 }
 
@@ -29522,6 +29522,32 @@ readers do not read off random characters that represent icons */
 
 .fab {
   font-family: 'Font Awesome 5 Brands';
+}
+
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body#bg-img {
+  background: url(/img/backgrond.jpg);
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+body#bg-img:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.login-logo {
+  color: #000;
+  background: rgba(254, 254, 254, 0.5);
 }
 
 .navbar-laravel {
