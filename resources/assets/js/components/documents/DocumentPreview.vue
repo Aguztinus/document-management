@@ -1,6 +1,10 @@
 <template>
   <div>
-    <img v-if="jenis == 'png' || jenis == 'jpg' || jenis == 'gif'" :src="url">
+    <img
+      v-if="jenis == 'png' || jenis == 'jpg' || jenis == 'gif'"
+      :src="url"
+      style="width:100%;min-height:640px;"
+    >
     <iframe
       v-else-if="jenis == 'pdf'"
       :src="url"
@@ -22,10 +26,12 @@ export default {
   methods: {
     getUrl() {
       let uri =
-        "https://docs.google.com/gview?url=http://127.0.0.1:8000/" +
+        "https://docs.google.com/gview?url=" +
+        baseUrl +
         this.url +
         "&embedded=true";
       console.log(uri);
+
       return uri;
     }
   }

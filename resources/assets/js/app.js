@@ -54,6 +54,7 @@ Vue.use(VueProgressBar, {
 });
 
 let routes = [
+    { path: "/", component: require("./components/Dashboard.vue") },
     { path: "/dashboard", component: require("./components/Dashboard.vue") },
     { path: "/developer", component: require("./components/Developer.vue") },
     { path: "/users", component: require("./components/Users.vue") },

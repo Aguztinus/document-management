@@ -30,6 +30,9 @@ class DocumentController extends Controller
         if ($user->type != 'admin') {
             $query->where('unit_id',$user->unit_id); 
         }
+        if ($filter = \Request::get('filter')) {
+            $query->where('document_type_id', $filter);
+        }
         $doc = $query->latest()->paginate(12);
         return $doc;
     }
@@ -40,8 +43,13 @@ class DocumentController extends Controller
         $user = User::findOrFail($this->getUserDir());
         $queryh = Document::with('userowner')->with('documenttype');
 
-        if ($search = \Request::get('q')) {
-            $queryh->where('name','LIKE',"%$search%");
+        if ($search = \Request::get('qry')) {
+            $queryh->where('name','LIKE',"%$search%")
+            ->orWhere('description','LIKE',"%$search%");
+        }
+
+        if ($filter = \Request::get('filter')) {
+            $query->where('document_type_id', $filter);
         }
 
         if ($user->type != 'admin') {

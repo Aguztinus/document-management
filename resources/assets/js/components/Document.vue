@@ -6,7 +6,7 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-md-3">
-                <h1>My Documents</h1>
+                <h1>Documents</h1>
               </div>
               <div class="col-sm-3 d-flex flex-row">
                 <div class="btn-group mr-2">
@@ -51,6 +51,8 @@
                     <div v-for="doct in docTypes" :key="doct.id" :value="doct">
                       <a class="dropdown-item" @click="filterResults(doct.id)">{{ doct.name }}</a>
                     </div>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" @click="filterResults('')">Reset</a>
                   </div>
                 </div>
               </div>
@@ -96,7 +98,7 @@
                   >
                     <i class="fas fa-file"></i> Upload New Version
                   </button>
-                  <button
+                  <!-- <button
                     type="button"
                     v-show="isMine"
                     class="btn btn-primary float-sm-right mr-2"
@@ -111,7 +113,7 @@
                   
                   <a class="btn btn-secondary float-sm-right mr-2" v-bind:href="geturl()" download>
                     <i class="fas fa-arrow-circle-down"></i> download
-                  </a>
+                  </a>-->
                   <button
                     type="button"
                     v-show="isMine"
@@ -121,6 +123,32 @@
                     <i class="fas fa-trash"></i>
                     Delete
                   </button>
+
+                  <div class="btn-group float-sm-right mr-2">
+                    <button type="button" class="btn btn-success">
+                      <i class="nav-icon fas fa-cogs"></i> More Action
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-success dropdown-toggle"
+                      data-toggle="dropdown"
+                    >
+                      <span class="caret"></span>
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                      <a class="dropdown-item" @click="Edit">
+                        <i class="fas fa-edit"></i> Edit
+                      </a>
+                      <a class="dropdown-item" :href="geturl()" download>
+                        <i class="fas fa-arrow-circle-down"></i> Download
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" @click="SeeDetail">
+                        <i class="fas fa-eye"></i> See Document
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -576,6 +604,7 @@ export default {
       tampfile: {},
       userowner: "",
       scrolled: false,
+      tampFilter: "",
       form: new Form({
         id: 0,
         name: "",
@@ -623,9 +652,11 @@ export default {
   methods: {
     getResults(page = 1) {
       this.$Progress.start();
-      axios.get("api/document?page=" + page).then(response => {
-        this.documents = response.data;
-      });
+      axios
+        .get("api/document?page=" + page + "&filter=" + this.tampFilter)
+        .then(response => {
+          this.documents = response.data;
+        });
       this.$Progress.finish();
     },
     sortResults(qry = "name") {
@@ -637,6 +668,7 @@ export default {
     },
     filterResults(filter) {
       this.$Progress.start();
+      this.tampFilter = filter;
       axios.get("api/filterDoc?filter=" + filter).then(response => {
         this.documents = response.data;
       });
@@ -907,9 +939,10 @@ export default {
     this.loadDocTypes();
     window.addEventListener("scroll", this.handleScroll);
     Fire.$on("searching", () => {
-      let query = this.$parent.search;
+      // let query = this.$parent.search;
+      let query = this.$parent.$parent.search;
       axios
-        .get("api/findDochome?q=" + query)
+        .get("api/findDochome?qry=" + query)
         .then(data => {
           this.documents = data.data;
         })

@@ -11,7 +11,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <title>Document Storage | Application</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper" id="app">
@@ -112,14 +112,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li>
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
                 <router-link to="/developer" class="nav-link">
                     <i class="nav-icon fas fa-cogs"></i>
                     <p>
                         Developer
                     </p>
                 </router-link>
-         </li>
+         </li> -->
          @endcan
           <li class="nav-item">
                 <router-link to="/profile" class="nav-link">
@@ -181,10 +181,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 @auth
 <script>
-    window.user = @json(auth()->user())
+    window.user = @json(auth()->user());
+    window.baseUrl = {!! json_encode(url('/')) !!};
+    //console.log(APP_URL);
 </script>
 @endauth
 
-<script src="/js/app.js"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
   <title>Document Storage | Application</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body class="hold-transition login-page">
     
@@ -77,7 +77,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- /.login-card-body -->
   </div>
 </div>
-<script src="/js/app.js"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 
 </html>
