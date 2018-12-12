@@ -134,7 +134,7 @@ class DocumentController extends Controller
         $user = User::findOrFail($this->getUserDir());
         $dokTypeId=$request['docType_id'];
         
-
+        try {
             foreach($request['uploadDoc'] as $data)
             {
                 $splitName = explode('.',  $data['name'], 2);
@@ -161,6 +161,17 @@ class DocumentController extends Controller
                     $doc->reference()->attach($dataref['code']);
                 }
             }
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'massage' => 'err 1' . $e
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'massage' => 'err 1' . $e
+            ], 500);
+        }
 
             return response()->json([
                 'success' => true
@@ -178,14 +189,20 @@ class DocumentController extends Controller
             ], 500);
          }
 
+         if(!Storage::exists('/public/uploads/' . $this->getUserDir())) {
+            Storage::makeDirectory('/public/uploads/' . $this->getUserDir(), 0775, true); //creates directory
+         }        
+
         if (Storage::putFileAs('/public/uploads/' . $this->getUserDir() . '/', $file, $filename)) {
 
             return response()->json([
                 'success' => true
             ], 200);
         }
+
         return response()->json([
-            'success' => false
+            'success' => false,
+            'massage' => 'Error Server' 
         ], 500);
     }
 
@@ -334,15 +351,25 @@ class DocumentController extends Controller
         //
         $doc = Document::findOrFail($id);
        
-        if (Storage::delete('/public/uploads/' . $this->getUserDir() . '/' . $doc->name)) {
+        if (Storage::exists('/public/uploads/' . $this->getUserDir() . '/' . $doc->name)) {
+            if (Storage::delete('/public/uploads/' . $this->getUserDir() . '/' . $doc->name)) {  
+                $doc->history()->detach();
+                $doc->reference()->detach();
+                $doc->delete();
+                return response()->json([
+                    'success' => true
+                ], 200);
+            }
+        }else {
             $doc->history()->detach();
             $doc->reference()->detach();
             $doc->delete();
-           
             return response()->json([
                 'success' => true
             ], 200);
         }
+      
+       
         return response()->json([
             'success' => false
         ], 500);

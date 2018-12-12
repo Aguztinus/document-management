@@ -680,6 +680,7 @@ export default {
     Upload() {
       //popup modal upload
       //this.clearAll();
+      this.clearAll();
       this.judul = "Upload File";
       this.isEdit = false;
       this.form.isUploadNew = 0;
@@ -755,6 +756,7 @@ export default {
         .post("api/document")
         .then(() => {
           this.clearAll();
+          this.claerFile();
           this.loadDocs();
           $("#addNew").modal("hide");
           toast({
@@ -785,6 +787,7 @@ export default {
         .then(() => {
           // success
           this.clearAll();
+          this.claerFile();
           this.loadDocs();
           $("#addNew").modal("hide");
           toast({
@@ -826,8 +829,8 @@ export default {
               this.clearAll();
               this.loadDocs();
             })
-            .catch(() => {
-              swal("Failed!", "There was something wrong.", "warning");
+            .catch(err => {
+              swal("Failed!", "There was something wrong." + err, "warning");
             });
         }
       });
@@ -924,14 +927,19 @@ export default {
     }, 700),
     clearAll() {
       //clear all  multiselect document
-      if (this.tampfile) {
-        this.$refs.vc.removeFile(this.tampfile);
-        this.$refs.vc.files = [];
-      }
+      // if (this.tampfile != null) {
+      //   this.$refs.vc.removeFile(this.tampfile);
+      //   this.$refs.vc.files = [];
+      // }
       this.selectedDocuments = [];
+      this.Multidocuments = [];
       this.form.docTypes = null;
       this.form.docTypes_id = null;
       this.form.reset();
+    },
+    claerFile() {
+      this.$refs.vc.removeFile(this.tampfile);
+      this.$refs.vc.files = [];
     }
   },
   created() {
