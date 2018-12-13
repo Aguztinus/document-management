@@ -8,6 +8,7 @@ require("./bootstrap");
 
 window.Vue = require("vue");
 import moment from "moment";
+window.moment = moment;
 import { Form, HasError, AlertError } from "vform";
 
 import Gate from "./Gate";
@@ -61,12 +62,14 @@ let routes = [
     { path: "/units", component: require("./components/Units.vue") },
     { path: "/profile", component: require("./components/Profile.vue") },
     { path: "/document", component: require("./components/Document.vue") },
+    { path: "/documentlist", component: require("./components/DocumentList.vue") },
     {
         path: "/documenttype",
         component: require("./components/DocumentType.vue")
     },
     { path: "/upload", component: require("./components/Upload.vue") },
-    { path: "/tes", component: require("./components/Tes.vue") },
+    { path: "/tesselect", component: require("./components/TesSelect.vue") },
+    { path: "/testable", component: require("./components/TesVuetable.vue") },
     { path: "*", component: require("./components/NotFound.vue") }
 ];
 
@@ -100,6 +103,18 @@ window.Fire = new Vue();
  */
 
 Vue.component("passport-clients", require("./components/passport/Clients.vue"));
+
+import Vuetable from "vuetable-2/src/components/Vuetable";
+import VueTablePagination from "vuetable-2/src/components/VuetablePagination";
+import VueTablePaginationDropDown from "vuetable-2/src/components/VuetablePaginationDropdown";
+import VueTablePaginationInfo from "vuetable-2/src/components/VuetablePaginationInfo";
+import VueEvents from "vue-events";
+
+Vue.use(VueEvents);
+Vue.component("vuetable", Vuetable);
+Vue.component("vuetable-pagination", VueTablePagination);
+Vue.component("vuetable-pagination-dropdown", VueTablePaginationDropDown);
+Vue.component("vuetable-pagination-info", VueTablePaginationInfo);
 
 Vue.component(
     "passport-authorized-clients",
