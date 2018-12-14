@@ -15,7 +15,9 @@ class CreateDocumentsTable extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('number', 30);
+            $table->string('name', 150);
+            $table->string('realname');
             $table->string('description')->nullable();
             $table->string('file_ext');
             $table->string('url');
@@ -25,11 +27,13 @@ class CreateDocumentsTable extends Migration
             $table->string('status');
             $table->integer('owner_id')->unsigned()->index();
             $table->integer('document_type_id')->unsigned()->index();
+            $table->integer('document_num_id')->unsigned()->index();
             $table->integer('unit_id')->unsigned()->index();
             $table->timestamps();
 
             $table->foreign('owner_id')->references('id')->on('users');
             $table->foreign('document_type_id')->references('id')->on('document_types');
+            $table->foreign('document_num_id')->references('id')->on('document_nums');
             $table->foreign('unit_id')->references('id')->on('units');
         });
     }
