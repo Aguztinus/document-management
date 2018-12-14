@@ -1,40 +1,59 @@
 <template>
-  <div>
-    <filter-bar-doc></filter-bar-doc>
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Documents</h3>
-      </div>
-      <!-- /.card-header -->
-      <div class="card-body">
-        <div class="vuetable-pagination">
-          <vuetable-pagination-info ref="paginationInfoTop"></vuetable-pagination-info>
-          <vuetable-pagination
-            ref="paginationTop"
-            :css="css.pagination"
-            @vuetable-pagination:change-page="onChangePage"
-          ></vuetable-pagination>
+  <div class="row">
+    <div class="col-md-12">
+      <section class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1>All Documents</h1>
+            </div>
+            <div class="col-sm-6">
+              <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item">
+                  <router-link to="/dashboard">Home</router-link>
+                </li>
+                <li class="breadcrumb-item active">Documents</li>
+              </ol>
+            </div>
+          </div>
         </div>
-        <vuetable
-          ref="vuetable"
-          api-url="api/document"
-          :fields="fields"
-          :multi-sort="true"
-          :css="css.table"
-          :append-params="moreParams"
-          multi-sort-key="ctrl"
-          :http-options="httpOptions"
-          pagination-path
-          @vuetable:pagination-data="onPaginationData"
-        ></vuetable>
-        <div class="vuetable-pagination">
-          <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
+        <!-- /.container-fluid -->
+      </section>
 
-          <vuetable-pagination
-            ref="pagination"
-            :css="css.pagination"
-            @vuetable-pagination:change-page="onChangePage"
-          ></vuetable-pagination>
+      <filter-bar-doc></filter-bar-doc>
+      <div class="card card-primary card-outline">
+        <div class="card-header">
+          <h3 class="card-title">Documents</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+          <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
+            <div class="vuetable-pagination ui basic segment grid">
+              <vuetable-pagination-info ref="paginationInfoTop"></vuetable-pagination-info>
+              <vuetable-pagination
+                ref="paginationTop"
+                @vuetable-pagination:change-page="onChangePage"
+              ></vuetable-pagination>
+            </div>
+            <vuetable
+              ref="vuetable"
+              api-url="api/document"
+              :fields="fields"
+              :multi-sort="true"
+              :append-params="moreParams"
+              multi-sort-key="ctrl"
+              :http-options="httpOptions"
+              pagination-path
+              @vuetable:pagination-data="onPaginationData"
+              @vuetable:load-error="onLoadError"
+              @vuetable:loading="showLoader"
+              @vuetable:loaded="hideLoader"
+            ></vuetable>
+            <div class="vuetable-pagination ui basic segment grid">
+              <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
+              <vuetable-pagination ref="pagination" @vuetable-pagination:change-page="onChangePage"></vuetable-pagination>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -44,6 +63,28 @@
 <script>
 import FilterBarDoc from "./vuetable/FilterBarDoc";
 Vue.component("filter-bar-doc", FilterBarDoc);
+
+Vue.component("custom-actions", {
+  template: [
+    "<div class='d-flex flex-row'>",
+    '<button class="btn btn-info " @click="onClick(\'view-item\', rowData)"><i class="zoom icon"></i></button>',
+    '<button class="btn btn-success ml-1" @click="onClick(\'edit-item\', rowData)"><i class="edit icon"></i></button>',
+    '<button class="btn btn-danger ml-1" @click="onClick(\'delete-item\', rowData)"><i class="delete icon"></i></button>',
+    "</div>"
+  ].join(""),
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    onClick(action, data) {
+      console.log("actions: on-click", data.name);
+      swal(action, data.name);
+    }
+  }
+});
 
 export default {
   mounted() {
@@ -72,35 +113,17 @@ export default {
           titleClass: "center aligned",
           dataClass: "center aligned",
           callback: "formatDate|DD-MM-YYYY"
+        },
+        {
+          name: "__component:custom-actions",
+          title: "Actions",
+          titleClass: "center aligned",
+          dataClass: "center aligned",
+          width: "150px"
         }
       ],
-      css: {
-        table: {
-          tableClass: "table table-bordered table-striped table-hover",
-          ascendingIcon: "glyphicon glyphicon-chevron-up",
-          descendingIcon: "glyphicon glyphicon-chevron-down"
-        },
-        pagination: {
-          wrapperClass: "pagination pull-right",
-          activeClass: "active",
-          disabledClass: "disabled",
-          pageClass: "page",
-          linkClass: "link",
-          icons: {
-            first: "",
-            prev: "",
-            next: "",
-            last: ""
-          }
-        },
-        icons: {
-          first: "glyphicon glyphicon-step-backward",
-          prev: "glyphicon glyphicon-chevron-left",
-          next: "glyphicon glyphicon-chevron-right",
-          last: "glyphicon glyphicon-step-forward"
-        }
-      },
-      moreParams: {}
+      moreParams: {},
+      loading: ""
     };
   },
   computed: {
@@ -113,6 +136,19 @@ export default {
   methods: {
     allcap(value) {
       return value.toUpperCase();
+    },
+    showLoader() {
+      this.loading = "loading";
+    },
+    hideLoader() {
+      this.loading = "";
+    },
+    onLoadError(response) {
+      if (response.status == 400) {
+        sweetAlert("Something's Wrong!", response.data.message, "error");
+      } else {
+        sweetAlert("Oops", E_SERVER_ERROR, "error");
+      }
     },
     genderLabel(value) {
       return value === "M"
@@ -137,11 +173,13 @@ export default {
     }
   },
   events: {
-    "filter-set"(filterText) {
+    "filter-set"(filterName, filterDesc) {
       this.moreParams = {
-        filter: filterText
+        filname: filterName,
+        fildesc: filterDesc
       };
-      console.log("tes");
+      console.log(filterName);
+      console.log(filterDesc);
       Vue.nextTick(() => this.$refs.vuetable.refresh());
     },
     "filter-reset"() {
@@ -152,48 +190,6 @@ export default {
 };
 </script>
 
-
-<style>
-.vuetable-pagination {
-  display: inline;
-}
-.vuetable-pagination-info {
-  width: 200px;
-  float: left;
-}
-.pagination {
-  margin: 0;
-  float: right;
-}
-.pagination a.page {
-  border: 1px solid rgb(92, 83, 83);
-  border-radius: 3px;
-  padding: 5px 10px;
-  margin-right: 2px;
-}
-.pagination a.page.active {
-  color: white;
-  background-color: #337ab7;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  padding: 5px 10px;
-  margin-right: 2px;
-}
-.pagination a.btn-nav {
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  padding: 5px 7px;
-  margin-right: 2px;
-}
-.pagination a.btn-nav.disabled {
-  color: lightgray;
-  border: 1px solid lightgray;
-  border-radius: 3px;
-  padding: 5px 7px;
-  margin-right: 2px;
-  cursor: not-allowed;
-}
-.pagination-info {
-  float: left;
-}
+<style scoped>
+@import url("../../sass/semantic.min.css");
 </style>

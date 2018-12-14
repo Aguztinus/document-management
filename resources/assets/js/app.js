@@ -62,7 +62,10 @@ let routes = [
     { path: "/units", component: require("./components/Units.vue") },
     { path: "/profile", component: require("./components/Profile.vue") },
     { path: "/document", component: require("./components/Document.vue") },
-    { path: "/documentlist", component: require("./components/DocumentList.vue") },
+    {
+        path: "/documentlist",
+        component: require("./components/DocumentList.vue")
+    },
     {
         path: "/documenttype",
         component: require("./components/DocumentType.vue")
@@ -93,6 +96,10 @@ Vue.filter("myDateshort", function(created) {
         .locale("id")
         .format("L");
 });
+
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+Vue.component("flat-pickr", flatPickr);
 
 window.Fire = new Vue();
 

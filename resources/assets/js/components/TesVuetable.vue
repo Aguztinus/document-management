@@ -1,24 +1,29 @@
 <template>
   <div>
     <filter-bar></filter-bar>
-    <div class="vuetable-pagination ui basic segment grid">
-      <vuetable-pagination-info ref="paginationInfoTop"></vuetable-pagination-info>
-      <vuetable-pagination ref="paginationTop" @vuetable-pagination:change-page="onChangePage"></vuetable-pagination>
-    </div>
-    <vuetable
-      ref="vuetable"
-      api-url="https://vuetable.ratiw.net/api/users"
-      :fields="fields"
-      :multi-sort="true"
-      :append-params="moreParams"
-      multi-sort-key="ctrl"
-      pagination-path
-      @vuetable:pagination-data="onPaginationData"
-    ></vuetable>
-    <div class="vuetable-pagination ui basic segment grid">
-      <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
+    <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
+      <div class="vuetable-pagination ui basic segment grid">
+        <vuetable-pagination-info ref="paginationInfoTop"></vuetable-pagination-info>
+        <vuetable-pagination ref="paginationTop" @vuetable-pagination:change-page="onChangePage"></vuetable-pagination>
+      </div>
+      <vuetable
+        ref="vuetable"
+        api-url="https://vuetable.ratiw.net/api/users"
+        :fields="fields"
+        :multi-sort="true"
+        :append-params="moreParams"
+        @vuetable:load-success="onLoadSuccess"
+                      @vuetable:loading="showLoader"
+                      @vuetable:loaded="hideLoader"
+        multi-sort-key="ctrl"
+        pagination-path
+        @vuetable:pagination-data="onPaginationData"
+      ></vuetable>
+      <div class="vuetable-pagination ui basic segment grid">
+        <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
 
-      <vuetable-pagination ref="pagination" @vuetable-pagination:change-page="onChangePage"></vuetable-pagination>
+        <vuetable-pagination ref="pagination" @vuetable-pagination:change-page="onChangePage"></vuetable-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -34,6 +39,7 @@ export default {
   },
   data() {
     return {
+      loading: "",
       fields: [
         {
           name: "name",
@@ -77,6 +83,12 @@ export default {
     allcap(value) {
       return value.toUpperCase();
     },
+    showLoader() {
+      this.loading = "loading";
+    },
+    hideLoader() {
+      this.loading = "";
+    },
     genderLabel(value) {
       return value === "M"
         ? '<span class="label label-success"><i class="glyphicon glyphicon-star"></i> Male</span>'
@@ -117,5 +129,5 @@ export default {
 
 
 <style scoped>
-@import url("https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.7/semantic.min.css");
+@import url("../../sass/semantic.min.css");
 </style>
