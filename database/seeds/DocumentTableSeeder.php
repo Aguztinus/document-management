@@ -12,6 +12,7 @@ class DocumentTableSeeder extends Seeder
     public function run()
     {
         //
+        factory(App\DocumentNum::class, 50)->create();
         factory(App\Document::class, 50)->create();
 
         $doc = App\Document::all();

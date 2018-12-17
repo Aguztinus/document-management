@@ -14,14 +14,14 @@ class CreateUsersHistoriesTable extends Migration
     public function up()
     {
         Schema::create('users_histories', function (Blueprint $table) {
-            $table->bigInteger('id');
+            $table->bigIncrements('id');
             $table->integer('user_id')->unsigned()->index();
             $table->string('user_name', 150);
             $table->string('description', 150);
             $table->ipAddress('ip');
             $table->string('action', 50);
             $table->tinyInteger('status');
-            $table->dateTime('created_at');
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

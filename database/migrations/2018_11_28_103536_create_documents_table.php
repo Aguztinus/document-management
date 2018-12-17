@@ -26,12 +26,14 @@ class CreateDocumentsTable extends Migration
             $table->string('slug')->unique();
             $table->string('status');
             $table->integer('owner_id')->unsigned()->index();
+            $table->integer('author_id')->unsigned()->index();
             $table->integer('document_type_id')->unsigned()->index();
             $table->integer('document_num_id')->unsigned()->index();
             $table->integer('unit_id')->unsigned()->index();
             $table->timestamps();
 
             $table->foreign('owner_id')->references('id')->on('users');
+            $table->foreign('author_id')->references('id')->on('document_autors');
             $table->foreign('document_type_id')->references('id')->on('document_types');
             $table->foreign('document_num_id')->references('id')->on('document_nums');
             $table->foreign('unit_id')->references('id')->on('units');

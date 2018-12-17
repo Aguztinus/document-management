@@ -42,4 +42,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Document::class);
     }
+
+    public function history()
+    {
+        return $this->hasMany('App\UsersHistory','user_id','id');
+    }
 }

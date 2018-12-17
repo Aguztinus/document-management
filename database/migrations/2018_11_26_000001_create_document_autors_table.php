@@ -16,6 +16,7 @@ class CreateDocumentAutorsTable extends Migration
         Schema::create('document_autors', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 150);
+            $table->string('email')->unique();
             $table->timestamps();
         });
     }

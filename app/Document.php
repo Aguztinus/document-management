@@ -11,12 +11,22 @@ class Document extends Model
     protected $appends = ['is_mine'];
 
     protected $fillable = [
-        'name', 'description', 'file_ext', 'url', 'size','size_int','slug','status','owner_id','document_type_id','unit_id'
+        'number','name', 'realname','description', 'file_ext', 'url', 'size','size_int','slug','status','owner_id','document_type_id','unit_id','author_id','document_num_id'
     ];
 
     public function documenttype()
     {
         return $this->belongsTo('App\DocumentType','document_type_id','id');
+    }
+
+    public function documentautor()
+    {
+        return $this->belongsTo('App\DocumentAutor','author_id','id');
+    }
+
+    public function documentnum()
+    {
+        return $this->belongsTo('App\DocumentNum','document_num_id','id');
     }
 
     public function userowner()
