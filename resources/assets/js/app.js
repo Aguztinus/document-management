@@ -61,6 +61,8 @@ let routes = [
     { path: "/users", component: require("./components/Users.vue") },
     { path: "/units", component: require("./components/Units.vue") },
     { path: "/profile", component: require("./components/Profile.vue") },
+    { path: "/author", component: require("./components/Author.vue") },
+    { path: "/generate", component: require("./components/GenerateNum.vue") },
     { path: "/document", component: require("./components/Document.vue") },
     {
         path: "/documentlist",

@@ -43233,7 +43233,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_8_vue_progressbar___default.a, {
     }
 });
 
-var routes = [{ path: "/", component: __webpack_require__(169) }, { path: "/dashboard", component: __webpack_require__(169) }, { path: "/developer", component: __webpack_require__(246) }, { path: "/users", component: __webpack_require__(249) }, { path: "/units", component: __webpack_require__(252) }, { path: "/profile", component: __webpack_require__(255) }, { path: "/document", component: __webpack_require__(170) }, {
+var routes = [{ path: "/", component: __webpack_require__(169) }, { path: "/dashboard", component: __webpack_require__(169) }, { path: "/developer", component: __webpack_require__(246) }, { path: "/users", component: __webpack_require__(249) }, { path: "/units", component: __webpack_require__(252) }, { path: "/profile", component: __webpack_require__(255) }, { path: "/author", component: __webpack_require__(416) }, { path: "/generate", component: __webpack_require__(419) }, { path: "/document", component: __webpack_require__(170) }, {
     path: "/documentlist",
     component: __webpack_require__(260)
 }, {
@@ -92499,10 +92499,10 @@ if(false) {
 
 exports = module.exports = __webpack_require__(2)(false);
 // imports
-exports.i(__webpack_require__(171), "");
+
 
 // module
-exports.push([module.i, "\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -92704,6 +92704,9 @@ Vue.component("custom-actions", {
   data: function data() {
     return {
       fields: [{
+        name: "number",
+        sortField: "number"
+      }, {
         name: "name",
         sortField: "name"
       }, {
@@ -95723,7 +95726,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.filter-bar {\r\n  padding: 10px;\n}\r\n", ""]);
+exports.push([module.i, "\n.filter-bar {\r\n  padding: 10px 0 0 5px;\n}\r\n", ""]);
 
 // exports
 
@@ -95747,21 +95750,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      filterText: ''
+      filterText: ""
     };
   },
 
   methods: {
     doFilter: function doFilter() {
-      this.$events.fire('filter-set', this.filterText);
+      this.$events.fire("filter-set", this.filterText);
     },
     resetFilter: function resetFilter() {
-      this.filterText = '';
-      this.$events.fire('filter-reset');
+      this.filterText = "";
+      this.$events.fire("filter-reset");
     }
   }
 });
@@ -95777,8 +95785,6 @@ var render = function() {
   return _c("div", { staticClass: "filter-bar" }, [
     _c("form", { staticClass: "form-inline" }, [
       _c("div", { staticClass: "form-group" }, [
-        _c("label", [_vm._v("Search for:")]),
-        _vm._v(" "),
         _c("input", {
           directives: [
             {
@@ -95788,8 +95794,8 @@ var render = function() {
               expression: "filterText"
             }
           ],
-          staticClass: "form-control",
-          attrs: { type: "text", placeholder: "name, nickname, or email" },
+          staticClass: "form-control mr-2",
+          attrs: { type: "text", placeholder: "Search" },
           domProps: { value: _vm.filterText },
           on: {
             keyup: function($event) {
@@ -95813,7 +95819,7 @@ var render = function() {
         _c(
           "button",
           {
-            staticClass: "btn btn-primary",
+            staticClass: "btn btn-primary mr-2",
             on: {
               click: function($event) {
                 $event.preventDefault()
@@ -107096,6 +107102,1601 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 404 */,
+/* 405 */,
+/* 406 */,
+/* 407 */,
+/* 408 */,
+/* 409 */,
+/* 410 */,
+/* 411 */,
+/* 412 */,
+/* 413 */,
+/* 414 */,
+/* 415 */,
+/* 416 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(417)
+/* template */
+var __vue_template__ = __webpack_require__(418)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Author.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4c64f642", Component.options)
+  } else {
+    hotAPI.reload("data-v-4c64f642", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 417 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vuetable_FilterBar__ = __webpack_require__(304);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vuetable_FilterBar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__vuetable_FilterBar__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+Vue.component("filter-bar", __WEBPACK_IMPORTED_MODULE_0__vuetable_FilterBar___default.a);
+
+Vue.component("custom-actions-simple", {
+  template: ["<div class='d-flex flex-row'>", '<button class="btn btn-success ml-1" @click="onClickEdit(rowData)"><i class="edit icon"></i></button>', '<button class="btn btn-danger ml-1" @click="onClickDelete(rowData)"><i class="delete icon"></i></button>', "</div>"].join(""),
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    onClickEdit: function onClickEdit(data) {
+      Fire.$emit("Edit", data);
+    },
+    onClickDelete: function onClickDelete(data) {
+      Fire.$emit("Delete", data.id);
+    }
+  }
+});
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      fields: [{
+        name: "name",
+        sortField: "name"
+      }, {
+        name: "email",
+        sortField: "email"
+      }, {
+        name: "__component:custom-actions-simple",
+        title: "Actions",
+        titleClass: "center aligned",
+        dataClass: "center aligned",
+        width: "150px"
+      }],
+      moreParams: {},
+      loading: "",
+      editmode: false,
+      visible: false,
+      units: {},
+      form: new Form({
+        id: "",
+        name: "",
+        email: ""
+      })
+    };
+  },
+
+  computed: {
+    httpOptions: function httpOptions() {
+      return {
+        headers: window.axios.defaults.headers.common //table props -> :http-options="httpOptions"
+      };
+    }
+  },
+  methods: {
+    showLoader: function showLoader() {
+      this.loading = "loading";
+    },
+    hideLoader: function hideLoader() {
+      this.loading = "";
+    },
+    onLoadError: function onLoadError(response) {
+      if (response.status == 400) {
+        sweetAlert("Something's Wrong!", response.data.message, "error");
+      } else {
+        sweetAlert("Oops", E_SERVER_ERROR, "error");
+      }
+    },
+    onPaginationData: function onPaginationData(paginationData) {
+      this.$refs.pagination.setPaginationData(paginationData);
+      this.$refs.paginationInfo.setPaginationData(paginationData);
+    },
+    onChangePage: function onChangePage(page) {
+      this.$refs.vuetable.changePage(page);
+    },
+    updateUnit: function updateUnit() {
+      var _this = this;
+
+      this.$Progress.start();
+      // console.log('Editing data');
+      this.form.put("api/author/" + this.form.id).then(function () {
+        // success
+        $("#addNew").modal("hide");
+        swal("Updated!", "Information has been updated.", "success");
+        _this.$Progress.finish();
+        Fire.$emit("LoadTable");
+      }).catch(function () {
+        _this.$Progress.fail();
+      });
+    },
+    editModal: function editModal(unit) {
+      this.editmode = true;
+      this.form.reset();
+      $("#addNew").modal("show");
+      this.form.fill(unit);
+    },
+    newModal: function newModal() {
+      this.editmode = false;
+      this.form.reset();
+      $("#addNew").modal("show");
+    },
+    deleteUnit: function deleteUnit(id) {
+      var _this2 = this;
+
+      swal({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        // Send request to the server
+        if (result.value) {
+          _this2.form.delete("api/author/" + id).then(function () {
+            swal("Deleted!", "Your author has been deleted.", "success");
+            Fire.$emit("LoadTable");
+          }).catch(function () {
+            swal("Failed!", "There was something wronge.", "warning");
+          });
+        }
+      });
+    },
+    createUnit: function createUnit() {
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.form.post("api/author").then(function () {
+        Fire.$emit("LoadTable");
+        $("#addNew").modal("hide");
+
+        toast({
+          type: "success",
+          title: "Author Created in successfully"
+        });
+        _this3.$Progress.finish();
+      }).catch(function (error) {
+        if (error.response) {
+          console.log(error.response);
+        }
+        _this3.$Progress.fail();
+      });
+    }
+  },
+  events: {
+    "filter-set": function filterSet(filterText) {
+      var _this4 = this;
+
+      this.moreParams = {
+        filter: filterText
+      };
+      Vue.nextTick(function () {
+        return _this4.$refs.vuetable.refresh();
+      });
+    },
+    "filter-reset": function filterReset() {
+      var _this5 = this;
+
+      this.moreParams = {};
+      Vue.nextTick(function () {
+        return _this5.$refs.vuetable.refresh();
+      });
+    }
+  },
+  created: function created() {
+    var _this6 = this;
+
+    Fire.$on("LoadTable", function () {
+      _this6.$refs.vuetable.refresh();
+    });
+
+    Fire.$on("Edit", function (data) {
+      _this6.editModal(data);
+    });
+
+    Fire.$on("Delete", function (data) {
+      _this6.deleteUnit(data);
+    });
+  }
+});
+
+/***/ }),
+/* 418 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _vm.$gate.isAdminOrAuthor()
+      ? _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-12" }, [
+            _c("section", { staticClass: "content-header" }, [
+              _c("div", { staticClass: "container-fluid" }, [
+                _c("div", { staticClass: "row mb-2" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-6" }, [
+                    _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
+                      _c(
+                        "li",
+                        { staticClass: "breadcrumb-item" },
+                        [
+                          _c("router-link", { attrs: { to: "/dashboard" } }, [
+                            _vm._v("Home")
+                          ])
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "breadcrumb-item active" }, [
+                        _vm._v("Author")
+                      ])
+                    ])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card card-primary card-outline" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("h3", { staticClass: "card-title" }, [_c("filter-bar")], 1),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-tools mt-3" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success",
+                      on: { click: _vm.newModal }
+                    },
+                    [
+                      _vm._v("\n              Add New\n              "),
+                      _c("i", { staticClass: "fas fa-plus-circle fa-fw" })
+                    ]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body table-responsive p-0" }, [
+                _c(
+                  "div",
+                  {
+                    class: [
+                      { "vuetable-wrapper ui basic segment": true },
+                      _vm.loading
+                    ]
+                  },
+                  [
+                    _c("vuetable", {
+                      ref: "vuetable",
+                      attrs: {
+                        "api-url": "api/author",
+                        fields: _vm.fields,
+                        "multi-sort": true,
+                        "append-params": _vm.moreParams,
+                        "multi-sort-key": "ctrl",
+                        "http-options": _vm.httpOptions,
+                        "pagination-path": ""
+                      },
+                      on: {
+                        "vuetable:pagination-data": _vm.onPaginationData,
+                        "vuetable:load-error": _vm.onLoadError,
+                        "vuetable:loading": _vm.showLoader,
+                        "vuetable:loaded": _vm.hideLoader
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "vuetable-pagination ui basic segment grid"
+                      },
+                      [
+                        _c("vuetable-pagination-info", {
+                          ref: "paginationInfo"
+                        }),
+                        _vm._v(" "),
+                        _c("vuetable-pagination", {
+                          ref: "pagination",
+                          on: {
+                            "vuetable-pagination:change-page": _vm.onChangePage
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ])
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    !_vm.$gate.isAdminOrAuthor() ? _c("div", [_c("not-found")], 1) : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "addNew",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "addNewLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h5",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.editmode,
+                        expression: "!editmode"
+                      }
+                    ],
+                    staticClass: "modal-title",
+                    attrs: { id: "addNewLabel" }
+                  },
+                  [_vm._v("Add New")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "h5",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.editmode,
+                        expression: "editmode"
+                      }
+                    ],
+                    staticClass: "modal-title",
+                    attrs: { id: "addNewLabel" }
+                  },
+                  [_vm._v("Update Author's Info")]
+                ),
+                _vm._v(" "),
+                _vm._m(1)
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.editmode ? _vm.updateUnit() : _vm.createUnit()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "labelName" } }, [
+                          _vm._v("Name")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.name,
+                              expression: "form.name"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: { "is-invalid": _vm.form.errors.has("name") },
+                          attrs: {
+                            type: "text",
+                            name: "name",
+                            placeholder: "Name"
+                          },
+                          domProps: { value: _vm.form.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "name", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "name" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "labelEmail" } }, [
+                          _vm._v("Email")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.email,
+                              expression: "form.email"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: { "is-invalid": _vm.form.errors.has("email") },
+                          attrs: {
+                            name: "text",
+                            id: "email",
+                            placeholder: "Email"
+                          },
+                          domProps: { value: _vm.form.email },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "email", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "email" }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        attrs: { type: "button", "data-dismiss": "modal" }
+                      },
+                      [_vm._v("Close")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.editmode,
+                            expression: "editmode"
+                          }
+                        ],
+                        staticClass: "btn btn-success",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Update")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.editmode,
+                            expression: "!editmode"
+                          }
+                        ],
+                        staticClass: "btn btn-primary",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Create")]
+                    )
+                  ])
+                ]
+              )
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h1", [_vm._v("Master Authors")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4c64f642", module.exports)
+  }
+}
+
+/***/ }),
+/* 419 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(420)
+/* template */
+var __vue_template__ = __webpack_require__(421)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\GenerateNum.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-d232c8ac", Component.options)
+  } else {
+    hotAPI.reload("data-v-d232c8ac", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 420 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vuetable_FilterBar__ = __webpack_require__(304);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vuetable_FilterBar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__vuetable_FilterBar__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+Vue.component("filter-bar", __WEBPACK_IMPORTED_MODULE_0__vuetable_FilterBar___default.a);
+
+Vue.component("custom-actions-simple", {
+  template: ["<div class='d-flex flex-row'>", '<button class="btn btn-success ml-1" @click="onClickEdit(rowData)"><i class="edit icon"></i></button>', '<button class="btn btn-danger ml-1" @click="onClickDelete(rowData)"><i class="delete icon"></i></button>', "</div>"].join(""),
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    onClickEdit: function onClickEdit(data) {
+      Fire.$emit("Edit", data);
+    },
+    onClickDelete: function onClickDelete(data) {
+      Fire.$emit("Delete", data.id);
+    }
+  }
+});
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      fields: [{
+        name: "number",
+        sortField: "number"
+      }, {
+        name: "name",
+        sortField: "name"
+      }, {
+        name: "__component:custom-actions-simple",
+        title: "Actions",
+        titleClass: "center aligned",
+        dataClass: "center aligned",
+        width: "150px"
+      }],
+      moreParams: {},
+      loading: "",
+      editmode: false,
+      visible: false,
+      units: {},
+      form: new Form({
+        id: "",
+        name: "",
+        number: ""
+      })
+    };
+  },
+
+  computed: {
+    httpOptions: function httpOptions() {
+      return {
+        headers: window.axios.defaults.headers.common //table props -> :http-options="httpOptions"
+      };
+    }
+  },
+  methods: {
+    showLoader: function showLoader() {
+      this.loading = "loading";
+    },
+    hideLoader: function hideLoader() {
+      this.loading = "";
+    },
+    onLoadError: function onLoadError(response) {
+      if (response.status == 400) {
+        sweetAlert("Something's Wrong!", response.data.message, "error");
+      } else {
+        sweetAlert("Oops", E_SERVER_ERROR, "error");
+      }
+    },
+    onPaginationData: function onPaginationData(paginationData) {
+      this.$refs.pagination.setPaginationData(paginationData);
+      this.$refs.paginationInfo.setPaginationData(paginationData);
+    },
+    onChangePage: function onChangePage(page) {
+      this.$refs.vuetable.changePage(page);
+    },
+    updateUnit: function updateUnit() {
+      var _this = this;
+
+      this.$Progress.start();
+      // console.log('Editing data');
+      this.form.put("api/documentnum/" + this.form.id).then(function () {
+        // success
+        $("#addNew").modal("hide");
+        swal("Updated!", "Information has been updated.", "success");
+        _this.$Progress.finish();
+        Fire.$emit("LoadTable");
+      }).catch(function () {
+        _this.$Progress.fail();
+      });
+    },
+    editModal: function editModal(unit) {
+      this.editmode = true;
+      this.form.reset();
+      $("#addNew").modal("show");
+      this.form.fill(unit);
+    },
+    newModal: function newModal() {
+      this.editmode = false;
+      this.form.reset();
+      $("#addNew").modal("show");
+    },
+    deleteUnit: function deleteUnit(id) {
+      var _this2 = this;
+
+      swal({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(function (result) {
+        // Send request to the server
+        if (result.value) {
+          _this2.form.delete("api/author/" + id).then(function () {
+            swal("Deleted!", "Your author has been deleted.", "success");
+            Fire.$emit("LoadTable");
+          }).catch(function () {
+            swal("Failed!", "There was something wronge.", "warning");
+          });
+        }
+      });
+    },
+    createUnit: function createUnit() {
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.form.post("api/documentnum").then(function () {
+        Fire.$emit("LoadTable");
+        $("#addNew").modal("hide");
+
+        toast({
+          type: "success",
+          title: "Number Created in successfully"
+        });
+        _this3.$Progress.finish();
+      }).catch(function (error) {
+        if (error.response) {
+          console.log(error.response);
+        }
+        _this3.$Progress.fail();
+      });
+    }
+  },
+  events: {
+    "filter-set": function filterSet(filterText) {
+      var _this4 = this;
+
+      this.moreParams = {
+        filter: filterText
+      };
+      Vue.nextTick(function () {
+        return _this4.$refs.vuetable.refresh();
+      });
+    },
+    "filter-reset": function filterReset() {
+      var _this5 = this;
+
+      this.moreParams = {};
+      Vue.nextTick(function () {
+        return _this5.$refs.vuetable.refresh();
+      });
+    }
+  },
+  created: function created() {
+    var _this6 = this;
+
+    Fire.$on("LoadTable", function () {
+      _this6.$refs.vuetable.refresh();
+    });
+
+    Fire.$on("Edit", function (data) {
+      _this6.editModal(data);
+    });
+
+    Fire.$on("Delete", function (data) {
+      _this6.deleteUnit(data);
+    });
+  }
+});
+
+/***/ }),
+/* 421 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _vm.$gate.isAdminOrAuthor()
+      ? _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-12" }, [
+            _c("section", { staticClass: "content-header" }, [
+              _c("div", { staticClass: "container-fluid" }, [
+                _c("div", { staticClass: "row mb-2" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-6" }, [
+                    _c("ol", { staticClass: "breadcrumb float-sm-right" }, [
+                      _c(
+                        "li",
+                        { staticClass: "breadcrumb-item" },
+                        [
+                          _c("router-link", { attrs: { to: "/dashboard" } }, [
+                            _vm._v("Home")
+                          ])
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("li", { staticClass: "breadcrumb-item active" }, [
+                        _vm._v("Generate Number")
+                      ])
+                    ])
+                  ])
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c("div", { staticClass: "tab-content" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "tab-pane active show",
+                    attrs: { id: "tab_1" }
+                  },
+                  [
+                    _c(
+                      "form",
+                      {
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            _vm.createNumber()
+                          }
+                        }
+                      },
+                      [
+                        _c("div", { staticClass: "card-body" }, [
+                          _c("div", { staticClass: "row" }, [
+                            _c("div", { staticClass: "col-md-4" }, [
+                              _c("div", { staticClass: "form-group" }, [
+                                _c(
+                                  "label",
+                                  {
+                                    staticClass: "control-label",
+                                    attrs: { for: "inputName3" }
+                                  },
+                                  [_vm._v("Number")]
+                                ),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.number,
+                                      expression: "form.number"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    type: "text",
+                                    id: "inputName3 ",
+                                    placeholder: "Auto generate",
+                                    disabled: ""
+                                  },
+                                  domProps: { value: _vm.form.number },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "number",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "col-md-8" }, [
+                              _c("div", { staticClass: "form-group" }, [
+                                _c(
+                                  "label",
+                                  {
+                                    staticClass: "control-label",
+                                    attrs: { for: "inputdescription" }
+                                  },
+                                  [_vm._v("Nama File/Description")]
+                                ),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.form.name,
+                                      expression: "form.name"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    type: "text",
+                                    id: "inputdescription",
+                                    placeholder: "Description"
+                                  },
+                                  domProps: { value: _vm.form.name },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        _vm.form,
+                                        "name",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              ])
+                            ])
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(2)
+                      ]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "tab-pane", attrs: { id: "tab_2" } }, [
+                  _c(
+                    "h3",
+                    { staticClass: "card-title mt-3 ml-3" },
+                    [_c("filter-bar")],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-body table-responsive p-0" }, [
+                    _c(
+                      "div",
+                      {
+                        class: [
+                          { "vuetable-wrapper ui basic segment": true },
+                          _vm.loading
+                        ]
+                      },
+                      [
+                        _c("vuetable", {
+                          ref: "vuetable",
+                          attrs: {
+                            "api-url": "api/documentnum",
+                            fields: _vm.fields,
+                            "multi-sort": true,
+                            "append-params": _vm.moreParams,
+                            "multi-sort-key": "ctrl",
+                            "http-options": _vm.httpOptions,
+                            "pagination-path": ""
+                          },
+                          on: {
+                            "vuetable:pagination-data": _vm.onPaginationData,
+                            "vuetable:load-error": _vm.onLoadError,
+                            "vuetable:loading": _vm.showLoader,
+                            "vuetable:loaded": _vm.hideLoader
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            staticClass:
+                              "vuetable-pagination ui basic segment grid"
+                          },
+                          [
+                            _c("vuetable-pagination-info", {
+                              ref: "paginationInfo"
+                            }),
+                            _vm._v(" "),
+                            _c("vuetable-pagination", {
+                              ref: "pagination",
+                              on: {
+                                "vuetable-pagination:change-page":
+                                  _vm.onChangePage
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    !_vm.$gate.isAdminOrAuthor() ? _c("div", [_c("not-found")], 1) : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "addNew",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "addNewLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          {
+            staticClass: "modal-dialog modal-dialog-centered",
+            attrs: { role: "document" }
+          },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h5",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.editmode,
+                        expression: "editmode"
+                      }
+                    ],
+                    staticClass: "modal-title",
+                    attrs: { id: "addNewLabel" }
+                  },
+                  [_vm._v("Update Author's Info")]
+                ),
+                _vm._v(" "),
+                _vm._m(3)
+              ]),
+              _vm._v(" "),
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      _vm.updateUnit()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "labelName" } }, [
+                          _vm._v("Name")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.name,
+                              expression: "form.name"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: { "is-invalid": _vm.form.errors.has("name") },
+                          attrs: {
+                            type: "text",
+                            name: "name",
+                            placeholder: "Name"
+                          },
+                          domProps: { value: _vm.form.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(_vm.form, "name", $event.target.value)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "name" }
+                        })
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-footer" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        attrs: { type: "button", "data-dismiss": "modal" }
+                      },
+                      [_vm._v("Close")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.editmode,
+                            expression: "editmode"
+                          }
+                        ],
+                        staticClass: "btn btn-success",
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Update")]
+                    )
+                  ])
+                ]
+              )
+            ])
+          ]
+        )
+      ]
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-6" }, [
+      _c("h1", [_vm._v("Generate Number")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("ul", { staticClass: "nav nav-pills ml-auto p-2" }, [
+        _c("li", { staticClass: "nav-item" }, [
+          _c(
+            "a",
+            {
+              staticClass: "nav-link active show",
+              attrs: { href: "#tab_1", "data-toggle": "tab" }
+            },
+            [_vm._v("Generate Number")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "nav-item" }, [
+          _c(
+            "a",
+            {
+              staticClass: "nav-link",
+              attrs: { href: "#tab_2", "data-toggle": "tab" }
+            },
+            [_vm._v("List Number")]
+          )
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-footer" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_vm._v("Create")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-default float-right",
+          attrs: { type: "submit" }
+        },
+        [_vm._v("Cancel")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-d232c8ac", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

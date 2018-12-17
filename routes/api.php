@@ -19,9 +19,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::apiResources([
     'user' => 'API\UserController',
+    'author' => 'API\DocumentAutorController',
     'unit' => 'API\UnitController',
     'document' => 'API\DocumentController',
-    'documenttype' => 'API\DocumentTypeController'
+    'documenttype' => 'API\DocumentTypeController',
+    'documentnum' => 'API\DocumentNumController',
 ]);
 
 Route::get('profile', 'API\UserController@profile');

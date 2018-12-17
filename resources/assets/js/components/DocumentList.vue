@@ -94,6 +94,10 @@ export default {
     return {
       fields: [
         {
+          name: "number",
+          sortField: "number"
+        },
+        {
           name: "name",
           sortField: "name"
         },
@@ -191,5 +195,4 @@ export default {
 </script>
 
 <style scoped>
-@import url("../../sass/semantic.min.css");
 </style>
