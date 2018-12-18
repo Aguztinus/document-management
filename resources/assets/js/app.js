@@ -65,6 +65,7 @@ let routes = [
     { path: "/generate", component: require("./components/GenerateNum.vue") },
     { path: "/document", component: require("./components/Document.vue") },
     {
+        name: "documentlist",
         path: "/documentlist",
         component: require("./components/DocumentList.vue")
     },
@@ -99,6 +100,7 @@ Vue.filter("myDateshort", function(created) {
         .format("L");
 });
 
+// datetime component
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 Vue.component("flat-pickr", flatPickr);

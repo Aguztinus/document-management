@@ -129,6 +129,8 @@ class DocumentController extends Controller
         $this->validate($request,[
             'name' => 'required|string|max:191',
             'docType_id' => 'required',
+            'selectdocnum' => 'required',
+            'author' => 'required'
         ]);
 
         $user = User::findOrFail($this->getUserDir());
@@ -142,8 +144,12 @@ class DocumentController extends Controller
                 $slug = str_slug($splitName[0], '-');
                 $slugFin = $slug . '.' . $splitName[1];
                 $unitid = $user->unit_id;
+                $number = $request['selectdocnum'];
+                $author = $request['author'];
                 $doc = new Document([
-                    'name' => $data['name'],
+                    'number' => $number['number'],
+                    'name' => $number['name'],
+                    'realname' => $data['name'],
                     'description' => $request['description'],
                     'file_ext' => $splitName[1],
                     'url' => $data['name'],
@@ -152,7 +158,9 @@ class DocumentController extends Controller
                     'slug' =>  $slugFin,
                     'status' => 'new',
                     'owner_id' => $this->getUserDir(),
+                    'author_id' => $author['id'],
                     'document_type_id' => $dokTypeId,
+                    'document_num_id' => $number['id'],
                     'unit_id' => $unitid
                 ]);
                 $doc->save();
@@ -380,12 +388,6 @@ class DocumentController extends Controller
         //
         $doc = Document::findOrFail($id);
         return response()->download(storage_path('/public/uploads/' . $this->getUserDir() . '/' . $doc->name));
-    }
-    // Document Type
-    public function allDocTypes()
-    {
-        //
-        return DocumentType::all();
     }
 
     private function getUserDir()

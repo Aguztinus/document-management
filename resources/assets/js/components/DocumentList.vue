@@ -43,8 +43,10 @@
               :append-params="moreParams"
               multi-sort-key="ctrl"
               :http-options="httpOptions"
+              :row-class="rowClassCB"
               pagination-path
               @vuetable:pagination-data="onPaginationData"
+              @vuetable:cell-clicked="onCellClicked"
               @vuetable:load-error="onLoadError"
               @vuetable:loading="showLoader"
               @vuetable:loaded="hideLoader"
@@ -127,7 +129,8 @@ export default {
         }
       ],
       moreParams: {},
-      loading: ""
+      loading: "",
+      selectdoc: ""
     };
   },
   computed: {
@@ -140,6 +143,18 @@ export default {
   methods: {
     allcap(value) {
       return value.toUpperCase();
+    },
+    onCellClicked(data, field, event) {
+      // console.log(data.id);
+      this.selectdoc = data.id;
+    },
+    rowClassCB(data, index) {
+      console.log(this.selectdoc);
+      if (this.$refs.vuetable.selectedTo.indexOf(data.id) > -1) {
+        return "highlight";
+      } else {
+        return index % 2 === 0 ? "odd" : "even";
+      }
     },
     showLoader() {
       this.loading = "loading";
@@ -194,5 +209,59 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+.ui.vertical.stripe h3 {
+  font-size: 2em;
+}
+.secondary.pointing.menu .toc.item {
+  display: none;
+}
+.vuetable {
+  margin-top: 1em !important;
+}
+.vuetable-wrapper.ui.basic.segment {
+  padding: 0em;
+}
+.vuetable button.ui.button {
+  padding: 0.5em 0.5em;
+  font-weight: 400;
+}
+.vuetable button.ui.button i.icon {
+  margin: 0;
+}
+.vuetable td i.handle-icon:hover {
+  cursor: pointer;
+}
+.vuetable-actions {
+  width: 15%;
+  padding: 12px 0px;
+  text-align: center;
+}
+.vuetable-pagination {
+  background: #f9fafb !important;
+}
+.vuetable-pagination-info {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.highlight {
+  background-color: yellow;
+}
+.vuetable-detail-row {
+  height: 200px;
+}
+.detail-row {
+  margin-left: 40px;
+}
+.expand-transition {
+  transition: all 0.5s ease;
+}
+.expand-enter,
+.expand-leave {
+  height: 0;
+  opacity: 0;
+}
+tr.odd {
+  background-color: #e6f5ff;
+}
 </style>

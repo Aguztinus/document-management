@@ -18,7 +18,10 @@ class CreateDocumentNumsTable extends Migration
             $table->string('number', 30);
             $table->string('name', 150);
             $table->boolean('used');
+            $table->integer('document_type_id')->unsigned()->index();
             $table->timestamps();
+
+            $table->foreign('document_type_id')->references('id')->on('document_types');
         });
     }
 

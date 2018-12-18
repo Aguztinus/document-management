@@ -66,11 +66,23 @@
                         >
                       </div>
                     </div>
+                    <div class="col-md-4"></div>
+                    <div class="col-md-8">
+                      <label class="control-label">Jenis Document</label>
+                      <multiselect
+                        v-model="form.selectdoc"
+                        :options="doctypes"
+                        :custom-label="nameWithId"
+                        placeholder="Select one"
+                        label="name"
+                        track-by="name"
+                      ></multiselect>
+                    </div>
                   </div>
                 </div>
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Create</button>
-                  <button type="submit" class="btn btn-default float-right">Cancel</button>
+                  <button class="btn btn-secondary float-right">Reset</button>
                 </div>
               </form>
             </div>
@@ -209,11 +221,12 @@ export default {
       loading: "",
       editmode: false,
       visible: false,
-      units: {},
+      doctypes: [],
       form: new Form({
         id: "",
         name: "",
-        number: ""
+        number: "",
+        selectdoc: []
       })
     };
   },
@@ -244,6 +257,9 @@ export default {
     },
     onChangePage(page) {
       this.$refs.vuetable.changePage(page);
+    },
+    nameWithId({ id, name }) {
+      return `[${id}] — ${name}`;
     },
     updateUnit() {
       this.$Progress.start();
@@ -285,7 +301,7 @@ export default {
         // Send request to the server
         if (result.value) {
           this.form
-            .delete("api/author/" + id)
+            .delete("api/documentnum/" + id)
             .then(() => {
               swal("Deleted!", "Your author has been deleted.", "success");
               Fire.$emit("LoadTable");
@@ -296,18 +312,19 @@ export default {
         }
       });
     },
-    createUnit() {
+    createNumber() {
       this.$Progress.start();
       this.form
         .post("api/documentnum")
-        .then(() => {
+        .then(response => {
           Fire.$emit("LoadTable");
-          $("#addNew").modal("hide");
+          this.form.number = response.data.msg;
+          swal(
+            response.data.msg,
+            "Your Number successfuly created ",
+            "success"
+          );
 
-          toast({
-            type: "success",
-            title: "Number Created in successfully"
-          });
           this.$Progress.finish();
         })
         .catch(error => {
@@ -316,6 +333,19 @@ export default {
           }
           this.$Progress.fail();
         });
+    },
+    loadDocTypes() {
+      this.$Progress.start();
+      axios
+        .get("api/allDocTypes")
+        .then(({ data }) => (this.doctypes = data))
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response);
+          }
+          this.$Progress.fail();
+        });
+      this.$Progress.finish();
     }
   },
   events: {
@@ -331,6 +361,7 @@ export default {
     }
   },
   created() {
+    this.loadDocTypes();
     Fire.$on("LoadTable", () => {
       this.$refs.vuetable.refresh();
     });

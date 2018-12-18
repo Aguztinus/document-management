@@ -37,6 +37,12 @@ class DocumentAutorController extends Controller
         return $doc;
     }
 
+    public function allAuthor()
+    {
+        //
+        return DocumentAutor::all();
+    }
+
     /**
      * Store a newly created resource in storage.
      *

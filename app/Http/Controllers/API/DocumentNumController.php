@@ -4,7 +4,10 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\DocumentNum;
+use App\Counter;
+use App\User;
 
 class DocumentNumController extends Controller
 {
@@ -37,6 +40,12 @@ class DocumentNumController extends Controller
         return $doc;
     }
 
+    public function allDocNum()
+    {
+        //
+        return DocumentNum::where('used',0)->get();
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -46,16 +55,25 @@ class DocumentNumController extends Controller
     public function store(Request $request)
     {
         //
+        $jenis = $request['selectdoc'];
+
+        $number = $this->getnumber($jenis['name']);
+        $request->merge(['number' => $number]);
         $this->validate($request,[
             'number' => 'required|string|max:191|unique:document_nums',
             'name' => 'nullable|string|max:150',
         ]);
 
-        return DocumentAutor::create([
+        DocumentNum::create([
             'number' => $request['number'],
             'name' => $request['name'],
             'used' => 0
         ]);
+
+        return response()->json([
+            'success' => true,
+            'msg' => $number
+        ], 200);
     }
 
     /**
@@ -90,5 +108,28 @@ class DocumentNumController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function getUserDir()
+    {
+        return Auth::id();
+    }
+
+    private function getnumber($jenis)
+    {
+        $user = User::findOrFail(Auth::id());
+        $todayDate = date("y");
+        $namenm = $jenis . '/' . $user->unit_id . '/' . $todayDate;
+        //$number = Counter::firstOrCreate(['name' => $namenm]);
+        $number = Counter::firstOrCreate([
+            'name' => $namenm
+        ], [
+            'counter' => 1000
+        ]);
+
+        $numberku = $number->counter . '/' . $namenm;
+        $number->increment('counter');
+
+        return  strtoupper($numberku);
     }
 }

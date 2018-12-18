@@ -33,12 +33,14 @@ Route::get('findUser', 'API\UserController@search');
 Route::get('allUnit', 'API\UnitController@allUnit');
 Route::get('findUnit', 'API\UnitController@search');
 Route::get('findDocType', 'API\DocumentTypeController@search');
+Route::get('allDocTypes', 'API\DocumentTypeController@allDocTypes');
+Route::get('allDocNum', 'API\DocumentNumController@allDocNum');
+Route::get('allAuthor', 'API\DocumentAutorController@allAuthor');
 
 Route::get('findDochome', 'API\DocumentController@searchDochome');
 Route::get('findDoc', 'API\DocumentController@searchDoc');
 Route::get('sortDoc', 'API\DocumentController@sortDoc');
 Route::get('filterDoc', 'API\DocumentController@filterDoc');
-Route::get('allDocTypes', 'API\DocumentController@allDocTypes');
 Route::get('getref/{id}', 'API\DocumentController@getref');
 Route::get('gethistory/{id}', 'API\DocumentController@gethistory');
 Route::get('getdocumentref/{id}', 'API\DocumentController@getdocumentref');

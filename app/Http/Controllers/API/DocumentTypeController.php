@@ -25,6 +25,13 @@ class DocumentTypeController extends Controller
         }
     }
 
+    // Document Type
+    public function allDocTypes()
+    {
+        //
+        return DocumentType::all();
+    }
+
     public function search(){
 
         if ($search = \Request::get('q')) {
