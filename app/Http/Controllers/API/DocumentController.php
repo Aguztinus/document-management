@@ -26,14 +26,14 @@ class DocumentController extends Controller
     {
         //return Document::with(['unit','userowner'])->latest()->paginate(12);
         $user = User::findOrFail($this->getUserDir());
-        $query = Document::with('userowner')->with('documenttype');
+        $query = Document::with('userowner')->with('documenttype')->with('documentautor')->with('documentnum');
         if ($user->type != 'admin') {
             $query->where('unit_id',$user->unit_id); 
         }
         if ($filter = \Request::get('filter')) {
             $query->where('document_type_id', $filter);
         }
-        $doc = $query->latest()->paginate(12);
+        $doc = $query->latest()->paginate(10);
         return $doc;
     }
 

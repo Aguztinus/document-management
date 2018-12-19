@@ -73,6 +73,10 @@ let routes = [
         path: "/documenttype",
         component: require("./components/DocumentType.vue")
     },
+    {
+        path: "/docupload",
+        component: require("./components/documents/DocumentUpload.vue")
+    },
     { path: "/upload", component: require("./components/Upload.vue") },
     { path: "/tesselect", component: require("./components/TesSelect.vue") },
     { path: "/testable", component: require("./components/TesVuetable.vue") },

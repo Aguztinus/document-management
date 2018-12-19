@@ -23,7 +23,100 @@
       <filter-bar-doc></filter-bar-doc>
       <div class="card card-primary card-outline">
         <div class="card-header">
-          <h3 class="card-title">Documents</h3>
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-md-4">
+                <h3>Documents</h3>
+              </div>
+              <!-- Tombol Header -->
+              <div class="col-md-8">
+                <div v-show="!visible">
+                  <div class="btn-group float-sm-right">
+                    <button type="button" class="btn btn-primary" @click="Upload">Upload</button>
+                    <button
+                      type="button"
+                      class="btn btn-primary dropdown-toggle"
+                      data-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <span class="caret"></span>
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div
+                      class="dropdown-menu"
+                      role="menu"
+                      x-placement="bottom-start"
+                      style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(67px, 38px, 0px);"
+                    >
+                      <a class="dropdown-item" @click="Upload">File</a>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    @click="clikEmail"
+                    class="btn btn-secondary float-sm-right mr-2"
+                  >
+                    <i class="fas fa-envelope"></i> Email
+                  </button>
+                </div>
+
+                <div v-show="visible">
+                  <button
+                    type="button"
+                    class="btn btn-secondary float-sm-right mr-2"
+                    @click="closeside"
+                  >
+                    <i class="fa fa-times"></i>
+                    Cancel
+                  </button>
+                  
+                  <button
+                    type="button"
+                    class="btn btn-primary float-sm-right mr-2"
+                    @click="UploadNew"
+                    v-show="isMine"
+                  >
+                    <i class="fas fa-file"></i> Upload New Version
+                  </button>
+                  <button
+                    type="button"
+                    v-show="isMine"
+                    class="btn btn-danger float-sm-right mr-2"
+                    @click="Delete"
+                  >
+                    <i class="fas fa-trash"></i>
+                    Delete
+                  </button>
+
+                  <div class="btn-group float-sm-right mr-2">
+                    <button type="button" class="btn btn-success">
+                      <i class="nav-icon fas fa-cogs"></i> More Action
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-success dropdown-toggle"
+                      data-toggle="dropdown"
+                    >
+                      <span class="caret"></span>
+                      <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                      <a class="dropdown-item" @click="Edit" v-show="isMine">
+                        <i class="fas fa-edit"></i> Edit
+                      </a>
+                      <a class="dropdown-item" :href="geturl()" download>
+                        <i class="fas fa-arrow-circle-down"></i> Download
+                      </a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" @click="SeeDetail">
+                        <i class="fas fa-eye"></i> See Document
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive p-0">
@@ -59,19 +152,162 @@
         </div>
       </div>
     </div>
+
+    <div
+      class="modal fade"
+      id="addNew"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addNewLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="upload">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNewLabel">{{ judul }}</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <DocUpload
+            :isEdit="isEdit"
+            :isMine="isMine"
+            :doc="detail"
+            :isUploadNew="isUploadNew"
+            :judul="judul"
+          ></DocUpload>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="moreDetail"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="moreDetaillabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="upload">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNewLabel">More Detail</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card card-primary card-outline">
+                    <div class="card-header">
+                      <h3 class="card-title">Document Detail</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                      <ul class="list-group mb-3">
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0">File name</h6>
+                            <small class="text-muted">{{ detail.name }}</small>
+                          </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0">File Description</h6>
+                            <p>
+                              <small class="text-muted">{{ detail.description }}</small>
+                            </p>
+                          </div>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0">Owner</h6>
+                            <p>
+                              <small class="text-muted">{{ userowner }}</small>
+                            </p>
+                            <h6 class="my-0">Created</h6>
+                            <p>
+                              <small class="text-muted">{{ detail.created_at }}</small>
+                            </p>
+                            <h6 class="my-0">Modified</h6>
+                            <p>
+                              <small class="text-muted">{{ detail.updated_at }}</small>
+                            </p>
+                          </div>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                          <div>
+                            <h6 class="my-0">Size</h6>
+                            <p>
+                              <small class="text-muted">{{ detail.size }}</small>
+                            </p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="card card-primary card-outline">
+                    <div class="card-header">
+                      <h3 class="card-title">Document Refrence</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                      <div class="doksmall mt-3">
+                        <div
+                          class="card"
+                          v-for="doc in documentsref.data"
+                          :key="doc.id"
+                          v-on:click="clikfile(doc)"
+                        >
+                          <DocItem :doc="doc"></DocItem>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card card-primary card-outline">
+                    <div class="card-header">
+                      <h3 class="card-title">Document History</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0">
+                      <div class="doksmall mt-3">
+                        <div
+                          class="card"
+                          v-for="dochis in documentshis.data"
+                          :key="dochis.id"
+                          v-on:click="clikfile(dochis)"
+                        >
+                          <DocItem :doc="dochis"></DocItem>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import DocItem from "./documents/DocumentItem";
+import PreviewDoc from "./documents/DocumentPreview";
+import DocUpload from "./documents/DocumentUpload";
 import FilterBarDoc from "./vuetable/FilterBarDoc";
-Vue.component("filter-bar-doc", FilterBarDoc);
 
 Vue.component("custom-actions", {
   template: [
     "<div class='d-flex flex-row'>",
-    '<button class="btn btn-info " @click="onClick(\'view-item\', rowData)"><i class="zoom icon"></i></button>',
-    '<button class="btn btn-success ml-1" @click="onClick(\'edit-item\', rowData)"><i class="edit icon"></i></button>',
-    '<button class="btn btn-danger ml-1" @click="onClick(\'delete-item\', rowData)"><i class="delete icon"></i></button>',
+    '<button class="btn btn-info " @click="onClickDetail(rowData)"><i class="zoom icon"></i></button>',
     "</div>"
   ].join(""),
   props: {
@@ -81,9 +317,8 @@ Vue.component("custom-actions", {
     }
   },
   methods: {
-    onClick(action, data) {
-      console.log("actions: on-click", data.name);
-      swal(action, data.name);
+    onClickDetail(data) {
+      Fire.$emit("Detail", data);
     }
   }
 });
@@ -92,8 +327,24 @@ export default {
   mounted() {
     console.log("Tes Component mounted.");
   },
+  components: {
+    DocItem,
+    PreviewDoc,
+    FilterBarDoc,
+    DocUpload
+  },
   data() {
     return {
+      isEdit: false,
+      isMine: false,
+      visible: false,
+      judul: "Upload File",
+      isUploadNew: 0,
+      documentsref: {},
+      documentshis: {},
+      detail: {},
+      docTypes: {},
+      userowner: "",
       fields: [
         {
           name: "number",
@@ -125,7 +376,7 @@ export default {
           title: "Actions",
           titleClass: "center aligned",
           dataClass: "center aligned",
-          width: "150px"
+          width: "35px"
         }
       ],
       moreParams: {},
@@ -145,13 +396,19 @@ export default {
       return value.toUpperCase();
     },
     onCellClicked(data, field, event) {
-      // console.log(data.id);
       this.selectdoc = data.id;
+      this.isMine = data.is_mine;
+      this.visible = true;
+      this.isEdit = true;
+      this.detail = data;
     },
     rowClassCB(data, index) {
-      console.log(this.selectdoc);
-      if (this.$refs.vuetable.selectedTo.indexOf(data.id) > -1) {
-        return "highlight";
+      if (this.selectdoc == data.id) {
+        if (this.visible == true) {
+          return "highlight";
+        } else {
+          return index % 2 === 0 ? "odd" : "even";
+        }
       } else {
         return index % 2 === 0 ? "odd" : "even";
       }
@@ -189,6 +446,87 @@ export default {
     },
     formatDate(value, fmt = "D MMM YYYY") {
       return value == null ? "" : moment(value, "YYYY-MM-DD").format(fmt);
+    },
+    clikEmail() {
+      //$("#moreEmail").modal("show");
+    },
+    geturl() {
+      let url =
+        "storage/uploads/" + this.detail.owner_id + "/" + this.detail.name;
+      console.log(url);
+      return url;
+    },
+    Upload() {
+      this.$Progress.start();
+      this.detail.reset();
+      this.isEdit = false;
+      this.isUploadNew = 0;
+      this.$Progress.finish();
+      $("#addNew").modal("show");
+    },
+    UploadNew() {
+      this.$Progress.start();
+      this.isEdit = true;
+      this.judul = "Upload New File";
+      this.isUploadNew = 1; //bedanya sm edit
+      Fire.$emit("LoadForm");
+      this.$Progress.finish();
+      $("#addNew").modal("show");
+    },
+    Edit() {
+      this.$Progress.start();
+      this.isEdit = true;
+      this.judul = "Edit File";
+      this.isUploadNew = 0;
+      Fire.$emit("LoadForm");
+
+      $("#addNew").modal("show");
+    },
+    Delete() {
+      swal({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then(result => {
+        // Send request to the server
+        if (result.value) {
+          this.form
+            .delete("api/deletefile/" + this.form.id)
+            .then(() => {
+              swal("Deleted!", "Your file has been deleted.", "success");
+              Fire.$emit("LoadTable");
+            })
+            .catch(err => {
+              swal("Failed!", "There was something wrong." + err, "warning");
+            });
+        }
+      });
+    },
+    SeeDetail() {},
+    closeModal(data) {
+      $("#addNew").modal("hide");
+    },
+    closeside() {
+      this.visible = false;
+    },
+    MoreDetail(data) {
+      this.$Progress.start();
+      this.detail = data;
+      this.userowner = data.userowner.name;
+      axios.get("api/getref/" + data.id).then(response => {
+        //console.log(response.data);
+        this.documentsref = response.data;
+      });
+      axios.get("api/gethistory/" + data.id).then(response2 => {
+        //console.log(response2.data);
+        this.documentshis = response2.data;
+      });
+      this.$Progress.finish();
+      $("#moreDetail").modal("show");
     }
   },
   events: {
@@ -205,6 +543,27 @@ export default {
       this.moreParams = {};
       Vue.nextTick(() => this.$refs.vuetable.refresh());
     }
+  },
+  created() {
+    Fire.$on("LoadTable", () => {
+      this.$refs.vuetable.refresh();
+    });
+
+    Fire.$on("Edit", data => {
+      this.editModal(data);
+    });
+
+    Fire.$on("Delete", data => {
+      this.deleteUnit(data);
+    });
+
+    Fire.$on("Detail", data => {
+      this.MoreDetail(data);
+    });
+
+    Fire.$on("Close", () => {
+      this.closeModal(data);
+    });
   }
 };
 </script>
@@ -245,7 +604,7 @@ export default {
   margin-bottom: auto;
 }
 .highlight {
-  background-color: yellow;
+  background-color: rgb(255, 255, 154);
 }
 .vuetable-detail-row {
   height: 200px;
