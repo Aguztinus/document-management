@@ -13,7 +13,7 @@ class DocumentTableSeeder extends Seeder
     {
         //
         factory(App\DocumentNum::class, 50)->create();
-        factory(App\Document::class, 50)->create();
+        factory(App\Document::class, 25)->create();
 
         $doc = App\Document::all();
 

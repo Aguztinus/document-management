@@ -67,7 +67,8 @@ class DocumentNumController extends Controller
         DocumentNum::create([
             'number' => $request['number'],
             'name' => $request['name'],
-            'used' => 0
+            'used' => 0,
+            'document_type_id' => $jenis['id']
         ]);
 
         return response()->json([

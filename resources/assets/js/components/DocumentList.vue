@@ -25,9 +25,7 @@
         <div class="card-header">
           <div class="container-fluid">
             <div class="row mb-2">
-              <div class="col-md-4">
-                <h3>Documents</h3>
-              </div>
+              <div class="col-md-4"></div>
               <!-- Tombol Header -->
               <div class="col-md-8">
                 <div v-show="!visible">
@@ -208,47 +206,47 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0">
-                      <ul class="list-group mb-3">
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                          <div>
-                            <h6 class="my-0">File name</h6>
-                            <small class="text-muted">{{ detail.name }}</small>
-                          </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                          <div>
-                            <h6 class="my-0">File Description</h6>
-                            <p>
-                              <small class="text-muted">{{ detail.description }}</small>
-                            </p>
-                          </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                          <div>
-                            <h6 class="my-0">Owner</h6>
-                            <p>
-                              <small class="text-muted">{{ userowner }}</small>
-                            </p>
-                            <h6 class="my-0">Created</h6>
-                            <p>
-                              <small class="text-muted">{{ detail.created_at }}</small>
-                            </p>
-                            <h6 class="my-0">Modified</h6>
-                            <p>
-                              <small class="text-muted">{{ detail.updated_at }}</small>
-                            </p>
-                          </div>
-                        </li>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="info-box">
+                            <span class="info-box-icon bg-danger">
+                              <i class="fas fa-file-pdf"></i>
+                            </span>
 
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                          <div>
-                            <h6 class="my-0">Size</h6>
-                            <p>
-                              <small class="text-muted">{{ detail.size }}</small>
-                            </p>
+                            <div class="info-box-content">
+                              <span class="info-box-text">File Number</span>
+                              <span class="info-box-number">{{ detail.number }}</span>
+                            </div>
+                            <!-- /.info-box-content -->
                           </div>
-                        </li>
-                      </ul>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="card-body">
+                            <strong>Owner</strong>
+                            <p class="text-muted">{{ userowner }}</p>
+                            <hr>
+                            <strong>Created</strong>
+                            <p class="text-muted">{{ detail.created_at }}</p>
+                            <hr>
+                            <strong>Modified</strong>
+                            <p class="text-muted">{{ detail.updated_at }}</p>
+                            <hr>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="card-body">
+                            <strong>File name</strong>
+                            <p class="text-muted">{{ detail.name }}</p>
+                            <hr>
+                            <strong>File Description</strong>
+                            <p class="text-muted">{{ detail.description }}</p>
+                            <hr>
+                            <strong>Size</strong>
+                            <p class="text-muted">{{ detail.size }}</p>
+                            <hr>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -288,6 +286,37 @@
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="seeDoc"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="moreDetaillabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="upload">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNewLabel">Document</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <PreviewDoc :jenis="detail.file_ext" :url="geturl()"></PreviewDoc>
                 </div>
               </div>
             </div>
@@ -343,6 +372,7 @@ export default {
       documentsref: {},
       documentshis: {},
       detail: {},
+      cetak: {},
       docTypes: {},
       userowner: "",
       fields: [
@@ -452,13 +482,13 @@ export default {
     },
     geturl() {
       let url =
-        "storage/uploads/" + this.detail.owner_id + "/" + this.detail.name;
+        "storage/uploads/" + this.cetak.owner_id + "/" + this.cetak.realname;
       console.log(url);
       return url;
     },
     Upload() {
       this.$Progress.start();
-      this.detail.reset();
+      this.detail = {};
       this.isEdit = false;
       this.isUploadNew = 0;
       this.$Progress.finish();
@@ -494,8 +524,8 @@ export default {
       }).then(result => {
         // Send request to the server
         if (result.value) {
-          this.form
-            .delete("api/deletefile/" + this.form.id)
+          axios
+            .delete("api/deletefile/" + this.selectdoc)
             .then(() => {
               swal("Deleted!", "Your file has been deleted.", "success");
               Fire.$emit("LoadTable");
@@ -506,8 +536,11 @@ export default {
         }
       });
     },
-    SeeDetail() {},
-    closeModal(data) {
+    SeeDetail() {
+      this.cetak = this.detail;
+      $("#seeDoc").modal("show");
+    },
+    closeModal() {
       $("#addNew").modal("hide");
     },
     closeside() {
@@ -562,13 +595,20 @@ export default {
     });
 
     Fire.$on("Close", () => {
-      this.closeModal(data);
+      this.closeModal();
     });
   }
 };
 </script>
 
 <style>
+.dokdtl svg {
+  text-align: center;
+  height: 50%;
+  width: 50%;
+  margin: auto;
+  padding-top: 1rem;
+}
 .ui.vertical.stripe h3 {
   font-size: 2em;
 }

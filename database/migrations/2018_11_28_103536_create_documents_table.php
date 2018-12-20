@@ -25,6 +25,7 @@ class CreateDocumentsTable extends Migration
             $table->integer('size_int');
             $table->string('slug')->unique();
             $table->string('status');
+            $table->smallInteger('public');
             $table->integer('owner_id')->unsigned()->index();
             $table->integer('author_id')->unsigned()->index();
             $table->integer('document_type_id')->unsigned()->index();

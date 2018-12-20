@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
 use App\Document;
+use App\DocumentNum;
 use App\DocumentType;
 use App\User;
 
@@ -128,13 +129,11 @@ class DocumentController extends Controller
         //
         $this->validate($request,[
             'name' => 'required|string|max:191',
-            'docType_id' => 'required',
             'selectdocnum' => 'required',
             'author' => 'required'
         ]);
 
         $user = User::findOrFail($this->getUserDir());
-        $dokTypeId=$request['docType_id'];
         
         try {
             foreach($request['uploadDoc'] as $data)
@@ -157,9 +156,10 @@ class DocumentController extends Controller
                     'size_int' =>  $data['size'],
                     'slug' =>  $slugFin,
                     'status' => 'new',
+                    'public' => $request['public'],
                     'owner_id' => $this->getUserDir(),
                     'author_id' => $author['id'],
-                    'document_type_id' => $dokTypeId,
+                    'document_type_id' => $number['document_type_id'],
                     'document_num_id' => $number['id'],
                     'unit_id' => $unitid
                 ]);
@@ -168,6 +168,10 @@ class DocumentController extends Controller
                 {
                     $doc->reference()->attach($dataref['code']);
                 }
+
+                $num = DocumentNum::find($number['id']);
+                $num->used = 1;
+                $num->save();
             }
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
@@ -181,9 +185,9 @@ class DocumentController extends Controller
             ], 500);
         }
 
-            return response()->json([
-                'success' => true
-            ], 200);
+        return response()->json([
+             'success' => true
+        ], 200);
     }
 
      public function upload(Request $request)
@@ -253,6 +257,8 @@ class DocumentController extends Controller
         $doc = Document::findOrFail($id);
         $user = User::findOrFail($this->getUserDir());
         $dokTypeId=$request['docType_id'];
+        $number = $request['selectdocnum'];
+        $author = $request['author'];
 
         if($request['isUploadNew'] == 0){ // jika edit file
             if($request['uploadDoc'] != null){
@@ -272,13 +278,16 @@ class DocumentController extends Controller
                     $doc->size = $formatsize;
                     $doc->size_int =  $data['size'];
                     $doc->slug =  $slugFin;
+                    $doc->public = $request['public'];
                     $doc->document_type_id = $dokTypeId;
                     $doc->status = 'edited';
+                    $doc->author_id = $author['id'];
                     $doc->save();
                 }
             }else { //jika tidak upload file baru
                 $doc->description = $request['description'];
                 $doc->document_type_id = $dokTypeId;
+                $doc->public = $request['public'];
                 $doc->status = 'edited';
                 $doc->save();
             }
@@ -304,8 +313,9 @@ class DocumentController extends Controller
                     $slug = str_slug($splitName[0], '-');
                     $slugFin = $slug . '.' . $splitName[1];
                     $unitid = $user->unit_id;
-                    
+                   
                     $docnew = new Document([
+                        'number' => $number['number'],
                         'name' => $datanew['name'],
                         'description' => $request['description'],
                         'file_ext' => $splitName[1],
@@ -314,7 +324,9 @@ class DocumentController extends Controller
                         'size_int' =>  $datanew['size'],
                         'slug' =>  $slugFin,
                         'status' => 'new',
+                        'public' => $request['public'],
                         'owner_id' => $this->getUserDir(),
+                        'author_id' => $author['id'],
                         'document_type_id' => $dokTypeId,
                         'unit_id' => $unitid
                     ]);

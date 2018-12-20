@@ -806,7 +806,7 @@ export default {
     },
     geturl() {
       let url =
-        "storage/uploads/" + this.detail.owner_id + "/" + this.detail.name;
+        "storage/uploads/" + this.detail.owner_id + "/" + this.detail.realname;
       console.log(url);
       return url;
     },

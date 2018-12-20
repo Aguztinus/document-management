@@ -4,7 +4,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Document::class, function (Faker $faker) {
     return [
-        'number'=> App\DocumentNum::all()->random()->number,
+        'number'=> $faker->numberBetween($min = 1000, $max = 9000) . "/" . $faker->randomElement(['SOW','Manual']) . "/SD6/2018",
         'name' => $faker->unique()->word . "." . $faker->randomElement(['pdf', 'doc', 'txt', 'jpg', 'png', 'xls','docx','xlsx','zip']),
         'realname' =>  App\DocumentNum::all()->random()->name,
         'description' => $faker->sentence(10,true),
@@ -14,6 +14,7 @@ $factory->define(App\Document::class, function (Faker $faker) {
         'size_int' => $faker->randomDigit,
         'slug' => $faker->unique()->slug,
         'status' =>'New',
+        'public' => 1,
         'owner_id'=> App\User::all()->random()->id,
         'author_id'=> App\DocumentAutor::all()->random()->id,
         'document_type_id'=> App\DocumentType::all()->random()->id,

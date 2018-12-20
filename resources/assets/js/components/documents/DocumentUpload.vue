@@ -67,6 +67,7 @@
                       v-model="form.selectdocnum"
                       :options="docnum"
                       :custom-label="nameWithId"
+                      :disabled="isEdit"
                       placeholder="Select one"
                       label="name"
                       track-by="name"
@@ -104,24 +105,6 @@
                       :class="{ 'is-invalid': form.errors.has('description') }"
                     ></textarea>
                     <has-error :form="form" field="description"></has-error>
-                  </div>
-                  <div class="form-group">
-                    <label for="labelUnit">Document Type</label>
-                    <select
-                      name="documentType"
-                      v-model="form.docTypes"
-                      id="documentType"
-                      @change="onChangeDoc()"
-                      class="form-control"
-                      style="width: 100%;"
-                      tabindex="-1"
-                      aria-hidden="true"
-                      :class="{ 'is-invalid': form.errors.has('documentType') }"
-                    >
-                      <option v-for="doct in docTypes" :key="doct.id" :value="doct">{{ doct.name }}</option>
-                    </select>
-                    <has-error :form="form" field="documentType"></has-error>
-                    <input v-model="form.docType_id" type="hidden" name="docType_id">
                   </div>
                   <div class="form-group">
                     <label class="typo__label" for="ajax">Document Refrence</label>
@@ -165,6 +148,17 @@
                       >Oops! No elements found. Consider changing the search query.</span>
                     </multiselect>
                   </div>
+                  <div class="form-group">
+                    <label>Share</label>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" value="1" v-model="form.public">
+                      <label class="form-check-label">Public</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" value="0" v-model="form.public">
+                      <label class="form-check-label">Private</label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -207,7 +201,6 @@ export default {
     return {
       selectedDocuments: [],
       Multidocuments: [],
-      docTypes: {},
       tampfile: {},
       isLoading: false,
       docnum: [],
@@ -217,7 +210,7 @@ export default {
         name: "",
         description: "",
         isUploadNew: 0,
-        docType_id: 0,
+        public: 1,
         uploadDoc: [],
         refDoc: [],
         selectdocnum: [],
@@ -270,10 +263,6 @@ export default {
     },
     nameAuthor({ id, name }) {
       return `[${id}] — ${name}`;
-    },
-    onChangeDoc() {
-      //untuk change dropdown document type
-      this.form.docType_id = this.form.docTypes.id;
     },
     saveit() {
       this.form.refDoc = this.selectedDocuments;
@@ -360,25 +349,12 @@ export default {
               swal("Deleted!", "Your File has been deleted.", "success");
             })
             .catch(() => {});
+          this.form.name = "";
           this.$refs.vc.removeFile(file);
           var index = this.$refs.vc.files.indexOf(file);
           this.$refs.vc.files.splice(index, 1);
         }
       });
-    },
-    loadDocTypes() {
-      //load dropdown document type
-      this.$Progress.start();
-      axios
-        .get("api/allDocTypes")
-        .then(({ data }) => (this.docTypes = data))
-        .catch(error => {
-          if (error.response) {
-            console.log(error.response);
-          }
-          this.$Progress.fail();
-        });
-      this.$Progress.finish();
     },
     loadSelectedDoc() {
       console.log(this.isUploadNew);
@@ -386,7 +362,8 @@ export default {
         this.form.id = this.doc.id;
         this.form.name = this.doc.name;
         this.form.description = this.doc.description;
-        this.form.docTypes = this.doc.documenttype;
+        this.form.selectdocnum = this.doc.documentnum;
+        this.form.author = this.doc.documentautor;
         this.form.isUploadNew = this.isUploadNew;
         this.userowner = this.doc.userowner.name;
         axios.get("api/getdocumentref/" + this.form.id).then(response => {
@@ -398,8 +375,6 @@ export default {
     clearAll() {
       this.selectedDocuments = [];
       this.Multidocuments = [];
-      this.form.docTypes = null;
-      this.form.docTypes_id = null;
       this.form.reset();
     },
     claerFile() {
@@ -425,9 +400,9 @@ export default {
     complete(file, status, xhr) {
       let filename = file.name;
       this.tampfile = file;
-      this.form.uploadDoc.push(Object.assign({}, file));
 
       if (file.status !== "error") {
+        this.form.uploadDoc.push(Object.assign({}, file));
         this.form.name = filename;
         let text = "File " + filename + " has been successfully uploaded";
         toast({
@@ -453,7 +428,6 @@ export default {
   },
   created() {
     this.$Progress.start();
-    this.loadDocTypes();
     this.loadDocNum();
     this.loadAuthor();
     this.loadSelectedDoc();

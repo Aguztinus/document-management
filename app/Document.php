@@ -11,7 +11,7 @@ class Document extends Model
     protected $appends = ['is_mine'];
 
     protected $fillable = [
-        'number','name', 'realname','description', 'file_ext', 'url', 'size','size_int','slug','status','owner_id','document_type_id','unit_id','author_id','document_num_id'
+        'number','name', 'realname','description','public', 'file_ext', 'url', 'size','size_int','slug','status','owner_id','document_type_id','unit_id','author_id','document_num_id'
     ];
 
     public function documenttype()
