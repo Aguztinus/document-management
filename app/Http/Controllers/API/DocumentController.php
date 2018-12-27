@@ -34,6 +34,29 @@ class DocumentController extends Controller
         if ($filter = \Request::get('filter')) {
             $query->where('document_type_id', $filter);
         }
+        if ($filname = \Request::get('filname')) {
+            $query->where('name','LIKE',"%$filname%");
+        }
+        if ($fildesc = \Request::get('fildesc')) {
+            $query->where('description','LIKE',"%$fildesc%");
+        }
+        if ($filNo = \Request::get('filNo')) {
+            $query->where('number','LIKE',"%$filNo%");
+        }
+        if ($filMadeBy = \Request::get('filMade')) {
+            $query->whereHas('userowner', function($qry) use ($filMadeBy) {
+                $qry->where('name','LIKE',"%".$filMadeBy."%");
+            });
+        }
+        if ($filAutor = \Request::get('filAutor')) {
+            $query->whereHas('documentautor', function($qry) use ($filAutor) {
+                $qry->where('name','LIKE',"%".$filAutor."%");
+            });
+        }
+        if ($date = \Request::get('date')) {
+            $formatdate=date('Y-m-d', strtotime($date));
+            $query->whereDate('created_at', '=', $formatdate);
+        }
         $doc = $query->latest()->paginate(10);
         return $doc;
     }
@@ -176,12 +199,12 @@ class DocumentController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
                 'success' => false,
-                'massage' => 'err 1' . $e
+                'massage' => 'err qry,' . $e
             ], 500);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'massage' => 'err 1' . $e
+                'massage' => 'err qpp,' . $e
             ], 500);
         }
 

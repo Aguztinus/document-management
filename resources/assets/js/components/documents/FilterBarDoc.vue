@@ -135,7 +135,15 @@ export default {
   },
   methods: {
     doFilter() {
-      this.$events.fire("filter-set", this.filterName, this.filterDesc);
+      this.$events.fire(
+        "filter-set",
+        this.filterName,
+        this.filterDesc,
+        this.filterNo,
+        this.filterMade,
+        this.filterAutor,
+        this.date
+      );
     },
     resetFilter() {
       this.filterName = "";

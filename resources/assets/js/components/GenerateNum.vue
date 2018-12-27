@@ -210,6 +210,15 @@ export default {
           sortField: "name"
         },
         {
+          name: "used",
+          sortField: "used",
+          title: "Use",
+          titleClass: "center aligned",
+          dataClass: "center aligned",
+          callback: "usedLabel",
+          width: "100px"
+        },
+        {
           name: "__component:custom-actions-simple",
           title: "Actions",
           titleClass: "center aligned",
@@ -243,6 +252,11 @@ export default {
     },
     hideLoader() {
       this.loading = "";
+    },
+    usedLabel(value) {
+      return value == "1"
+        ? '<span class="badge bg-danger"> Used</span>'
+        : '<span class="badge bg-primary"> Unused</span>';
     },
     onLoadError(response) {
       if (response.status == 400) {
@@ -317,13 +331,17 @@ export default {
       this.form
         .post("api/documentnum")
         .then(response => {
-          Fire.$emit("LoadTable");
-          this.form.number = response.data.msg;
-          swal(
-            response.data.msg,
-            "Your Number successfuly created ",
-            "success"
-          );
+          if (response.data.success) {
+            Fire.$emit("LoadTable");
+            this.form.number = response.data.msg;
+            swal(
+              response.data.msg,
+              "Your Number successfuly created ",
+              "success"
+            );
+          } else {
+            swal(response.data.msg, "Not successfuly created ", "error");
+          }
 
           this.$Progress.finish();
         })

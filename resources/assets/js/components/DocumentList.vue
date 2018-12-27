@@ -174,7 +174,30 @@
             :doc="detail"
             :isUploadNew="isUploadNew"
             :judul="judul"
+            :isPopup="true"
           ></DocUpload>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="Email"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addNewLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered" role="upload">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNewLabel">Send Email</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <SendEmail></SendEmail>
         </div>
       </div>
     </div>
@@ -216,6 +239,9 @@
                             <div class="info-box-content">
                               <span class="info-box-text">File Number</span>
                               <span class="info-box-number">{{ detail.number }}</span>
+                              <a class :href="geturl()" download>
+                                <i class="fas fa-arrow-circle-down"></i> Download
+                              </a>
                             </div>
                             <!-- /.info-box-content -->
                           </div>
@@ -224,6 +250,9 @@
                           <div class="card-body">
                             <strong>Owner</strong>
                             <p class="text-muted">{{ userowner }}</p>
+                            <hr>
+                            <strong>Author</strong>
+                            <p class="text-muted">{{ documentautor }}</p>
                             <hr>
                             <strong>Created</strong>
                             <p class="text-muted">{{ detail.created_at }}</p>
@@ -243,6 +272,9 @@
                             <hr>
                             <strong>Size</strong>
                             <p class="text-muted">{{ detail.size }}</p>
+                            <hr>
+                            <strong>Document Type</strong>
+                            <p class="text-muted">{{ documenttype }}</p>
                             <hr>
                           </div>
                         </div>
@@ -331,7 +363,8 @@
 import DocItem from "./documents/DocumentItem";
 import PreviewDoc from "./documents/DocumentPreview";
 import DocUpload from "./documents/DocumentUpload";
-import FilterBarDoc from "./vuetable/FilterBarDoc";
+import FilterBarDoc from "./documents/FilterBarDoc";
+import SendEmail from "./emails/SendEmail";
 
 Vue.component("custom-actions", {
   template: [
@@ -360,7 +393,8 @@ export default {
     DocItem,
     PreviewDoc,
     FilterBarDoc,
-    DocUpload
+    DocUpload,
+    SendEmail
   },
   data() {
     return {
@@ -375,6 +409,8 @@ export default {
       cetak: {},
       docTypes: {},
       userowner: "",
+      documentautor:"",
+      documenttype:"",
       fields: [
         {
           name: "number",
@@ -478,7 +514,7 @@ export default {
       return value == null ? "" : moment(value, "YYYY-MM-DD").format(fmt);
     },
     clikEmail() {
-      //$("#moreEmail").modal("show");
+      $("#Email").modal("show");
     },
     geturl() {
       let url =
@@ -550,6 +586,8 @@ export default {
       this.$Progress.start();
       this.detail = data;
       this.userowner = data.userowner.name;
+      this.documenttype = data.documenttype.name;
+      this.documentautor = data.documentautor.name;
       axios.get("api/getref/" + data.id).then(response => {
         //console.log(response.data);
         this.documentsref = response.data;
@@ -563,13 +601,22 @@ export default {
     }
   },
   events: {
-    "filter-set"(filterName, filterDesc) {
+    "filter-set"(
+      filterName,
+      filterDesc,
+      filterNo,
+      filterMade,
+      filterAutor,
+      date
+    ) {
       this.moreParams = {
         filname: filterName,
-        fildesc: filterDesc
+        fildesc: filterDesc,
+        filNo: filterNo,
+        filMade: filterMade,
+        filAutor: filterAutor,
+        date: date
       };
-      console.log(filterName);
-      console.log(filterDesc);
       Vue.nextTick(() => this.$refs.vuetable.refresh());
     },
     "filter-reset"() {

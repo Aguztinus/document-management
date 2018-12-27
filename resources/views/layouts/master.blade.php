@@ -99,7 +99,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               <li class="nav-item">
                 <router-link to="/upload" class="nav-link">
                   <i class="fas fa-file-upload nav-icon"></i>
-                  <p>Upload Documnet</p>
+                  <p>Upload Document</p>
                 </router-link>
               </li>
               <li class="nav-item">
@@ -130,7 +130,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
               <li class="nav-item">
                 <router-link to="/author" class="nav-link">
-                  <i class="fas fa-users nav-icon"></i>
+                  <i class="fas fa-user nav-icon"></i>
                   <p>Author</p>
                 </router-link>
               </li>

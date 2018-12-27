@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-md-12">
+      <div class="wrapMe">
         <form @submit.prevent="isEdit? updateit() : saveit()">
           <div class="card-body table-responsive">
             <div class="container-fluid">
@@ -195,7 +195,11 @@ export default {
       type: Number,
       default: 0
     },
-    doc: Object
+    doc: Object,
+    isPopup: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -287,10 +291,16 @@ export default {
           }).then(result => {
             // Send request to the server
             if (result.value) {
-              //this.$router.push("documentlist");
-              Fire.$emit("Close");
+              // Jika dipanggil dari popup
+              if (this.isPopup) {
+                Fire.$emit("Close");
+              } else {
+                this.$router.push("documentlist");
+              }
             }
-            Fire.$emit("LoadTable");
+            if (this.isPopup) {
+              Fire.$emit("LoadTable");
+            }
           });
         })
         .catch(error => {
@@ -315,11 +325,14 @@ export default {
           // success
           this.clearAll();
           this.claerFile();
-          Fire.$emit("Close");
-          Fire.$emit("LoadTable");
+
+          if (this.isPopup) {
+            Fire.$emit("Close");
+            Fire.$emit("LoadTable");
+          }
           toast({
             type: "success",
-            title: "Document Created in successfully"
+            title: "Document Update successfully"
           });
 
           this.$Progress.finish();
@@ -463,8 +476,8 @@ export default {
   border-width: 2px;
   border-color: #ccc;
   color: #ccc;
-  margin: 20px 30px;
-  padding: 20px 10px 10px 10px;
+  margin: 30px 30px;
+  padding: 20px 10px;
 }
 </style>
 

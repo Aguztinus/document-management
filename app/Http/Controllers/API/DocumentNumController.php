@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\DocumentNum;
 use App\Counter;
 use App\User;
@@ -55,21 +56,39 @@ class DocumentNumController extends Controller
     public function store(Request $request)
     {
         //
-        $jenis = $request['selectdoc'];
-
-        $number = $this->getnumber($jenis['name']);
-        $request->merge(['number' => $number]);
-        $this->validate($request,[
-            'number' => 'required|string|max:191|unique:document_nums',
-            'name' => 'nullable|string|max:150',
-        ]);
-
-        DocumentNum::create([
-            'number' => $request['number'],
-            'name' => $request['name'],
-            'used' => 0,
-            'document_type_id' => $jenis['id']
-        ]);
+        DB::beginTransaction();
+        try {
+            // do your database transaction here
+            $jenis = $request['selectdoc'];
+            $number = $this->getnumber($jenis['name']);
+            $request->merge(['number' => $number]);
+            $this->validate($request,[
+                'number' => 'required|string|max:191|unique:document_nums',
+                'name' => 'nullable|string|max:150',
+            ]);
+    
+            DocumentNum::create([
+                'number' => $request['number'],
+                'name' => $request['name'],
+                'used' => 0,
+                'document_type_id' => $jenis['id']
+            ]);
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            // something went wrong with the transaction, rollback
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'msg' => 'err qry,' . $e
+            ], 500);
+        } catch (\Exception $e) {
+            // something went wrong elsewhere, handle gracefully
+            DB::rollback();
+            return response()->json([
+                'success' => false,
+                'msg' => 'err app,' . $e
+            ], 500);
+        }
 
         return response()->json([
             'success' => true,
