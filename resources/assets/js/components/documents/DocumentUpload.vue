@@ -203,6 +203,8 @@ export default {
   },
   data() {
     return {
+      edt: false,
+      isnewc: 0,
       selectedDocuments: [],
       Multidocuments: [],
       tampfile: {},
@@ -316,8 +318,7 @@ export default {
     },
     updateit() {
       this.form.refDoc = this.selectedDocuments;
-      this.form.docType_id = this.form.docTypes.id;
-      //console.log(this.form.docType_id);
+
       this.$Progress.start();
       this.form
         .put("api/document/" + this.form.id)
@@ -370,14 +371,15 @@ export default {
       });
     },
     loadSelectedDoc() {
-      console.log(this.isUploadNew);
+      //console.log(this.isEdit);
       if (this.isEdit == true) {
         this.form.id = this.doc.id;
         this.form.name = this.doc.name;
         this.form.description = this.doc.description;
         this.form.selectdocnum = this.doc.documentnum;
         this.form.author = this.doc.documentautor;
-        this.form.isUploadNew = this.isUploadNew;
+        //this.form.isUploadNew = this.isUploadNew;
+
         this.userowner = this.doc.userowner.name;
         axios.get("api/getdocumentref/" + this.form.id).then(response => {
           //console.log(response.data);
@@ -403,7 +405,7 @@ export default {
       axios
         .get("api/findDoc?q=" + e)
         .then(data => {
-          console.log(data.data.data);
+          //console.log(data.data.data);
           this.Multidocuments = data.data.data;
           this.isLoading = false;
         })
@@ -436,6 +438,18 @@ export default {
           type: "error",
           title: text
         });
+      }
+    }
+  },
+  watch: {
+    isUploadNew: function(newValue) {
+      this.form.isUploadNew = newValue;
+      //console.log(this.form.isUploadNew);
+    },
+    isEdit: function(newValue) {
+      //console.log(newValue);
+      if (!newValue) {
+        this.clearAll();
       }
     }
   },

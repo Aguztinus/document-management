@@ -29,6 +29,7 @@ Route::apiResources([
 Route::get('profile', 'API\UserController@profile');
 Route::put('profile', 'API\UserController@updateProfile');
 Route::get('findUser', 'API\UserController@search');
+Route::get('getUserHis', 'API\UserController@getuserHistory');
 
 Route::get('allUnit', 'API\UnitController@allUnit');
 Route::get('findUnit', 'API\UnitController@search');

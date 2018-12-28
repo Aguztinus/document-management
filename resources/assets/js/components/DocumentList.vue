@@ -409,8 +409,8 @@ export default {
       cetak: {},
       docTypes: {},
       userowner: "",
-      documentautor:"",
-      documenttype:"",
+      documentautor: "",
+      documenttype: "",
       fields: [
         {
           name: "number",
@@ -519,7 +519,7 @@ export default {
     geturl() {
       let url =
         "storage/uploads/" + this.cetak.owner_id + "/" + this.cetak.realname;
-      console.log(url);
+      //console.log(url);
       return url;
     },
     Upload() {

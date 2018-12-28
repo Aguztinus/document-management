@@ -279,7 +279,6 @@ class DocumentController extends Controller
         //
         $doc = Document::findOrFail($id);
         $user = User::findOrFail($this->getUserDir());
-        $dokTypeId=$request['docType_id'];
         $number = $request['selectdocnum'];
         $author = $request['author'];
 
@@ -302,14 +301,12 @@ class DocumentController extends Controller
                     $doc->size_int =  $data['size'];
                     $doc->slug =  $slugFin;
                     $doc->public = $request['public'];
-                    $doc->document_type_id = $dokTypeId;
                     $doc->status = 'edited';
                     $doc->author_id = $author['id'];
                     $doc->save();
                 }
             }else { //jika tidak upload file baru
                 $doc->description = $request['description'];
-                $doc->document_type_id = $dokTypeId;
                 $doc->public = $request['public'];
                 $doc->status = 'edited';
                 $doc->save();
@@ -350,7 +347,6 @@ class DocumentController extends Controller
                         'public' => $request['public'],
                         'owner_id' => $this->getUserDir(),
                         'author_id' => $author['id'],
-                        'document_type_id' => $dokTypeId,
                         'unit_id' => $unitid
                     ]);
                     $docnew->save();

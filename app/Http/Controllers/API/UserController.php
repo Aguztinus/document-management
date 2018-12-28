@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\UsersHistory;
 use Illuminate\Support\Facades\Hash;
 
 
@@ -158,9 +159,15 @@ class UserController extends Controller
         return ['message' => "Success"];
     }
 
-
     public function profile()
     {
         return auth('api')->user();
+    }
+
+    public function getuserHistory()
+    {
+        $user = auth('api')->user();
+        $his = UsersHistory::where('user_id',$user->id)->latest()->paginate(15);
+        return $his;
     }
 }
