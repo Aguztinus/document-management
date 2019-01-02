@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row" v-if="$gate.isAdminOrAuthor()">
+    <div class="row" v-if="$gate.isAdmin()">
       <div class="col-md-12">
         <section class="content-header">
           <div class="container-fluid">
@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <div v-if="!$gate.isAdminOrAuthor()">
+    <div v-if="!$gate.isAdmin()">
       <not-found></not-found>
     </div>
 

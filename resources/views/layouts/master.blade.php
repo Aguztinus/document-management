@@ -90,6 +90,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
             <ul class="nav nav-treeview pl-2">
+            @canany(['isAdmin', 'isUploader'])
             <li class="nav-item">
                 <router-link to="/generate" class="nav-link">
                   <i class="fas fa-list-ol nav-icon"></i>
@@ -102,6 +103,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <p>Upload Document</p>
                 </router-link>
               </li>
+              @endcan
               <li class="nav-item">
                 <router-link to="/documentlist" class="nav-link">
                   <i class="fas fa-copy nav-icon"></i>

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row" v-if="$gate.isAdminOrAuthor()">
+    <div class="row" v-if="$gate.isAdmin()">
       <div class="col-md-12">
         <section class="content-header">
           <div class="container-fluid">
@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <div v-if="!$gate.isAdminOrAuthor()">
+    <div v-if="!$gate.isAdmin()">
       <not-found></not-found>
     </div>
 
@@ -149,7 +149,7 @@
                   <option value>Select User Role</option>
                   <option value="admin">Admin</option>
                   <option value="user">Standard User</option>
-                  <option value="author">Author</option>
+                  <option value="uploader">Uploader</option>
                 </select>
                 <has-error :form="form" field="type"></has-error>
               </div>

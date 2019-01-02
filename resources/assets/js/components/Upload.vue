@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row">
+    <div class="row" v-if="$gate.isAdminOrUploader()">
       <div class="col-md-12">
         <section class="content-header">
           <div class="container-fluid">
@@ -29,6 +29,10 @@
           <DocUpload :isPopup="false"></DocUpload>
         </div>
       </div>
+    </div>
+
+    <div v-if="!$gate.isAdminOrUploader()">
+      <not-found></not-found>
     </div>
   </div>
 </template>

@@ -29,7 +29,7 @@
               <!-- Tombol Header -->
               <div class="col-md-8">
                 <div v-show="!visible">
-                  <div class="btn-group float-sm-right">
+                  <div class="btn-group float-sm-right" v-if="$gate.isAdminOrUploader()">
                     <button type="button" class="btn btn-primary" @click="Upload">Upload</button>
                     <button
                       type="button"

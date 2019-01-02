@@ -39,6 +39,7 @@ Route::get('allDocNum', 'API\DocumentNumController@allDocNum');
 Route::get('allAuthor', 'API\DocumentAutorController@allAuthor');
 
 Route::get('findDochome', 'API\DocumentController@searchDochome');
+Route::get('mydocument', 'API\DocumentController@mydocument');
 Route::get('findDoc', 'API\DocumentController@searchDoc');
 Route::get('sortDoc', 'API\DocumentController@sortDoc');
 Route::get('filterDoc', 'API\DocumentController@filterDoc');
@@ -47,6 +48,7 @@ Route::get('gethistory/{id}', 'API\DocumentController@gethistory');
 Route::get('getdocumentref/{id}', 'API\DocumentController@getdocumentref');
 Route::get('download/{id}', 'API\DocumentController@download');
 Route::delete('deletefile/{id}', 'API\DocumentController@deletefile');
+
 
 Route::post('upload', 'API\DocumentController@upload')->name('upload');
 

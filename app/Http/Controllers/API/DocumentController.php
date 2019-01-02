@@ -61,6 +61,26 @@ class DocumentController extends Controller
         return $doc;
     }
 
+    public function mydocument()
+    {
+        //return Document::with(['unit','userowner'])->latest()->paginate(12);
+        $user = User::findOrFail($this->getUserDir());
+        $query = Document::with('userowner')->with('documenttype')->with('documentautor')->with('documentnum');
+        if ($user->type == 'user') {
+            $query->where('unit_id',$user->unit_id); 
+        }else{
+            $query->where('owner_id',$user->id);
+        }
+        
+        if ($filter = \Request::get('filter')) {
+            $query->where('number', 'LIKE',"%$filter%")
+            ->orWhere('name','LIKE',"%$filter%")
+            ->orWhere('description','LIKE',"%$filter%");
+        }
+        $doc = $query->latest()->paginate(10);
+        return $doc;
+    }
+
     public function searchDochome()
     {
         //
