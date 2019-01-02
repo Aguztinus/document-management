@@ -95593,8 +95593,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__documents_DocumentUpload___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__documents_DocumentUpload__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__documents_FilterBarDoc__ = __webpack_require__(280);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__documents_FilterBarDoc___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__documents_FilterBarDoc__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__emails_SendEmail__ = __webpack_require__(285);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__emails_SendEmail___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__emails_SendEmail__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__documents_DocumentDetail__ = __webpack_require__(244);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__documents_DocumentDetail___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__documents_DocumentDetail__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__emails_SendEmail__ = __webpack_require__(285);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__emails_SendEmail___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__emails_SendEmail__);
 //
 //
 //
@@ -95859,103 +95861,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 
@@ -95988,7 +95894,8 @@ Vue.component("custom-actions", {
     PreviewDoc: __WEBPACK_IMPORTED_MODULE_1__documents_DocumentPreview___default.a,
     FilterBarDoc: __WEBPACK_IMPORTED_MODULE_3__documents_FilterBarDoc___default.a,
     DocUpload: __WEBPACK_IMPORTED_MODULE_2__documents_DocumentUpload___default.a,
-    SendEmail: __WEBPACK_IMPORTED_MODULE_4__emails_SendEmail___default.a
+    SendEmail: __WEBPACK_IMPORTED_MODULE_5__emails_SendEmail___default.a,
+    DocumentDetail: __WEBPACK_IMPORTED_MODULE_4__documents_DocumentDetail___default.a
   },
   data: function data() {
     return {
@@ -95997,14 +95904,9 @@ Vue.component("custom-actions", {
       visible: false,
       judul: "Upload File",
       isUploadNew: 0,
-      documentsref: {},
-      documentshis: {},
       detail: {},
       cetak: {},
       docTypes: {},
-      userowner: "",
-      documentautor: "",
-      documenttype: "",
       fields: [{
         name: "number",
         sortField: "number"
@@ -96169,28 +96071,14 @@ Vue.component("custom-actions", {
       this.visible = false;
     },
     MoreDetail: function MoreDetail(data) {
-      var _this2 = this;
-
-      this.$Progress.start();
-      this.detail = data;
-      this.userowner = data.userowner.name;
-      this.documenttype = data.documenttype.name;
-      this.documentautor = data.documentautor.name;
-      axios.get("api/getref/" + data.id).then(function (response) {
-        //console.log(response.data);
-        _this2.documentsref = response.data;
-      });
-      axios.get("api/gethistory/" + data.id).then(function (response2) {
-        //console.log(response2.data);
-        _this2.documentshis = response2.data;
-      });
-      this.$Progress.finish();
+      //this.detail = data;
+      Fire.$emit("Detaild", data);
       $("#moreDetail").modal("show");
     }
   },
   events: {
     "filter-set": function filterSet(filterName, filterDesc, filterNo, filterMade, filterAutor, date) {
-      var _this3 = this;
+      var _this2 = this;
 
       this.moreParams = {
         filname: filterName,
@@ -96201,39 +96089,39 @@ Vue.component("custom-actions", {
         date: date
       };
       Vue.nextTick(function () {
-        return _this3.$refs.vuetable.refresh();
+        return _this2.$refs.vuetable.refresh();
       });
     },
     "filter-reset": function filterReset() {
-      var _this4 = this;
+      var _this3 = this;
 
       this.moreParams = {};
       Vue.nextTick(function () {
-        return _this4.$refs.vuetable.refresh();
+        return _this3.$refs.vuetable.refresh();
       });
     }
   },
   created: function created() {
-    var _this5 = this;
+    var _this4 = this;
 
     Fire.$on("LoadTable", function () {
-      _this5.$refs.vuetable.refresh();
+      _this4.$refs.vuetable.refresh();
     });
 
     Fire.$on("Edit", function (data) {
-      _this5.editModal(data);
+      _this4.editModal(data);
     });
 
     Fire.$on("Delete", function (data) {
-      _this5.deleteUnit(data);
+      _this4.deleteUnit(data);
     });
 
     Fire.$on("Detail", function (data) {
-      _this5.MoreDetail(data);
+      _this4.MoreDetail(data);
     });
 
     Fire.$on("Close", function () {
-      _this5.closeModal();
+      _this4.closeModal();
     });
   }
 });
@@ -98534,212 +98422,12 @@ var render = function() {
               _vm._m(6),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
-                _c("div", { staticClass: "container-fluid" }, [
-                  _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col-md-12" }, [
-                      _c(
-                        "div",
-                        { staticClass: "card card-primary card-outline" },
-                        [
-                          _vm._m(7),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "card-body table-responsive p-0" },
-                            [
-                              _c("div", { staticClass: "row" }, [
-                                _c("div", { staticClass: "col-md-12" }, [
-                                  _c("div", { staticClass: "info-box" }, [
-                                    _vm._m(8),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      { staticClass: "info-box-content" },
-                                      [
-                                        _c(
-                                          "span",
-                                          { staticClass: "info-box-text" },
-                                          [_vm._v("File Number")]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "span",
-                                          { staticClass: "info-box-number" },
-                                          [_vm._v(_vm._s(_vm.detail.number))]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "a",
-                                          {
-                                            attrs: {
-                                              href: _vm.geturl(),
-                                              download: ""
-                                            }
-                                          },
-                                          [
-                                            _c("i", {
-                                              staticClass:
-                                                "fas fa-arrow-circle-down"
-                                            }),
-                                            _vm._v(
-                                              " Download\n                            "
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "col-md-6" }, [
-                                  _c("div", { staticClass: "card-body" }, [
-                                    _c("strong", [_vm._v("Owner")]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "text-muted" }, [
-                                      _vm._v(_vm._s(_vm.userowner))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("hr"),
-                                    _vm._v(" "),
-                                    _c("strong", [_vm._v("Author")]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "text-muted" }, [
-                                      _vm._v(_vm._s(_vm.documentautor))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("hr"),
-                                    _vm._v(" "),
-                                    _c("strong", [_vm._v("Created")]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "text-muted" }, [
-                                      _vm._v(_vm._s(_vm.detail.created_at))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("hr"),
-                                    _vm._v(" "),
-                                    _c("strong", [_vm._v("Modified")]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "text-muted" }, [
-                                      _vm._v(_vm._s(_vm.detail.updated_at))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("hr")
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("div", { staticClass: "col-md-6" }, [
-                                  _c("div", { staticClass: "card-body" }, [
-                                    _c("strong", [_vm._v("File name")]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "text-muted" }, [
-                                      _vm._v(_vm._s(_vm.detail.name))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("hr"),
-                                    _vm._v(" "),
-                                    _c("strong", [_vm._v("File Description")]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "text-muted" }, [
-                                      _vm._v(_vm._s(_vm.detail.description))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("hr"),
-                                    _vm._v(" "),
-                                    _c("strong", [_vm._v("Size")]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "text-muted" }, [
-                                      _vm._v(_vm._s(_vm.detail.size))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("hr"),
-                                    _vm._v(" "),
-                                    _c("strong", [_vm._v("Document Type")]),
-                                    _vm._v(" "),
-                                    _c("p", { staticClass: "text-muted" }, [
-                                      _vm._v(_vm._s(_vm.documenttype))
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("hr")
-                                  ])
-                                ])
-                              ])
-                            ]
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "card card-primary card-outline" },
-                        [
-                          _vm._m(9),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "card-body table-responsive p-0" },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "doksmall mt-3" },
-                                _vm._l(_vm.documentsref.data, function(doc) {
-                                  return _c(
-                                    "div",
-                                    {
-                                      key: doc.id,
-                                      staticClass: "card",
-                                      on: {
-                                        click: function($event) {
-                                          _vm.clikfile(doc)
-                                        }
-                                      }
-                                    },
-                                    [_c("DocItem", { attrs: { doc: doc } })],
-                                    1
-                                  )
-                                })
-                              )
-                            ]
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "card card-primary card-outline" },
-                        [
-                          _vm._m(10),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "card-body table-responsive p-0" },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "doksmall mt-3" },
-                                _vm._l(_vm.documentshis.data, function(dochis) {
-                                  return _c(
-                                    "div",
-                                    {
-                                      key: dochis.id,
-                                      staticClass: "card",
-                                      on: {
-                                        click: function($event) {
-                                          _vm.clikfile(dochis)
-                                        }
-                                      }
-                                    },
-                                    [_c("DocItem", { attrs: { doc: dochis } })],
-                                    1
-                                  )
-                                })
-                              )
-                            ]
-                          )
-                        ]
-                      )
-                    ])
-                  ])
-                ])
+                _c(
+                  "div",
+                  { staticClass: "container-fluid" },
+                  [_c("DocumentDetail", { attrs: { Mydetail: _vm.detail } })],
+                  1
+                )
               ])
             ])
           ]
@@ -98768,7 +98456,7 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(11),
+              _vm._m(7),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c("div", { staticClass: "container-fluid" }, [
@@ -98917,38 +98605,6 @@ var staticRenderFns = [
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h3", { staticClass: "card-title" }, [_vm._v("Document Detail")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "info-box-icon bg-danger" }, [
-      _c("i", { staticClass: "fas fa-file-pdf" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h3", { staticClass: "card-title" }, [_vm._v("Document Refrence")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h3", { staticClass: "card-title" }, [_vm._v("Document History")])
     ])
   },
   function() {
