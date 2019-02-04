@@ -84,7 +84,7 @@
 
               <div class="modal-body">
                 <div class="container-fluid">
-                  <DocumentDetail ref="dtl" :Mydetail="detail"></DocumentDetail>
+                  <DocumentDetail :Mydetail="detail"></DocumentDetail>
                 </div>
               </div>
             </div>
