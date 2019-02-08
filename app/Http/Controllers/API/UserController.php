@@ -31,7 +31,7 @@ class UserController extends Controller
     {
         // $this->authorize('isAdmin');
         if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
-            return User::with('unit')->latest()->paginate(5);
+            return User::with('units')->latest()->paginate(5);
         }
 
     }
@@ -50,14 +50,37 @@ class UserController extends Controller
             'password' => 'required|string|min:6'
         ]);
 
-        return User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'type' => $request['type'],
-            'bio' => $request['bio'],
-            'unit_id' =>  $request['unit_id'],
-            'password' => Hash::make($request['password']),
-        ]);
+        try {
+            $usr = new User([
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'type' => $request['type'],
+                'bio' => $request['bio'],
+                'unit_id' => 1,
+                'password' => Hash::make($request['password']),
+            ]);
+            $usr->save();
+
+            foreach($request['units'] as $dataref)
+            {
+                $usr->units()->attach($dataref['id']);
+            }
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'massage' => 'err qry,' . $e
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'massage' => 'err qpp,' . $e
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true
+        ], 200);
 
     }
     /**
@@ -88,8 +111,31 @@ class UserController extends Controller
             'password' => 'sometimes|min:6'
         ]);
 
-        $user->update($request->all());
-        return ['message' => 'Updated the user info'];
+        try {
+            $user->update($request->all());
+
+            foreach($request['units'] as $dataref)
+            {
+                $arr[] = $dataref['id'];
+            }
+            $user->units()->sync($arr);
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'massage' => 'err qry,' . $e
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'massage' => 'err qpp,' . $e
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Updated the user info'
+        ], 200);
     }
 
     /**
@@ -169,5 +215,12 @@ class UserController extends Controller
         $user = auth('api')->user();
         $his = UsersHistory::where('user_id',$user->id)->latest()->paginate(15);
         return $his;
+    }
+
+    public function getuserunit($id)
+    {
+        //
+        $user =User::find($id)->units()->get();
+        return $user;
     }
 }

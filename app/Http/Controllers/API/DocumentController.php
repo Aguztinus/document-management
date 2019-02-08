@@ -28,6 +28,7 @@ class DocumentController extends Controller
         //return Document::with(['unit','userowner'])->latest()->paginate(12);
         $user = User::findOrFail($this->getUserDir());
         $query = Document::with('userowner')->with('documenttype')->with('documentautor')->with('documentnum');
+        // Filter
         if ($user->type != 'admin') {
             $query->where('unit_id',$user->unit_id); 
         }
@@ -57,7 +58,20 @@ class DocumentController extends Controller
             $formatdate=date('Y-m-d', strtotime($date));
             $query->whereDate('created_at', '=', $formatdate);
         }
-        $doc = $query->latest()->paginate(10);
+        // Sort
+        if($sort = \Request::get('sort')){
+            $splitSort = explode('|', $sort, 2);
+            $tamp = $splitSort[0];
+            if ($splitSort[0] == 'userowner.name' || $splitSort[0] == 'documentautor.name') {
+                $query->get()->sortBy('userowner.name');
+            }
+            else {
+                $query->orderBy($tamp, $splitSort[1]);
+            }
+        }else{
+            $query->latest();
+        }
+        $doc = $query->paginate(10);
         return $doc;
     }
 

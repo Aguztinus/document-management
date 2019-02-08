@@ -80,13 +80,13 @@
                       <a class="dropdown-item" href="#">Folder</a>
                     </div>
                   </div>
-                  <button
+                  <!-- <button
                     type="button"
                     @click="clikEmail"
                     class="btn btn-secondary float-sm-right mr-2"
                   >
                     <i class="fas fa-envelope"></i> Email
-                  </button>
+                  </button> -->
                 </div>
 
                 <div v-show="visible">
@@ -145,7 +145,7 @@
                       </a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" @click="SeeDetail">
-                        <i class="fas fa-eye"></i> See Document
+                        <i class="fas fa-eye"></i> View Document
                       </a>
                     </div>
                   </div>

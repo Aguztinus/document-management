@@ -156,17 +156,26 @@
 
               <div class="form-group">
                 <label for="labelUnit">Unit</label>
-                <select
-                  name="unit"
-                  v-model="form.unit"
-                  id="unit"
-                  @change="onChange()"
-                  class="form-control"
-                  :class="{ 'is-invalid': form.errors.has('unit') }"
+                <multiselect
+                  v-model="form.units"
+                  :options="Unitoptions"
+                  :multiple="true"
+                  :close-on-select="false"
+                  :clear-on-select="false"
+                  :preserve-search="true"
+                  placeholder="Pick some"
+                  label="name"
+                  track-by="name"
+                  :preselect-first="true"
                 >
-                  <option value>Select Unit</option>
-                  <option v-for="unit in units" :key="unit.id" :value="unit">{{ unit.name }}</option>
-                </select>
+                  <template slot="selection" slot-scope="{ values, search, isOpen }">
+                    <span
+                      class="multiselect__single"
+                      v-if="values.length &amp;&amp; !isOpen"
+                    >{{ values.length }} options selected</span>
+                  </template>
+                </multiselect>
+
                 <has-error :form="form" field="unit"></has-error>
                 <input v-model="form.unit_id" type="hidden" name="unit_id">
               </div>
@@ -213,6 +222,7 @@ export default {
       editmode: false,
       isDisabled: false,
       visible: false,
+      Unitoptions: [],
       users: {},
       units: {},
       form: new Form({
@@ -221,7 +231,7 @@ export default {
         email: "",
         password: "",
         type: "",
-        unit: "",
+        units: [],
         bio: "",
         photo: ""
       })
@@ -301,7 +311,7 @@ export default {
         this.$Progress.start();
         axios
           .get("api/allUnit")
-          .then(({ data }) => (this.units = data))
+          .then(({ data }) => (this.Unitoptions = data))
           .catch(error => {
             if (error.response) {
               console.log(error.response);

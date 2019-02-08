@@ -49,13 +49,13 @@
                       <a class="dropdown-item" @click="Upload">File</a>
                     </div>
                   </div>
-                  <button
+                  <!-- <button
                     type="button"
                     @click="clikEmail"
                     class="btn btn-secondary float-sm-right mr-2"
                   >
                     <i class="fas fa-envelope"></i> Email
-                  </button>
+                  </button>-->
                 </div>
 
                 <div v-show="visible">
@@ -107,7 +107,7 @@
                       </a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" @click="SeeDetail">
-                        <i class="fas fa-eye"></i> See Document
+                        <i class="fas fa-eye"></i> View Documment
                       </a>
                     </div>
                   </div>
@@ -318,6 +318,7 @@ export default {
         },
         {
           name: "name",
+          title: "Document Name",
           sortField: "name"
         },
         {
@@ -330,12 +331,17 @@ export default {
           sortField: "userowner.name"
         },
         {
+          name: "documentautor.name",
+          title: "Author By",
+          sortField: "documentautor.name"
+        },
+        {
           name: "created_at",
           title: "Created At",
           sortField: "created_at",
           titleClass: "center aligned",
           dataClass: "center aligned",
-          callback: "formatDate|DD-MM-YYYY"
+          callback: "formatDate|DD-MM-YYYY h:mm:ss"
         },
         {
           name: "__component:custom-actions",
@@ -410,8 +416,10 @@ export default {
     onChangePage(page) {
       this.$refs.vuetable.changePage(page);
     },
-    formatDate(value, fmt = "D MMM YYYY") {
-      return value == null ? "" : moment(value, "YYYY-MM-DD").format(fmt);
+    formatDate(value, fmt = "D MMM YYYY h:mm:ss") {
+      return value == null
+        ? ""
+        : moment(value, "YYYY-MM-DD h:mm:ss").format(fmt);
     },
     clikEmail() {
       $("#Email").modal("show");

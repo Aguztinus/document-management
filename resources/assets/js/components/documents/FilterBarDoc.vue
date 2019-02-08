@@ -15,7 +15,7 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label for="inputName3" class="control-label">Name</label>
+            <label for="inputName3" class="control-label">Document Name</label>
             
             <input
               type="text"
@@ -67,7 +67,7 @@
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label for="inputNo" class="control-label">Document Number</label>
+            <label for="inputNo" class="control-label">Number</label>
             
             <input
               type="text"
