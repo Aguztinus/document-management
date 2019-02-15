@@ -326,6 +326,11 @@ export default {
           sortField: "description"
         },
         {
+          name: "unit.name",
+          title: "Unit",
+          sortField: "unit.name"
+        },
+        {
           name: "userowner.name",
           title: "Made By",
           sortField: "userowner.name"
@@ -503,6 +508,7 @@ export default {
       filterNo,
       filterMade,
       filterAutor,
+      filterUnit,
       date
     ) {
       this.moreParams = {
@@ -511,6 +517,7 @@ export default {
         filNo: filterNo,
         filMade: filterMade,
         filAutor: filterAutor,
+        filUnit: filterUnit,
         date: date
       };
       Vue.nextTick(() => this.$refs.vuetable.refresh());

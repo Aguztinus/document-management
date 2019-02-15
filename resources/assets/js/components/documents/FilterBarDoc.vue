@@ -65,6 +65,75 @@
             </div>
           </div>
         </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="inputmade" class="control-label">Unit</label>
+
+            <!-- <input
+              type="text"
+              class="form-control"
+              id="inputmade"
+              v-model="filterMade"
+              placeholder="Made By"
+            >-->
+            <multiselect
+              v-model="unitsch"
+              :options="unitlist"
+              placeholder="Select one"
+              label="name"
+              track-by="name"
+              @input="selectunit"
+            ></multiselect>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="inputmade" class="control-label">Made By</label>
+
+            <!-- <input
+              type="text"
+              class="form-control"
+              id="inputmade"
+              v-model="filterMade"
+              placeholder="Made By"
+            >-->
+            <multiselect
+              v-model="madeby"
+              :options="madebylist"
+              placeholder="Select one"
+              label="name"
+              track-by="name"
+              @input="selectmadeby"
+            ></multiselect>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <!-- <div class="form-group">
+            <label for="inputautor" class="control-label">Autor By</label>
+            
+            <input
+              type="text"
+              class="form-control"
+              id="inputautor"
+              v-model="filterAutor"
+              placeholder="Autor By"
+            >
+          </div>-->
+          <div class="form-group">
+            <label class="control-label">Author By</label>
+            <multiselect
+              v-model="author"
+              :options="authorlist"
+              placeholder="Select one"
+              label="name"
+              track-by="name"
+              @input="selectautor"
+            ></multiselect>
+          </div>
+        </div>
+
         <div class="col-md-4">
           <div class="form-group">
             <label for="inputNo" class="control-label">Number</label>
@@ -75,32 +144,6 @@
               id="inputNo"
               v-model="filterNo"
               placeholder="Number"
-            >
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="inputmade" class="control-label">Made By</label>
-            
-            <input
-              type="text"
-              class="form-control"
-              id="inputmade"
-              v-model="filterMade"
-              placeholder="Made By"
-            >
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-group">
-            <label for="inputautor" class="control-label">Autor By</label>
-            
-            <input
-              type="text"
-              class="form-control"
-              id="inputautor"
-              v-model="filterAutor"
-              placeholder="Autor By"
             >
           </div>
         </div>
@@ -124,6 +167,12 @@ export default {
       filterMade: "",
       filterAutor: "",
       date: "",
+      author: [],
+      authorlist: [],
+      madeby: [],
+      madebylist: [],
+      unitsch: [],
+      unitlist: [],
       // Get more form https://chmln.github.io/flatpickr/options/
       config: {
         wrap: true, // set wrap to true only when using 'input-group'
@@ -142,6 +191,7 @@ export default {
         this.filterNo,
         this.filterMade,
         this.filterAutor,
+        this.filterUnit,
         this.date
       );
     },
@@ -152,8 +202,61 @@ export default {
       this.filterMade = "";
       this.filterAutor = "";
       this.date = "";
+      this.filterUnit = "";
+      this.author = [];
+      this.madeby = [];
       this.$events.fire("filter-reset");
+    },
+    selectautor() {
+      //console.log(this.author.name);
+      this.filterAutor = this.author.name;
+    },
+    selectmadeby() {
+      //console.log(this.author.name);
+      this.filterMade = this.madeby.name;
+    },
+    selectunit() {
+      //console.log(this.author.name);
+      this.filterUnit = this.unitsch.name;
+    },
+    loadAuthor() {
+      axios
+        .get("api/allAuthor")
+        .then(({ data }) => (this.authorlist = data))
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response);
+          }
+          this.$Progress.fail();
+        });
+    },
+    loadUser() {
+      axios
+        .get("api/allUser")
+        .then(({ data }) => (this.madebylist = data))
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response);
+          }
+          this.$Progress.fail();
+        });
+    },
+    loadUnit() {
+      axios
+        .get("api/allUnit")
+        .then(({ data }) => (this.unitlist = data))
+        .catch(error => {
+          if (error.response) {
+            console.log(error.response);
+          }
+          this.$Progress.fail();
+        });
     }
+  },
+  created() {
+    this.loadAuthor();
+    this.loadUser();
+    this.loadUnit();
   }
 };
 </script>

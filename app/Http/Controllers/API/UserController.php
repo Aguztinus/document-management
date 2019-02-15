@@ -33,7 +33,12 @@ class UserController extends Controller
         if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
             return User::with('units')->latest()->paginate(5);
         }
+    }
 
+    public function allUser()
+    {
+        //
+        return User::all();
     }
 
     /**

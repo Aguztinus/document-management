@@ -176,7 +176,7 @@
                   </template>
                 </multiselect>
 
-                <has-error :form="form" field="unit"></has-error>
+                <has-error :form="form" field="units"></has-error>
                 <input v-model="form.unit_id" type="hidden" name="unit_id">
               </div>
 

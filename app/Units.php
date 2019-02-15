@@ -22,4 +22,9 @@ class Units extends Model
     {
         return $this->hasMany('App\Document','unit_id','id');
     }
+
+    public function users()
+    {
+        return $this->belongsToMany('App\User', 'users_units', 'unit_id','user_id');
+    }
 }

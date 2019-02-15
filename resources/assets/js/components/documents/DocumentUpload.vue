@@ -148,7 +148,7 @@
                       >Oops! No elements found. Consider changing the search query.</span>
                     </multiselect>
                   </div>
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                     <label>Share</label>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" value="1" v-model="form.public">
@@ -158,6 +158,20 @@
                       <input class="form-check-input" type="radio" value="0" v-model="form.public">
                       <label class="form-check-label">Private</label>
                     </div>
+                  </div>-->
+                  <div class="form-group">
+                    <label for="labelUnit">Unit</label>
+                    <multiselect
+                      v-model="form.units"
+                      :options="Unitoptions"
+                      :preserve-search="true"
+                      placeholder="Select One"
+                      label="name"
+                      track-by="name"
+                      :preselect-first="true"
+                    ></multiselect>
+
+                    <has-error :form="form" field="units"></has-error>
                   </div>
                 </div>
               </div>
@@ -211,6 +225,7 @@ export default {
       isLoading: false,
       docnum: [],
       authorlist: [],
+      Unitoptions: [],
       form: new Form({
         id: 0,
         name: "",
@@ -220,6 +235,7 @@ export default {
         uploadDoc: [],
         refDoc: [],
         selectdocnum: [],
+        units: [],
         author: []
       }),
       options: {
@@ -263,6 +279,21 @@ export default {
           }
           this.$Progress.fail();
         });
+    },
+    loadUnits() {
+      if (this.$gate.isAdminOrAuthor()) {
+        this.$Progress.start();
+        axios
+          .get("api/userUnits")
+          .then(({ data }) => (this.Unitoptions = data))
+          .catch(error => {
+            if (error.response) {
+              console.log(error.response);
+            }
+            this.$Progress.fail();
+          });
+        this.$Progress.finish();
+      }
     },
     nameWithId({ number, name }) {
       return `[${number}] — ${name}`;
@@ -364,6 +395,7 @@ export default {
             })
             .catch(() => {});
           this.form.name = "";
+          this.form.uploadDoc = [];
           this.$refs.vc.removeFile(file);
           var index = this.$refs.vc.files.indexOf(file);
           this.$refs.vc.files.splice(index, 1);
@@ -395,6 +427,7 @@ export default {
     claerFile() {
       this.$refs.vc.removeFile(this.tampfile);
       this.$refs.vc.files = [];
+      this.form.uploadDoc = [];
     },
     limitText(count) {
       return `and ${count} other `;
@@ -458,6 +491,7 @@ export default {
     this.loadDocNum();
     this.loadAuthor();
     this.loadSelectedDoc();
+    this.loadUnits();
     Fire.$on("LoadForm", () => {
       this.loadSelectedDoc();
     });

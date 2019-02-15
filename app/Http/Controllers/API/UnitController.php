@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Units;
+use App\User;
 
 class UnitController extends Controller
 {
@@ -32,6 +33,14 @@ class UnitController extends Controller
         if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
             return Units::all();
         }
+    }
+
+    public function userUnits()
+    {
+        //
+        $user = auth('api')->user();
+        $units = User::find($user->id)->units;
+        return $units;
     }
 
     public function search(){

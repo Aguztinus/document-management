@@ -78,7 +78,7 @@
           </div>
         </div>
       </div>
-      <div class="card card-primary card-outline">
+      <div v-if="$gate.isAdminOrUploader()" class="card card-primary card-outline">
         <div class="card-header">
           <h3 class="card-title">Document History</h3>
         </div>

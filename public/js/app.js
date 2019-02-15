@@ -90388,32 +90388,34 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "card card-primary card-outline" }, [
-        _vm._m(3),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body table-responsive p-0" }, [
-          _c(
-            "div",
-            { staticClass: "doksmall mt-3" },
-            _vm._l(_vm.documentshis.data, function(dochis) {
-              return _c(
+      _vm.$gate.isAdminOrUploader()
+        ? _c("div", { staticClass: "card card-primary card-outline" }, [
+            _vm._m(3),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body table-responsive p-0" }, [
+              _c(
                 "div",
-                {
-                  key: dochis.id,
-                  staticClass: "card",
-                  on: {
-                    click: function($event) {
-                      _vm.clikfile(dochis)
-                    }
-                  }
-                },
-                [_c("DocItem", { attrs: { doc: dochis } })],
-                1
+                { staticClass: "doksmall mt-3" },
+                _vm._l(_vm.documentshis.data, function(dochis) {
+                  return _c(
+                    "div",
+                    {
+                      key: dochis.id,
+                      staticClass: "card",
+                      on: {
+                        click: function($event) {
+                          _vm.clikfile(dochis)
+                        }
+                      }
+                    },
+                    [_c("DocItem", { attrs: { doc: dochis } })],
+                    1
+                  )
+                })
               )
-            })
-          )
-        ])
-      ])
+            ])
+          ])
+        : _vm._e()
     ])
   ])
 }
@@ -91667,7 +91669,7 @@ var render = function() {
                         }),
                         _vm._v(" "),
                         _c("has-error", {
-                          attrs: { form: _vm.form, field: "unit" }
+                          attrs: { form: _vm.form, field: "units" }
                         }),
                         _vm._v(" "),
                         _c("input", {
@@ -95900,6 +95902,10 @@ Vue.component("custom-actions", {
         name: "description",
         sortField: "description"
       }, {
+        name: "unit.name",
+        title: "Unit",
+        sortField: "unit.name"
+      }, {
         name: "userowner.name",
         title: "Made By",
         sortField: "userowner.name"
@@ -96064,7 +96070,7 @@ Vue.component("custom-actions", {
     }
   },
   events: {
-    "filter-set": function filterSet(filterName, filterDesc, filterNo, filterMade, filterAutor, date) {
+    "filter-set": function filterSet(filterName, filterDesc, filterNo, filterMade, filterAutor, filterUnit, date) {
       var _this2 = this;
 
       this.moreParams = {
@@ -96073,6 +96079,7 @@ Vue.component("custom-actions", {
         filNo: filterNo,
         filMade: filterMade,
         filAutor: filterAutor,
+        filUnit: filterUnit,
         date: date
       };
       Vue.nextTick(function () {
@@ -96334,6 +96341,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   mounted: function mounted() {
@@ -96373,6 +96394,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       isLoading: false,
       docnum: [],
       authorlist: [],
+      Unitoptions: [],
       form: new Form({
         id: 0,
         name: "",
@@ -96382,6 +96404,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         uploadDoc: [],
         refDoc: [],
         selectdocnum: [],
+        units: [],
         author: []
       }),
       options: {
@@ -96431,28 +96454,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         _this2.$Progress.fail();
       });
     },
-    nameWithId: function nameWithId(_ref3) {
-      var number = _ref3.number,
-          name = _ref3.name;
+    loadUnits: function loadUnits() {
+      var _this3 = this;
+
+      if (this.$gate.isAdminOrAuthor()) {
+        this.$Progress.start();
+        axios.get("api/userUnits").then(function (_ref3) {
+          var data = _ref3.data;
+          return _this3.Unitoptions = data;
+        }).catch(function (error) {
+          if (error.response) {
+            console.log(error.response);
+          }
+          _this3.$Progress.fail();
+        });
+        this.$Progress.finish();
+      }
+    },
+    nameWithId: function nameWithId(_ref4) {
+      var number = _ref4.number,
+          name = _ref4.name;
 
       return "[" + number + "] \u2014 " + name;
     },
-    nameAuthor: function nameAuthor(_ref4) {
-      var id = _ref4.id,
-          name = _ref4.name;
+    nameAuthor: function nameAuthor(_ref5) {
+      var id = _ref5.id,
+          name = _ref5.name;
 
       return "[" + id + "] \u2014 " + name;
     },
     saveit: function saveit() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.form.refDoc = this.selectedDocuments;
       //console.log(this.form.refDoc);
       this.$Progress.start();
       this.form.post("api/document").then(function () {
-        _this3.clearAll();
-        _this3.claerFile();
-        _this3.$Progress.finish();
+        _this4.clearAll();
+        _this4.claerFile();
+        _this4.$Progress.finish();
 
         swal({
           title: "Success Upload File!",
@@ -96467,13 +96507,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           // Send request to the server
           if (result.value) {
             // Jika dipanggil dari popup
-            if (_this3.isPopup) {
+            if (_this4.isPopup) {
               Fire.$emit("Close");
             } else {
-              _this3.$router.push("documentlist");
+              _this4.$router.push("documentlist");
             }
           }
-          if (_this3.isPopup) {
+          if (_this4.isPopup) {
             Fire.$emit("LoadTable");
           }
         });
@@ -96485,21 +96525,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             title: "There was something wrong"
           });
         }
-        _this3.$Progress.fail();
+        _this4.$Progress.fail();
       });
     },
     updateit: function updateit() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.form.refDoc = this.selectedDocuments;
 
       this.$Progress.start();
       this.form.put("api/document/" + this.form.id).then(function () {
         // success
-        _this4.clearAll();
-        _this4.claerFile();
+        _this5.clearAll();
+        _this5.claerFile();
 
-        if (_this4.isPopup) {
+        if (_this5.isPopup) {
           Fire.$emit("Close");
           Fire.$emit("LoadTable");
         }
@@ -96508,16 +96548,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           title: "Document Update successfully"
         });
 
-        _this4.$Progress.finish();
+        _this5.$Progress.finish();
       }).catch(function (error) {
         if (error.response) {
           console.log(error.response);
         }
-        _this4.$Progress.fail();
+        _this5.$Progress.fail();
       });
     },
     removeFile: function removeFile(file) {
-      var _this5 = this;
+      var _this6 = this;
 
       swal({
         title: "Are you sure?",
@@ -96533,15 +96573,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           axios.delete("api/document/" + file.name).then(function () {
             swal("Deleted!", "Your File has been deleted.", "success");
           }).catch(function () {});
-          _this5.form.name = "";
-          _this5.$refs.vc.removeFile(file);
-          var index = _this5.$refs.vc.files.indexOf(file);
-          _this5.$refs.vc.files.splice(index, 1);
+          _this6.form.name = "";
+          _this6.form.uploadDoc = [];
+          _this6.$refs.vc.removeFile(file);
+          var index = _this6.$refs.vc.files.indexOf(file);
+          _this6.$refs.vc.files.splice(index, 1);
         }
       });
     },
     loadSelectedDoc: function loadSelectedDoc() {
-      var _this6 = this;
+      var _this7 = this;
 
       //console.log(this.isEdit);
       if (this.isEdit == true) {
@@ -96555,7 +96596,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.userowner = this.doc.userowner.name;
         axios.get("api/getdocumentref/" + this.form.id).then(function (response) {
           //console.log(response.data);
-          _this6.selectedDocuments = response.data;
+          _this7.selectedDocuments = response.data;
         });
       }
     },
@@ -96567,20 +96608,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     claerFile: function claerFile() {
       this.$refs.vc.removeFile(this.tampfile);
       this.$refs.vc.files = [];
+      this.form.uploadDoc = [];
     },
     limitText: function limitText(count) {
       return "and " + count + " other ";
     },
 
     asyncFind: _.debounce(function (e) {
-      var _this7 = this;
+      var _this8 = this;
 
       //serach get data di multiselect document
       this.isLoading = true;
       axios.get("api/findDoc?q=" + e).then(function (data) {
         //console.log(data.data.data);
-        _this7.Multidocuments = data.data.data;
-        _this7.isLoading = false;
+        _this8.Multidocuments = data.data.data;
+        _this8.isLoading = false;
       }).catch(function () {});
       this.isLoading = false;
     }, 600),
@@ -96625,14 +96667,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   created: function created() {
-    var _this8 = this;
+    var _this9 = this;
 
     this.$Progress.start();
     this.loadDocNum();
     this.loadAuthor();
     this.loadSelectedDoc();
+    this.loadUnits();
     Fire.$on("LoadForm", function () {
-      _this8.loadSelectedDoc();
+      _this9.loadSelectedDoc();
     });
 
     this.$Progress.finish();
@@ -97094,59 +97137,38 @@ var render = function() {
                       1
                     ),
                     _vm._v(" "),
-                    _c("div", { staticClass: "form-group" }, [
-                      _c("label", [_vm._v("Share")]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-check" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.public,
-                              expression: "form.public"
-                            }
-                          ],
-                          staticClass: "form-check-input",
-                          attrs: { type: "radio", value: "1" },
-                          domProps: { checked: _vm._q(_vm.form.public, "1") },
-                          on: {
-                            change: function($event) {
-                              _vm.$set(_vm.form, "public", "1")
-                            }
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { attrs: { for: "labelUnit" } }, [
+                          _vm._v("Unit")
+                        ]),
+                        _vm._v(" "),
+                        _c("multiselect", {
+                          attrs: {
+                            options: _vm.Unitoptions,
+                            "preserve-search": true,
+                            placeholder: "Select One",
+                            label: "name",
+                            "track-by": "name",
+                            "preselect-first": true
+                          },
+                          model: {
+                            value: _vm.form.units,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "units", $$v)
+                            },
+                            expression: "form.units"
                           }
                         }),
                         _vm._v(" "),
-                        _c("label", { staticClass: "form-check-label" }, [
-                          _vm._v("Public")
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "form-check" }, [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.form.public,
-                              expression: "form.public"
-                            }
-                          ],
-                          staticClass: "form-check-input",
-                          attrs: { type: "radio", value: "0" },
-                          domProps: { checked: _vm._q(_vm.form.public, "0") },
-                          on: {
-                            change: function($event) {
-                              _vm.$set(_vm.form, "public", "0")
-                            }
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c("label", { staticClass: "form-check-label" }, [
-                          _vm._v("Private")
-                        ])
-                      ])
-                    ])
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "units" }
+                        })
+                      ],
+                      1
+                    )
                   ])
                 ])
               ])
@@ -97404,6 +97426,49 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -97414,6 +97479,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       filterMade: "",
       filterAutor: "",
       date: "",
+      author: [],
+      authorlist: [],
+      madeby: [],
+      madebylist: [],
+      unitsch: [],
+      unitlist: [],
       // Get more form https://chmln.github.io/flatpickr/options/
       config: {
         wrap: true, // set wrap to true only when using 'input-group'
@@ -97426,7 +97497,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   methods: {
     doFilter: function doFilter() {
-      this.$events.fire("filter-set", this.filterName, this.filterDesc, this.filterNo, this.filterMade, this.filterAutor, this.date);
+      this.$events.fire("filter-set", this.filterName, this.filterDesc, this.filterNo, this.filterMade, this.filterAutor, this.filterUnit, this.date);
     },
     resetFilter: function resetFilter() {
       this.filterName = "";
@@ -97435,8 +97506,67 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.filterMade = "";
       this.filterAutor = "";
       this.date = "";
+      this.filterUnit = "";
+      this.author = [];
+      this.madeby = [];
       this.$events.fire("filter-reset");
+    },
+    selectautor: function selectautor() {
+      //console.log(this.author.name);
+      this.filterAutor = this.author.name;
+    },
+    selectmadeby: function selectmadeby() {
+      //console.log(this.author.name);
+      this.filterMade = this.madeby.name;
+    },
+    selectunit: function selectunit() {
+      //console.log(this.author.name);
+      this.filterUnit = this.unitsch.name;
+    },
+    loadAuthor: function loadAuthor() {
+      var _this = this;
+
+      axios.get("api/allAuthor").then(function (_ref) {
+        var data = _ref.data;
+        return _this.authorlist = data;
+      }).catch(function (error) {
+        if (error.response) {
+          console.log(error.response);
+        }
+        _this.$Progress.fail();
+      });
+    },
+    loadUser: function loadUser() {
+      var _this2 = this;
+
+      axios.get("api/allUser").then(function (_ref2) {
+        var data = _ref2.data;
+        return _this2.madebylist = data;
+      }).catch(function (error) {
+        if (error.response) {
+          console.log(error.response);
+        }
+        _this2.$Progress.fail();
+      });
+    },
+    loadUnit: function loadUnit() {
+      var _this3 = this;
+
+      axios.get("api/allUnit").then(function (_ref3) {
+        var data = _ref3.data;
+        return _this3.unitlist = data;
+      }).catch(function (error) {
+        if (error.response) {
+          console.log(error.response);
+        }
+        _this3.$Progress.fail();
+      });
     }
+  },
+  created: function created() {
+    this.loadAuthor();
+    this.loadUser();
+    this.loadUnit();
   }
 });
 
@@ -97556,6 +97686,100 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-md-4" }, [
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
+              _c(
+                "label",
+                { staticClass: "control-label", attrs: { for: "inputmade" } },
+                [_vm._v("Unit")]
+              ),
+              _vm._v(" "),
+              _c("multiselect", {
+                attrs: {
+                  options: _vm.unitlist,
+                  placeholder: "Select one",
+                  label: "name",
+                  "track-by": "name"
+                },
+                on: { input: _vm.selectunit },
+                model: {
+                  value: _vm.unitsch,
+                  callback: function($$v) {
+                    _vm.unitsch = $$v
+                  },
+                  expression: "unitsch"
+                }
+              })
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-4" }, [
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
+              _c(
+                "label",
+                { staticClass: "control-label", attrs: { for: "inputmade" } },
+                [_vm._v("Made By")]
+              ),
+              _vm._v(" "),
+              _c("multiselect", {
+                attrs: {
+                  options: _vm.madebylist,
+                  placeholder: "Select one",
+                  label: "name",
+                  "track-by": "name"
+                },
+                on: { input: _vm.selectmadeby },
+                model: {
+                  value: _vm.madeby,
+                  callback: function($$v) {
+                    _vm.madeby = $$v
+                  },
+                  expression: "madeby"
+                }
+              })
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-4" }, [
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
+              _c("label", { staticClass: "control-label" }, [
+                _vm._v("Author By")
+              ]),
+              _vm._v(" "),
+              _c("multiselect", {
+                attrs: {
+                  options: _vm.authorlist,
+                  placeholder: "Select one",
+                  label: "name",
+                  "track-by": "name"
+                },
+                on: { input: _vm.selectautor },
+                model: {
+                  value: _vm.author,
+                  callback: function($$v) {
+                    _vm.author = $$v
+                  },
+                  expression: "author"
+                }
+              })
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-4" }, [
           _c("div", { staticClass: "form-group" }, [
             _c(
               "label",
@@ -97581,74 +97805,6 @@ var render = function() {
                     return
                   }
                   _vm.filterNo = $event.target.value
-                }
-              }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-4" }, [
-          _c("div", { staticClass: "form-group" }, [
-            _c(
-              "label",
-              { staticClass: "control-label", attrs: { for: "inputmade" } },
-              [_vm._v("Made By")]
-            ),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.filterMade,
-                  expression: "filterMade"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { type: "text", id: "inputmade", placeholder: "Made By" },
-              domProps: { value: _vm.filterMade },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.filterMade = $event.target.value
-                }
-              }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-4" }, [
-          _c("div", { staticClass: "form-group" }, [
-            _c(
-              "label",
-              { staticClass: "control-label", attrs: { for: "inputautor" } },
-              [_vm._v("Autor By")]
-            ),
-            _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.filterAutor,
-                  expression: "filterAutor"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                id: "inputautor",
-                placeholder: "Autor By"
-              },
-              domProps: { value: _vm.filterAutor },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.filterAutor = $event.target.value
                 }
               }
             })

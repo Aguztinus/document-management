@@ -27,7 +27,9 @@ class DocumentController extends Controller
     {
         //return Document::with(['unit','userowner'])->latest()->paginate(12);
         $user = User::findOrFail($this->getUserDir());
-        $query = Document::with('userowner')->with('documenttype')->with('documentautor')->with('documentnum');
+        $query = Document::with('userowner')->with('documenttype')
+        ->with('documentautor')->with('documentnum')
+        ->with('unit')->where('status', '!=', 'old');
         // Filter
         if ($user->type != 'admin') {
             $query->where('unit_id',$user->unit_id); 
@@ -52,6 +54,11 @@ class DocumentController extends Controller
         if ($filAutor = \Request::get('filAutor')) {
             $query->whereHas('documentautor', function($qry) use ($filAutor) {
                 $qry->where('name','LIKE',"%".$filAutor."%");
+            });
+        }
+        if ($filUnit = \Request::get('filUnit')) {
+            $query->whereHas('unit', function($qry) use ($filUnit) {
+                $qry->where('name','LIKE',"%".$filUnit."%");
             });
         }
         if ($date = \Request::get('date')) {
@@ -79,7 +86,11 @@ class DocumentController extends Controller
     {
         //return Document::with(['unit','userowner'])->latest()->paginate(12);
         $user = User::findOrFail($this->getUserDir());
-        $query = Document::with('userowner')->with('documenttype')->with('documentautor')->with('documentnum');
+        $query = Document::with('userowner')
+        ->with('documenttype')
+        ->with('documentautor')
+        ->with('documentnum')
+        ->where('status', '!=', 'old');
         if ($user->type == 'user') {
             $query->where('unit_id',$user->unit_id); 
         }else{
@@ -99,7 +110,8 @@ class DocumentController extends Controller
     {
         //
         $user = User::findOrFail($this->getUserDir());
-        $queryh = Document::with('userowner')->with('documenttype');
+        $queryh = Document::with('userowner')->with('documenttype')
+        ->where('status', '!=', 'old');
 
         if ($search = \Request::get('qry')) {
             $queryh->where('name','LIKE',"%$search%")
@@ -122,7 +134,8 @@ class DocumentController extends Controller
     {
         //
         $user = User::findOrFail($this->getUserDir());
-        $query = Document::with('userowner')->with('documenttype');
+        $query = Document::with('userowner')->with('documenttype')
+        ->where('status', '!=', 'old');
 
         if ($user->type != 'admin') {
             $query->where('unit_id',$user->unit_id); 
@@ -142,7 +155,8 @@ class DocumentController extends Controller
     {
         //
         $user = User::findOrFail($this->getUserDir());
-        $query = Document::with('userowner')->with('documenttype');
+        $query = Document::with('userowner')->with('documenttype')
+        ->where('status', '!=', 'old');
 
         if ($filter = \Request::get('filter')) {
             $query->where('document_type_id', $filter);
@@ -161,7 +175,7 @@ class DocumentController extends Controller
         if ($search = \Request::get('q')) {
             $doc = Document::select('name', 'id As code')->where(function($query) use ($search){
                 $query->where('name','LIKE',"%$search%");
-            })->paginate(50);
+            })->where('status', '!=', 'old')->paginate(50);
         }else {
             $doc = Document::latest()->paginate(20);
         }
@@ -199,9 +213,11 @@ class DocumentController extends Controller
                 $formatsize = $this->formatSizeUnits($data['size']);
                 $slug = str_slug($splitName[0], '-');
                 $slugFin = $slug . '.' . $splitName[1];
-                $unitid = $user->unit_id;
+                //$unitid = $user->unit_id;
+                $unit = $request['units'];
                 $number = $request['selectdocnum'];
                 $author = $request['author'];
+                
                 $doc = new Document([
                     'number' => $number['number'],
                     'name' => $number['name'],
@@ -213,12 +229,12 @@ class DocumentController extends Controller
                     'size_int' =>  $data['size'],
                     'slug' =>  $slugFin,
                     'status' => 'new',
-                    'public' => $request['public'],
+                    'public' => 0,
                     'owner_id' => $this->getUserDir(),
                     'author_id' => $author['id'],
                     'document_type_id' => $number['document_type_id'],
                     'document_num_id' => $number['id'],
-                    'unit_id' => $unitid
+                    'unit_id' => $unit['id']
                 ]);
                 $doc->save();
                 foreach($request['refDoc'] as $dataref)
@@ -315,6 +331,7 @@ class DocumentController extends Controller
         $user = User::findOrFail($this->getUserDir());
         $number = $request['selectdocnum'];
         $author = $request['author'];
+        $unit = $request['units'];
 
         if($request['isUploadNew'] == 0){ // jika edit file
             if($request['uploadDoc'] != null){
@@ -325,7 +342,7 @@ class DocumentController extends Controller
                     $formatsize = $this->formatSizeUnits($data['size']);
                     $slug = str_slug($splitName[0], '-');
                     $slugFin = $slug . '.' . $splitName[1];
-                    $unitid = $user->unit_id;
+                    //$unitid = $user->unit_id;
                     
                     $doc->name = $data['name'];
                     $doc->description = $request['description'];
@@ -334,14 +351,17 @@ class DocumentController extends Controller
                     $doc->size = $formatsize;
                     $doc->size_int =  $data['size'];
                     $doc->slug =  $slugFin;
-                    $doc->public = $request['public'];
+                    $doc->public = 0;
                     $doc->status = 'edited';
                     $doc->author_id = $author['id'];
+                    $doc->unit_id = $unit['id'];
                     $doc->save();
                 }
             }else { //jika tidak upload file baru
                 $doc->description = $request['description'];
-                $doc->public = $request['public'];
+                $doc->public = 0;
+                $doc->author_id = $author['id'];
+                $doc->unit_id = $unit['id'];
                 $doc->status = 'edited';
                 $doc->save();
             }
@@ -366,7 +386,7 @@ class DocumentController extends Controller
                     $formatsize = $this->formatSizeUnits($datanew['size']);
                     $slug = str_slug($splitName[0], '-');
                     $slugFin = $slug . '.' . $splitName[1];
-                    $unitid = $user->unit_id;
+                    //$unitid = $user->unit_id;
                    
                     $docnew = new Document([
                         'number' => $number['number'],
@@ -378,10 +398,10 @@ class DocumentController extends Controller
                         'size_int' =>  $datanew['size'],
                         'slug' =>  $slugFin,
                         'status' => 'new',
-                        'public' => $request['public'],
+                        'public' => 0,
                         'owner_id' => $this->getUserDir(),
                         'author_id' => $author['id'],
-                        'unit_id' => $unitid
+                        'unit_id' => $unit['id']
                     ]);
                     $docnew->save();
                     foreach($request['refDoc'] as $dataref)
