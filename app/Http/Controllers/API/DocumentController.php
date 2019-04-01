@@ -32,7 +32,12 @@ class DocumentController extends Controller
         ->with('unit')->where('status', '!=', 'old');
         // Filter
         if ($user->type != 'admin') {
-            $query->where('unit_id',$user->unit_id); 
+            //$query->where('unit_id',$user->unit_id); 
+            $query->whereIn('unit_id',function($query){
+                $query->select('unit_id')
+                ->from('users_units')
+                ->where('user_id', '=', $this->getUserDir());
+             }); 
         }
         if ($filter = \Request::get('filter')) {
             $query->where('document_type_id', $filter);
@@ -201,7 +206,8 @@ class DocumentController extends Controller
         $this->validate($request,[
             'name' => 'required|string|max:191',
             'selectdocnum' => 'required',
-            'author' => 'required'
+            'author' => 'required',
+            'units' => 'required'
         ]);
 
         $user = User::findOrFail($this->getUserDir());

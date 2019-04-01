@@ -56,17 +56,19 @@ class DocumentNumController extends Controller
     public function store(Request $request)
     {
         //
+        $this->validate($request,[
+            'name' => 'required|string|max:150',
+            'selectdoc' => 'required'
+        ]);
+
         DB::beginTransaction();
         try {
             // do your database transaction here
             $jenis = $request['selectdoc'];
             $number = $this->getnumber($jenis['name']);
             $request->merge(['number' => $number]);
-            $this->validate($request,[
-                'number' => 'required|string|max:191|unique:document_nums',
-                'name' => 'nullable|string|max:150',
-            ]);
-    
+
+           
             DocumentNum::create([
                 'number' => $request['number'],
                 'name' => $request['name'],

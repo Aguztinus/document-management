@@ -42,7 +42,7 @@
                     <div class="col-md-4">
                       <div class="form-group">
                         <label for="inputName3" class="control-label">Number</label>
-                        
+
                         <input
                           type="text"
                           class="form-control"
@@ -50,20 +50,24 @@
                           v-model="form.number"
                           placeholder="Auto generate"
                           disabled
+                          :class="{ 'is-invalid': form.errors.has('number') }"
                         >
+                        <has-error :form="form" field="number"></has-error>
                       </div>
                     </div>
                     <div class="col-md-8">
                       <div class="form-group">
                         <label for="inputdescription" class="control-label">Nama File/Description</label>
-                        
+
                         <input
                           type="text"
                           class="form-control"
                           id="inputdescription"
                           v-model="form.name"
                           placeholder="Description"
+                          :class="{ 'is-invalid': form.errors.has('name') }"
                         >
+                        <has-error :form="form" field="name"></has-error>
                       </div>
                     </div>
                     <div class="col-md-4"></div>
@@ -76,7 +80,9 @@
                         placeholder="Select one"
                         label="name"
                         track-by="name"
+                        :class="{ 'is-danger': form.errors.has('selectdoc') }"
                       ></multiselect>
+                      <has-error :form="form" field="selectdoc"></has-error>
                     </div>
                   </div>
                 </div>
@@ -328,6 +334,7 @@ export default {
     },
     createNumber() {
       this.$Progress.start();
+
       this.form
         .post("api/documentnum")
         .then(response => {
@@ -348,6 +355,10 @@ export default {
         .catch(error => {
           if (error.response) {
             console.log(error.response);
+            toast({
+              type: "error",
+              title: "There was something wrong," + error.response.data.message
+            });
           }
           this.$Progress.fail();
         });

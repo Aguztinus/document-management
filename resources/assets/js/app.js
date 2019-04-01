@@ -85,6 +85,7 @@ let routes = [
 
 const router = new VueRouter({
     mode: "history",
+    // base: "/dev/",
     routes // short for `routes: routes`
 });
 

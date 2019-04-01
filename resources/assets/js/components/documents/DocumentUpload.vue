@@ -71,6 +71,7 @@
                       placeholder="Select one"
                       label="name"
                       track-by="name"
+                      :class="{ 'is-danger': form.errors.has('selectdocnum') }"
                     ></multiselect>
                     <has-error :form="form" field="selectdocnum"></has-error>
                   </div>
@@ -83,6 +84,7 @@
                       placeholder="Select one"
                       label="name"
                       track-by="name"
+                      :class="{ 'is-danger': form.errors.has('author') }"
                     ></multiselect>
                     <has-error :form="form" field="author"></has-error>
                   </div>
@@ -169,6 +171,7 @@
                       label="name"
                       track-by="name"
                       :preselect-first="true"
+                      :class="{ 'is-danger': form.errors.has('units') }"
                     ></multiselect>
 
                     <has-error :form="form" field="units"></has-error>
@@ -281,7 +284,7 @@ export default {
         });
     },
     loadUnits() {
-      if (this.$gate.isAdminOrAuthor()) {
+      if (this.$gate.isAdminOrUploader()) {
         this.$Progress.start();
         axios
           .get("api/userUnits")
@@ -323,6 +326,8 @@ export default {
             confirmButtonText: "List Document"
           }).then(result => {
             // Send request to the server
+            this.docnum = [];
+            this.loadDocNum();
             if (result.value) {
               // Jika dipanggil dari popup
               if (this.isPopup) {
@@ -341,7 +346,7 @@ export default {
             console.log(error.response);
             toast({
               type: "error",
-              title: "There was something wrong"
+              title: "There was something wrong, " + error.response.data.message
             });
           }
           this.$Progress.fail();
@@ -372,6 +377,10 @@ export default {
         .catch(error => {
           if (error.response) {
             console.log(error.response);
+            toast({
+              type: "error",
+              title: "There was something wrong, " + error.response.data.message
+            });
           }
           this.$Progress.fail();
         });
