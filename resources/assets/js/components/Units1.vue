@@ -6,14 +6,14 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1>Master Authors</h1>
+                <h1>Master Units</h1>
               </div>
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                   <li class="breadcrumb-item">
                     <router-link to="/dashboard">Home</router-link>
                   </li>
-                  <li class="breadcrumb-item active">Author</li>
+                  <li class="breadcrumb-item active">Units</li>
                 </ol>
               </div>
             </div>
@@ -24,10 +24,11 @@
         <div class="card card-primary card-outline">
           <div class="card-header">
             <h3 class="card-title">
-              <filter-bar></filter-bar>
+              <!-- <i class="fas fa-building"></i> Units Table -->
+              Units Table
             </h3>
 
-            <div class="card-tools mt-3">
+            <div class="card-tools">
               <button class="btn btn-success" @click="newModal">
                 Add New
                 <i class="fas fa-plus-circle fa-fw"></i>
@@ -36,29 +37,36 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body table-responsive p-0">
-            <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
-              <vuetable
-                ref="vuetable"
-                api-url="api/author"
-                :fields="fields"
-                :multi-sort="true"
-                :append-params="moreParams"
-                multi-sort-key="ctrl"
-                :http-options="httpOptions"
-                pagination-path
-                @vuetable:pagination-data="onPaginationData"
-                @vuetable:load-error="onLoadError"
-                @vuetable:loading="showLoader"
-                @vuetable:loaded="hideLoader"
-              ></vuetable>
-              <div class="vuetable-pagination ui basic segment grid">
-                <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
-                <vuetable-pagination
-                  ref="pagination"
-                  @vuetable-pagination:change-page="onChangePage"
-                ></vuetable-pagination>
-              </div>
-            </div>
+            <table class="table table-striped">
+              <tbody>
+                <tr>
+                  <th style="width: 10px">ID</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th style="width: 100px">Created At</th>
+                  <th style="width: 130px">Modify</th>
+                </tr>
+                <tr v-for="unit in units.data" :key="unit.id">
+                  <td>{{unit.id}}</td>
+                  <td>{{unit.name}}</td>
+                  <td>{{unit.description}}</td>
+                  <td>{{unit.created_at | myDateshort}}</td>
+                  <td>
+                    <a href="#" class="btn btn-default" @click="editModal(unit)">
+                      <i class="fa fa-edit blue"></i>
+                    </a>
+                    
+                    <a href="#" class="btn btn-default" @click="deleteUnit(unit.id)">
+                      <i class="fa fa-trash red"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
+          <div class="card-footer">
+            <pagination :data="units" :limit="7" @pagination-change-page="getResults"></pagination>
           </div>
         </div>
         <!-- /.card -->
@@ -82,7 +90,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" v-show="!editmode" id="addNewLabel">Add New</h5>
-            <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Author's Info</h5>
+            <h5 class="modal-title" v-show="editmode" id="addNewLabel">Update Unit's Info</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -103,16 +111,17 @@
               </div>
 
               <div class="form-group">
-                <label for="labelEmail">Email</label>
-                <input
-                  v-model="form.email"
+                <label for="labelDescription">Description</label>
+                <textarea
+                  v-model="form.description"
                   name="text"
-                  id="email"
-                  placeholder="Email"
+                  id="description"
+                  placeholder="Description (Optional)"
                   class="form-control"
-                  :class="{ 'is-invalid': form.errors.has('email') }"
-                >
-                <has-error :form="form" field="email"></has-error>
+                  :class="{ 'is-invalid': form.errors.has('description') }"
+                ></textarea>
+
+                <has-error :form="form" field="description"></has-error>
               </div>
             </div>
             <div class="modal-footer">
@@ -128,103 +137,38 @@
 </template>
 
 <script>
-import FilterBar from "./vuetable/FilterBar";
-Vue.component("filter-bar", FilterBar);
-
-Vue.component("custom-actions-simple", {
-  template: [
-    "<div class='d-flex flex-row'>",
-    '<button class="btn btn-success ml-1" @click="onClickEdit(rowData)"><i class="edit icon"></i></button>',
-    '<button class="btn btn-danger ml-1" @click="onClickDelete(rowData)"><i class="delete icon"></i></button>',
-    "</div>"
-  ].join(""),
-  props: {
-    rowData: {
-      type: Object,
-      required: true
-    }
-  },
-  methods: {
-    onClickEdit(data) {
-      Fire.$emit("Edit", data);
-    },
-    onClickDelete(data) {
-      Fire.$emit("Delete", data.id);
-    }
-  }
-});
-
 export default {
   data() {
     return {
-      fields: [
-        {
-          name: "name",
-          sortField: "name"
-        },
-        {
-          name: "email",
-          sortField: "email"
-        },
-        {
-          name: "__component:custom-actions-simple",
-          title: "Actions",
-          titleClass: "center aligned",
-          dataClass: "center aligned",
-          width: "150px"
-        }
-      ],
-      moreParams: {},
-      loading: "",
       editmode: false,
       visible: false,
       units: {},
       form: new Form({
         id: "",
         name: "",
-        email: ""
+        description: ""
       })
     };
   },
-  computed: {
-    httpOptions() {
-      return {
-        headers: window.axios.defaults.headers.common //table props -> :http-options="httpOptions"
-      };
-    }
-  },
   methods: {
-    showLoader() {
-      this.loading = "loading";
-    },
-    hideLoader() {
-      this.loading = "";
-    },
-    onLoadError(response) {
-      if (response.status == 400) {
-        sweetAlert("Something's Wrong!", response.data.message, "error");
-      } else {
-        sweetAlert("Oops", E_SERVER_ERROR, "error");
-      }
-    },
-    onPaginationData(paginationData) {
-      this.$refs.pagination.setPaginationData(paginationData);
-      this.$refs.paginationInfo.setPaginationData(paginationData);
-    },
-    onChangePage(page) {
-      this.$refs.vuetable.changePage(page);
+    getResults(page = 1) {
+      this.$Progress.start();
+      axios.get("api/unit?page=" + page).then(response => {
+        this.units = response.data;
+      });
+      this.$Progress.finish();
     },
     updateUnit() {
       this.$Progress.start();
       // console.log('Editing data');
       this.form
-        .put("api/author/" + this.form.id)
+        .put("api/unit/" + this.form.id)
         .then(() => {
           // success
           $("#addNew").modal("hide");
           swal("Updated!", "Information has been updated.", "success");
           this.$Progress.finish();
-          Fire.$emit("LoadTable");
+          Fire.$emit("AfterCreate");
         })
         .catch(() => {
           this.$Progress.fail();
@@ -254,10 +198,10 @@ export default {
         // Send request to the server
         if (result.value) {
           this.form
-            .delete("api/author/" + id)
+            .delete("api/unit/" + id)
             .then(() => {
-              swal("Deleted!", "Your author has been deleted.", "success");
-              Fire.$emit("LoadTable");
+              swal("Deleted!", "Your unit has been deleted.", "success");
+              Fire.$emit("AfterCreate");
             })
             .catch(() => {
               swal("Failed!", "There was something wronge.", "warning");
@@ -265,17 +209,25 @@ export default {
         }
       });
     },
+    loadUnits() {
+      this.$Progress.start();
+      if (this.$gate.isAdminOrAuthor()) {
+        axios.get("api/unit").then(({ data }) => (this.units = data));
+      }
+      this.$Progress.finish();
+    },
+
     createUnit() {
       this.$Progress.start();
       this.form
-        .post("api/author")
+        .post("api/unit")
         .then(() => {
-          Fire.$emit("LoadTable");
+          Fire.$emit("AfterCreate");
           $("#addNew").modal("hide");
 
           toast({
             type: "success",
-            title: "Author Created in successfully"
+            title: "Unit Created in successfully"
           });
           this.$Progress.finish();
         })
@@ -287,30 +239,21 @@ export default {
         });
     }
   },
-  events: {
-    "filter-set"(filterText) {
-      this.moreParams = {
-        filter: filterText
-      };
-      Vue.nextTick(() => this.$refs.vuetable.refresh());
-    },
-    "filter-reset"() {
-      this.moreParams = {};
-      Vue.nextTick(() => this.$refs.vuetable.refresh());
-    }
-  },
   created() {
-    Fire.$on("LoadTable", () => {
-      this.$events.fire("filter-reset");
+    Fire.$on("searching", () => {
+      let query = this.$parent.search;
+      axios
+        .get("api/findUnit?q=" + query)
+        .then(data => {
+          this.units = data.data;
+        })
+        .catch(() => {});
     });
-
-    Fire.$on("Edit", data => {
-      this.editModal(data);
+    this.loadUnits();
+    Fire.$on("AfterCreate", () => {
+      this.loadUnits();
     });
-
-    Fire.$on("Delete", data => {
-      this.deleteUnit(data);
-    });
+    //    setInterval(() => this.loadUsers(), 3000);
   }
 };
 </script>

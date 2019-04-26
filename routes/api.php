@@ -27,8 +27,10 @@ Route::apiResources([
 ]);
 
 Route::get('profile', 'API\UserController@profile');
-Route::get('allUser', 'API\UserController@allUser');
+Route::get('getUtilprofile', 'API\UserController@getUtilprofile');
 Route::put('profile', 'API\UserController@updateProfile');
+
+Route::get('allUser', 'API\UserController@allUser');
 Route::get('findUser', 'API\UserController@search');
 Route::get('getUserHis', 'API\UserController@getuserHistory');
 Route::get('getuserunit/{id}', 'API\UserController@getuserunit');
@@ -46,12 +48,14 @@ Route::get('mydocument', 'API\DocumentController@mydocument');
 Route::get('findDoc', 'API\DocumentController@searchDoc');
 Route::get('sortDoc', 'API\DocumentController@sortDoc');
 Route::get('filterDoc', 'API\DocumentController@filterDoc');
+Route::get('downloadfile', 'API\DocumentController@downloadfile');
+Route::post('countdownloadfile', 'API\DocumentController@countdownloadfile');
+Route::get('urldownloadfile/{id}', 'API\DocumentController@urldownloadfile');
 Route::get('getref/{id}', 'API\DocumentController@getref');
 Route::get('gethistory/{id}', 'API\DocumentController@gethistory');
 Route::get('getdocumentref/{id}', 'API\DocumentController@getdocumentref');
 Route::get('download/{id}', 'API\DocumentController@download');
 Route::delete('deletefile/{id}', 'API\DocumentController@deletefile');
-
 
 Route::post('upload', 'API\DocumentController@upload')->name('upload');
 

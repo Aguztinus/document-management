@@ -141,7 +141,7 @@ class DocumentNumController extends Controller
     {
         $user = User::findOrFail(Auth::id());
         $todayDate = date("y");
-        $namenm = $jenis . '/' . $user->unit_id . '/' . $todayDate;
+        $namenm = $jenis . '/' . $todayDate;
         //$number = Counter::firstOrCreate(['name' => $namenm]);
         $number = Counter::firstOrCreate([
             'name' => $namenm

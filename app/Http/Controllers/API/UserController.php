@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\UsersHistory;
+use App\Document;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 
 class UserController extends Controller
@@ -30,9 +32,24 @@ class UserController extends Controller
     public function index()
     {
         // $this->authorize('isAdmin');
-        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
-            return User::with('units')->latest()->paginate(5);
+        // if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
+        //     return User::with('units')->latest()->paginate(5);
+        // }
+        $query = User::with('units');
+        if ($filter = \Request::get('filter')) {
+            $query->where('name','LIKE',"%$filter%")
+            ->orWhere('email','LIKE',"%$filter%");
         }
+
+        if ($order = \Request::get('sort')) {
+            $splitOrder = explode('|',  $order);
+            $query->orderBy($splitOrder[0], $splitOrder[1]);
+        }else{
+            $query->latest();
+        }
+
+        $user = $query->paginate(10);
+        return $user;
     }
 
     public function allUser()
@@ -215,9 +232,22 @@ class UserController extends Controller
         return auth('api')->user();
     }
 
+    public function getUtilprofile()
+    {
+        $user = auth('api')->user();
+        $countupload = Document::where('owner_id', $user->id)->count();
+        
+        return response()->json([
+            'success' => true,
+            'countup' => $countupload,
+            'countdown' => $user->downloads
+       ], 200);
+    }
+
     public function getuserHistory()
     {
         $user = auth('api')->user();
+        
         $his = UsersHistory::where('user_id',$user->id)->latest()->paginate(15);
         return $his;
     }

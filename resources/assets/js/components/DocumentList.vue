@@ -67,7 +67,7 @@
                     <i class="fa fa-times"></i>
                     Cancel
                   </button>
-                  
+
                   <button
                     type="button"
                     class="btn btn-primary float-sm-right mr-2"
@@ -102,7 +102,7 @@
                       <a class="dropdown-item" @click="Edit" v-show="isMine">
                         <i class="fas fa-edit"></i> Edit
                       </a>
-                      <a class="dropdown-item" :href="geturl()" download>
+                      <a class="dropdown-item" @click.prevent="countDown" href="#">
                         <i class="fas fa-arrow-circle-down"></i> Download
                       </a>
                       <div class="dropdown-divider"></div>
@@ -379,6 +379,13 @@ export default {
       this.isEdit = true;
       this.detail = data;
     },
+    countDown() {
+      console.log("tes");
+      axios.post("api/countdownloadfile").then(response => {
+        console.log(response);
+      });
+      window.location.assign("/download/" + this.detail.id);
+    },
     rowClassCB(data, index) {
       if (this.selectdoc == data.id) {
         if (this.visible == true) {
@@ -430,8 +437,7 @@ export default {
       $("#Email").modal("show");
     },
     geturl() {
-      let url =
-        "storage/uploads/" + this.cetak.owner_id + "/" + this.cetak.realname;
+      let url = "download/";
       //console.log(url);
       return url;
     },
@@ -529,7 +535,7 @@ export default {
   },
   created() {
     Fire.$on("LoadTable", () => {
-      this.$refs.vuetable.refresh();
+      this.$events.fire("filter-reset");
     });
 
     Fire.$on("Edit", data => {

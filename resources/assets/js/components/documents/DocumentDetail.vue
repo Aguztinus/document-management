@@ -17,9 +17,12 @@
                 <div class="info-box-content">
                   <span class="info-box-text">File Number</span>
                   <span class="info-box-number">{{ detail.number }}</span>
-                  <a class :href="geturl()" download>
+                  <a class @click.prevent="countDown" href="#">
                     <i class="fas fa-arrow-circle-down"></i> Download
                   </a>
+                  <!-- <a class @click="DownloadFile">
+                    <i class="fas fa-arrow-circle-down"></i> Download
+                  </a>-->
                 </div>
                 <!-- /.info-box-content -->
               </div>
@@ -120,7 +123,8 @@ export default {
       detail: {},
       userowner: "",
       documentautor: "",
-      documenttype: ""
+      documenttype: "",
+      tampUrl: ""
     };
   },
   methods: {
@@ -130,6 +134,33 @@ export default {
       //console.log(url);
       return url;
     },
+    geturl2() {
+      let url = "download/" + this.detail.id;
+      //console.log(url);
+      return url;
+    },
+    countDown() {
+      console.log("tes");
+      axios.post("api/countdownloadfile").then(response => {
+        console.log(response);
+      });
+      window.location.assign("/download/" + this.detail.id);
+    },
+    // DownloadFile() {
+    //   //console.log(this.detail.id);
+    //   axios
+    //     .get("api/downloadfile/" + this.detail.id, {
+    //       responseType: "blob"
+    //     })
+    //     .then(response => {
+    //       const url = window.URL.createObjectURL(new Blob([response.data]));
+    //       const link = document.createElement("a");
+    //       link.href = url;
+    //       link.setAttribute("download", "file.pdf"); //or any other extension
+    //       document.body.appendChild(link);
+    //       link.click();
+    //     });
+    // },
     MoreDetail(data) {
       this.$Progress.start();
       this.detail = data;
@@ -144,6 +175,10 @@ export default {
         //console.log(response2.data);
         this.documentshis = response2.data;
       });
+      // axios.get("api/urldownloadfile/" + data.id).then(response => {
+      //   //console.log(response.data);
+      //   this.tampUrl = response.data;
+      // });
       this.$Progress.finish();
     }
   },

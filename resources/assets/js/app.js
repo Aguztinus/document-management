@@ -37,6 +37,13 @@ Vue.use(VueClip);
 import VTooltip from "v-tooltip";
 Vue.use(VTooltip);
 
+import IdleVue from "idle-vue";
+const eventsHub = new Vue();
+Vue.use(IdleVue, {
+    eventEmitter: eventsHub,
+    idleTime: 10000 * 6 * 60 * 2
+});
+
 Vue.component("pagination", require("laravel-vue-pagination"));
 
 import VueRouter from "vue-router";
@@ -85,7 +92,7 @@ let routes = [
 
 const router = new VueRouter({
     mode: "history",
-    // base: "/dev/",
+    //base: "/dev/",
     routes // short for `routes: routes`
 });
 
@@ -154,6 +161,19 @@ const app = new Vue({
     router,
     data: {
         search: ""
+    },
+    onIdle() {
+        console.log("ZZZZZ");
+        axios
+            .post("logout")
+            .then(response => {
+                console.log("logout");
+            })
+            .catch(error => {});
+        window.location.href = "/login";
+    },
+    onActive() {
+        console.log("On");
     },
     methods: {
         searchit: _.debounce(() => {

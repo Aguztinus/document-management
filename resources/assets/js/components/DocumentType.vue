@@ -24,8 +24,7 @@
         <div class="card card-primary card-outline">
           <div class="card-header">
             <h3 class="card-title">
-              <!-- <i class="fas fa-building"></i> Units Table -->
-              Document Type Table
+              <filter-bar></filter-bar>
             </h3>
 
             <div class="card-tools">
@@ -37,36 +36,29 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body table-responsive p-0">
-            <table class="table table-striped">
-              <tbody>
-                <tr>
-                  <th style="width: 10px">ID</th>
-                  <th>Name</th>
-                  <th>Description</th>
-                  <th style="width: 100px">Created At</th>
-                  <th style="width: 130px">Modify</th>
-                </tr>
-                <tr v-for="unit in units.data" :key="unit.id">
-                  <td>{{unit.id}}</td>
-                  <td>{{unit.name}}</td>
-                  <td>{{unit.description}}</td>
-                  <td>{{unit.created_at | myDateshort}}</td>
-                  <td>
-                    <a href="#" class="btn btn-default" @click="editModal(unit)">
-                      <i class="fa fa-edit blue"></i>
-                    </a>
-                    
-                    <a href="#" class="btn btn-default" @click="deleteUnit(unit.id)">
-                      <i class="fa fa-trash red"></i>
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
-          <div class="card-footer">
-            <pagination :data="units" :limit="7" @pagination-change-page="getResults"></pagination>
+            <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
+              <vuetable
+                ref="vuetable"
+                api-url="api/documenttype"
+                :fields="fields"
+                :multi-sort="true"
+                :append-params="moreParams"
+                multi-sort-key="ctrl"
+                :http-options="httpOptions"
+                pagination-path
+                @vuetable:pagination-data="onPaginationData"
+                @vuetable:load-error="onLoadError"
+                @vuetable:loading="showLoader"
+                @vuetable:loaded="hideLoader"
+              ></vuetable>
+              <div class="vuetable-pagination ui basic segment grid">
+                <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
+                <vuetable-pagination
+                  ref="pagination"
+                  @vuetable-pagination:change-page="onChangePage"
+                ></vuetable-pagination>
+              </div>
+            </div>
           </div>
         </div>
         <!-- /.card -->
@@ -137,9 +129,54 @@
 </template>
 
 <script>
+import FilterBar from "./vuetable/FilterBar";
+Vue.component("filter-bar", FilterBar);
+
+Vue.component("custom-actions-simple", {
+  template: [
+    "<div class='d-flex flex-row'>",
+    '<button class="btn btn-success ml-1" @click="onClickEdit(rowData)"><i class="edit icon"></i></button>',
+    '<button class="btn btn-danger ml-1" @click="onClickDelete(rowData)"><i class="delete icon"></i></button>',
+    "</div>"
+  ].join(""),
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    onClickEdit(data) {
+      Fire.$emit("Edit", data);
+    },
+    onClickDelete(data) {
+      Fire.$emit("Delete", data.id);
+    }
+  }
+});
+
 export default {
   data() {
     return {
+      fields: [
+        {
+          name: "name",
+          sortField: "name"
+        },
+        {
+          name: "description",
+          sortField: "description"
+        },
+        {
+          name: "__component:custom-actions-simple",
+          title: "Actions",
+          titleClass: "center aligned",
+          dataClass: "center aligned",
+          width: "150px"
+        }
+      ],
+      moreParams: {},
+      loading: "",
       editmode: false,
       visible: false,
       units: {},
@@ -150,13 +187,33 @@ export default {
       })
     };
   },
+  computed: {
+    httpOptions() {
+      return {
+        headers: window.axios.defaults.headers.common //table props -> :http-options="httpOptions"
+      };
+    }
+  },
   methods: {
-    getResults(page = 1) {
-      this.$Progress.start();
-      axios.get("api/documenttype?page=" + page).then(response => {
-        this.units = response.data;
-      });
-      this.$Progress.finish();
+    showLoader() {
+      this.loading = "loading";
+    },
+    hideLoader() {
+      this.loading = "";
+    },
+    onLoadError(response) {
+      if (response.status == 400) {
+        sweetAlert("Something's Wrong!", response.data.message, "error");
+      } else {
+        sweetAlert("Oops", E_SERVER_ERROR, "error");
+      }
+    },
+    onPaginationData(paginationData) {
+      this.$refs.pagination.setPaginationData(paginationData);
+      this.$refs.paginationInfo.setPaginationData(paginationData);
+    },
+    onChangePage(page) {
+      this.$refs.vuetable.changePage(page);
     },
     updateUnit() {
       this.$Progress.start();
@@ -168,7 +225,7 @@ export default {
           $("#addNew").modal("hide");
           swal("Updated!", "Information has been updated.", "success");
           this.$Progress.finish();
-          Fire.$emit("AfterCreate");
+          Fire.$emit("LoadTable");
         })
         .catch(() => {
           this.$Progress.fail();
@@ -201,7 +258,7 @@ export default {
             .delete("api/documenttype/" + id)
             .then(() => {
               swal("Deleted!", "Your unit has been deleted.", "success");
-              Fire.$emit("AfterCreate");
+              Fire.$emit("LoadTable");
             })
             .catch(() => {
               swal("Failed!", "There was something wronge.", "warning");
@@ -222,7 +279,7 @@ export default {
       this.form
         .post("api/documenttype")
         .then(() => {
-          Fire.$emit("AfterCreate");
+          Fire.$emit("LoadTable");
           $("#addNew").modal("hide");
 
           toast({
@@ -239,21 +296,30 @@ export default {
         });
     }
   },
+  events: {
+    "filter-set"(filterText) {
+      this.moreParams = {
+        filter: filterText
+      };
+      Vue.nextTick(() => this.$refs.vuetable.refresh());
+    },
+    "filter-reset"() {
+      this.moreParams = {};
+      Vue.nextTick(() => this.$refs.vuetable.refresh());
+    }
+  },
   created() {
-    Fire.$on("searching", () => {
-      let query = this.$parent.search;
-      axios
-        .get("api/findDocType?q=" + query)
-        .then(data => {
-          this.units = data.data;
-        })
-        .catch(() => {});
+    Fire.$on("LoadTable", () => {
+      this.$events.fire("filter-reset");
     });
-    this.loadUnits();
-    Fire.$on("AfterCreate", () => {
-      this.loadUnits();
+
+    Fire.$on("Edit", data => {
+      this.editModal(data);
     });
-    //    setInterval(() => this.loadUsers(), 3000);
+
+    Fire.$on("Delete", data => {
+      this.deleteUnit(data);
+    });
   }
 };
 </script>

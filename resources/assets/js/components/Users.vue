@@ -23,7 +23,10 @@
 
         <div class="card card-primary card-outline">
           <div class="card-header">
-            <h3 class="card-title">Users Table</h3>
+            <h3 class="card-title">
+              <!-- <i class="fas fa-building"></i> Units Table -->
+              <filter-bar></filter-bar>
+            </h3>
 
             <div class="card-tools">
               <button class="btn btn-success" @click="newModal">
@@ -34,40 +37,29 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body table-responsive p-0">
-            <table class="table table-striped">
-              <tbody>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Type</th>
-                  <th style="width: 100px">Created At</th>
-                  <th style="width: 130px">Modify</th>
-                </tr>
-
-                <tr v-for="user in users.data" :key="user.id">
-                  <td>{{user.id}}</td>
-                  <td>{{user.name}}</td>
-                  <td>{{user.email}}</td>
-                  <td>{{user.type | upText}}</td>
-                  <td>{{user.created_at | myDateshort}}</td>
-
-                  <td>
-                    <a href="#" class="btn btn-default" @click="editModal(user)">
-                      <i class="fa fa-edit blue"></i>
-                    </a>
-                    
-                    <a href="#" class="btn btn-default" @click="deleteUser(user.id)">
-                      <i class="fa fa-trash red"></i>
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <!-- /.card-body -->
-          <div class="card-footer">
-            <pagination :data="users" :limit="5" @pagination-change-page="getResults"></pagination>
+            <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
+              <vuetable
+                ref="vuetableUser"
+                api-url="api/user"
+                :fields="fields"
+                :multi-sort="true"
+                :append-params="moreParams"
+                multi-sort-key="ctrl"
+                :http-options="httpOptions"
+                pagination-path
+                @vuetable:pagination-data="onPaginationData"
+                @vuetable:load-error="onLoadError"
+                @vuetable:loading="showLoader"
+                @vuetable:loaded="hideLoader"
+              ></vuetable>
+              <div class="vuetable-pagination ui basic segment grid">
+                <vuetable-pagination-info ref="paginationInfo"></vuetable-pagination-info>
+                <vuetable-pagination
+                  ref="pagination"
+                  @vuetable-pagination:change-page="onChangePage"
+                ></vuetable-pagination>
+              </div>
+            </div>
           </div>
         </div>
         <!-- /.card -->
@@ -216,9 +208,65 @@
 </template>
 
 <script>
+import FilterBar from "./vuetable/FilterBar";
+Vue.component("filter-bar", FilterBar);
+
+Vue.component("custom-actions-simple", {
+  template: [
+    "<div class='d-flex flex-row'>",
+    '<button class="btn btn-success ml-1" @click="onClickEditUser(rowData)"><i class="edit icon"></i></button>',
+    '<button class="btn btn-danger ml-1" @click="onClickDeleteUser(rowData)"><i class="delete icon"></i></button>',
+    "</div>"
+  ].join(""),
+  props: {
+    rowData: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    onClickEditUser(data) {
+      console.log("Editing data");
+      Fire.$emit("Edit", data);
+    },
+    onClickDeleteUser(data) {
+      Fire.$emit("Delete", data.id);
+    }
+  }
+});
+
 export default {
   data() {
     return {
+      fields: [
+        {
+          name: "name",
+          sortField: "name"
+        },
+        {
+          name: "email",
+          sortField: "email"
+        },
+        {
+          name: "type",
+          sortField: "type"
+        },
+        {
+          name: "created_at",
+          title: "Created At",
+          sortField: "created_at",
+          callback: "formatDate|DD-MM-YYYY"
+        },
+        {
+          name: "__component:custom-actions-simple",
+          title: "Actions",
+          titleClass: "center aligned",
+          dataClass: "center aligned",
+          width: "150px"
+        }
+      ],
+      moreParams: {},
+      loading: "",
       editmode: false,
       isDisabled: false,
       visible: false,
@@ -237,7 +285,34 @@ export default {
       })
     };
   },
+  computed: {
+    httpOptions() {
+      return {
+        headers: window.axios.defaults.headers.common //table props -> :http-options="httpOptions"
+      };
+    }
+  },
   methods: {
+    showLoader() {
+      this.loading = "loading";
+    },
+    hideLoader() {
+      this.loading = "";
+    },
+    onLoadError(response) {
+      if (response.status == 400) {
+        sweetAlert("Something's Wrong!", response.data.message, "error");
+      } else {
+        sweetAlert("Oops", E_SERVER_ERROR, "error");
+      }
+    },
+    onPaginationData(paginationData) {
+      this.$refs.pagination.setPaginationData(paginationData);
+      this.$refs.paginationInfo.setPaginationData(paginationData);
+    },
+    onChangePage(page) {
+      this.$refs.vuetableUser.changePage(page);
+    },
     onChange() {
       this.form.unit_id = this.form.unit.id;
     },
@@ -247,6 +322,11 @@ export default {
         this.users = response.data;
       });
       this.$Progress.finish();
+    },
+    formatDate(value, fmt = "D MMM YYYY h:mm:ss") {
+      return value == null
+        ? ""
+        : moment(value, "YYYY-MM-DD h:mm:ss").format(fmt);
     },
     updateUser() {
       this.$Progress.start();
@@ -258,7 +338,7 @@ export default {
           $("#addNew").modal("hide");
           swal("Updated!", "Information has been updated.", "success");
           this.$Progress.finish();
-          Fire.$emit("AfterCreate");
+          Fire.$emit("LoadTableUser");
         })
         .catch(() => {
           this.$Progress.fail();
@@ -275,7 +355,7 @@ export default {
       this.form.reset();
       $("#addNew").modal("show");
     },
-    deleteUser(id) {
+    deleteMe(id) {
       swal({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -291,7 +371,7 @@ export default {
             .delete("api/user/" + id)
             .then(() => {
               swal("Deleted!", "Your file has been deleted.", "success");
-              Fire.$emit("AfterCreate");
+              Fire.$emit("LoadTableUser");
             })
             .catch(() => {
               swal("Failed!", "There was something wronge.", "warning");
@@ -327,7 +407,7 @@ export default {
       this.form
         .post("api/user")
         .then(() => {
-          Fire.$emit("AfterCreate");
+          Fire.$emit("LoadTableUser");
           $("#addNew").modal("hide");
 
           toast({
@@ -345,22 +425,31 @@ export default {
       this.isDisabled = false;
     }
   },
+  events: {
+    "filter-set"(filterText) {
+      this.moreParams = {
+        filter: filterText
+      };
+      Vue.nextTick(() => this.$refs.vuetableUser.refresh());
+    },
+    "filter-reset"() {
+      this.moreParams = {};
+      Vue.nextTick(() => this.$refs.vuetableUser.refresh());
+    }
+  },
   created() {
-    Fire.$on("searching", () => {
-      let query = this.$parent.search;
-      axios
-        .get("api/findUser?q=" + query)
-        .then(data => {
-          this.users = data.data;
-        })
-        .catch(() => {});
+    Fire.$on("LoadTableUser", () => {
+      this.$events.fire("filter-reset"); // untuk Reload Table
     });
-    this.loadUsers();
+
+    Fire.$on("Edit", data => {
+      this.editModal(data);
+    });
+
+    Fire.$on("Delete", data => {
+      this.deleteMe(data);
+    });
     this.loadUnits();
-    Fire.$on("AfterCreate", () => {
-      this.loadUsers();
-    });
-    //    setInterval(() => this.loadUsers(), 3000);
   }
 };
 </script>

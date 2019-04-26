@@ -29,7 +29,7 @@
             <div class="row">
               <div class="col-sm-4 border-right">
                 <div class="description-block">
-                  <h5 class="description-header">3,200</h5>
+                  <h5 class="description-header">{{this.countdown}}</h5>
                   <span class="description-text">Download</span>
                 </div>
                 <!-- /.description-block -->
@@ -42,7 +42,7 @@
               <!-- /.col -->
               <div class="col-sm-4">
                 <div class="description-block">
-                  <h5 class="description-header">35</h5>
+                  <h5 class="description-header">{{this.countup}}</h5>
                   <span class="description-text">Document</span>
                 </div>
                 <!-- /.description-block -->
@@ -88,7 +88,7 @@
                         v-if="(index === 0 || hi.created_at !== his[index].created_at)"
                         class="bg-danger"
                       >{{hi.created_at | myDateshort}}</span>
-                      
+
                       <i
                         v-if="!(index === 0 || hi.created_at !== his[index].created_at)"
                         class="fa fa-envelope bg-primary"
@@ -115,69 +115,7 @@
                       </div>
                     </li>
                     <!-- END timeline item -->
-                    <!-- timeline item -->
-                    <li>
-                      <i class="fa fa-user bg-info"></i>
-
-                      <div class="timeline-item">
-                        <span class="time">
-                          <i class="fa fa-clock-o"></i> 5 mins ago
-                        </span>
-
-                        <h3 class="timeline-header no-border">
-                          <a href="#">Sarah Young</a> accepted your friend request
-                        </h3>
-                      </div>
-                    </li>
-                    <!-- END timeline item -->
-                    <!-- timeline item -->
-                    <li>
-                      <i class="fa fa-comments bg-warning"></i>
-
-                      <div class="timeline-item">
-                        <span class="time">
-                          <i class="fa fa-clock-o"></i> 27 mins ago
-                        </span>
-
-                        <h3 class="timeline-header">
-                          <a href="#">Jay White</a> commented on your post
-                        </h3>
-
-                        <div class="timeline-body">
-                          Take me to your leader!
-                          Switzerland is small and neutral!
-                          We are more like Germany, ambitious and misunderstood!
-                        </div>
-                        <div class="timeline-footer">
-                          <a href="#" class="btn btn-warning btn-flat btn-sm">View comment</a>
-                        </div>
-                      </div>
-                    </li>
-                    <!-- END timeline item -->
-                    <!-- timeline time label -->
-                    <li class="time-label">
-                      <span class="bg-success">3 Jan. 2014</span>
-                    </li>
-                    <!-- /.timeline-label -->
-                    <!-- timeline item -->
-                    <li>
-                      <i class="fa fa-camera bg-purple"></i>
-
-                      <div class="timeline-item">
-                        <span class="time">
-                          <i class="fa fa-clock-o"></i> 2 days ago
-                        </span>
-
-                        <h3 class="timeline-header">
-                          <a href="#">Mina Lee</a> uploaded new photos
-                        </h3>
-
-                        <div class="timeline-body">
-                          Take me to your leader!
-                          Switzerland is small and neutral!
-                        </div>
-                      </div>
-                    </li>
+                   
                     <!-- END timeline item -->
                     <li>
                       <i class="fa fa-clock-o bg-gray"></i>
@@ -245,7 +183,7 @@
                     <label
                       for="password"
                       class="col-sm-12 control-label"
-                    >password (leave empty if not changing)</label>
+                    >Password (leave empty if not changing)</label>
 
                     <div class="col-sm-12">
                       <input
@@ -253,7 +191,7 @@
                         v-model="form.password"
                         class="form-control"
                         id="password"
-                        placeholder="Passport"
+                        placeholder="Password"
                         :class="{ 'is-invalid': form.errors.has('password') }"
                       >
                       <has-error :form="form" field="password"></has-error>
@@ -291,6 +229,8 @@ export default {
   data() {
     return {
       his: {},
+      countup: 0,
+      countdown: 0,
       isNewDate: false,
       myDate: "",
       form: new Form({
@@ -319,6 +259,13 @@ export default {
           }
         });
     },
+    getCount() {
+      axios.get("api/getUtilprofile").then(response => {
+        this.countup = response.data.countup;
+        this.countdown = response.data.countdown;
+        //console.log(response);
+      });
+    },
     getProfilePhoto() {
       let photo =
         this.form.photo.length > 200
@@ -337,7 +284,10 @@ export default {
       this.form
         .put("api/profile")
         .then(() => {
-          Fire.$emit("AfterCreate");
+          toast({
+            type: "success",
+            title: "User Update in successfully"
+          });
           this.$Progress.finish();
         })
         .catch(() => {
@@ -368,6 +318,7 @@ export default {
   created() {
     axios.get("api/profile").then(({ data }) => this.form.fill(data));
     this.getHistory();
+    this.getCount();
   }
 };
 </script>

@@ -67,7 +67,7 @@
                       v-model="form.selectdocnum"
                       :options="docnum"
                       :custom-label="nameWithId"
-                      :disabled="isEdit"
+                      :disabled="isEdit && isUploadNew == 0"
                       placeholder="Select one"
                       label="name"
                       track-by="name"
@@ -382,6 +382,7 @@ export default {
               title: "There was something wrong, " + error.response.data.message
             });
           }
+          console.log("tes");
           this.$Progress.fail();
         });
     },
@@ -412,12 +413,15 @@ export default {
       });
     },
     loadSelectedDoc() {
-      //console.log(this.isEdit);
+      //console.log(this.doc);
+      //console.log(this.form.isUploadNew);
       if (this.isEdit == true) {
         this.form.id = this.doc.id;
         this.form.name = this.doc.name;
         this.form.description = this.doc.description;
         this.form.selectdocnum = this.doc.documentnum;
+        this.form.units = this.doc.unit;
+
         this.form.author = this.doc.documentautor;
         //this.form.isUploadNew = this.isUploadNew;
 
@@ -434,7 +438,10 @@ export default {
       this.form.reset();
     },
     claerFile() {
-      this.$refs.vc.removeFile(this.tampfile);
+      if (Object.keys(this.tampfile).length > 0) {
+        // cek jika tidak ada object
+        this.$refs.vc.removeFile(this.tampfile);
+      }
       this.$refs.vc.files = [];
       this.form.uploadDoc = [];
     },
@@ -486,10 +493,14 @@ export default {
   watch: {
     isUploadNew: function(newValue) {
       this.form.isUploadNew = newValue;
-      //console.log(this.form.isUploadNew);
+      if (this.form.isUploadNew == 1) {
+        this.form.selectdocnum = "";
+      }
+      //console.log(this.form.isUploadNew + 2);
     },
     isEdit: function(newValue) {
       //console.log(newValue);
+      //console.log("ed");
       if (!newValue) {
         this.clearAll();
       }
@@ -499,8 +510,8 @@ export default {
     this.$Progress.start();
     this.loadDocNum();
     this.loadAuthor();
-    this.loadSelectedDoc();
     this.loadUnits();
+    this.loadSelectedDoc();
     Fire.$on("LoadForm", () => {
       this.loadSelectedDoc();
     });

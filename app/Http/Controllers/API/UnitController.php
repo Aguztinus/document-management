@@ -19,12 +19,31 @@ class UnitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // public function index()
+    // {
+    //     //
+    //     if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
+    //         return Units::latest()->paginate(5);
+    //     }
+    // }
+
     public function index()
     {
-        //
-        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
-            return Units::latest()->paginate(5);
+        $query = Units::query();
+        if ($filter = \Request::get('filter')) {
+            $query->where('name','LIKE',"%$filter%")
+            ->orWhere('description','LIKE',"%$filter%");
         }
+
+        if ($order = \Request::get('sort')) {
+            $splitOrder = explode('|',  $order);
+            $query->orderBy($splitOrder[0], $splitOrder[1]);
+        }else{
+            $query->latest();
+        }
+
+        $qry = $query->paginate(10);
+        return $qry;
     }
 
     public function allUnit()

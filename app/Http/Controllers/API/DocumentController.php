@@ -11,6 +11,7 @@ use App\Document;
 use App\DocumentNum;
 use App\DocumentType;
 use App\User;
+use App\UsersHistory;
 
 class DocumentController extends Controller
 {
@@ -251,6 +252,7 @@ class DocumentController extends Controller
                 $num = DocumentNum::find($number['id']);
                 $num->used = 1;
                 $num->save();
+                $his = $this->insertUserHis($number['number'], 'create');
             }
         } catch (\Illuminate\Database\QueryException $e) {
             return response()->json([
@@ -285,7 +287,8 @@ class DocumentController extends Controller
          }        
 
         if (Storage::putFileAs('/public/uploads/' . $this->getUserDir() . '/', $file, $filename)) {
-
+           
+            $his = $this->insertUserHis($filename, 'upload');
             return response()->json([
                 'success' => true
             ], 200);
@@ -376,7 +379,9 @@ class DocumentController extends Controller
             {
                 $arr[] = $dataref['code'];
             }
-            $doc->reference()->sync($arr);
+            if(!empty($arr)){
+                $doc->reference()->sync($arr);
+            }
 
         }else{ // jika upload new version
 
@@ -396,7 +401,8 @@ class DocumentController extends Controller
                    
                     $docnew = new Document([
                         'number' => $number['number'],
-                        'name' => $datanew['name'],
+                        'name' => $number['name'],
+                        'realname' => $datanew['name'],
                         'description' => $request['description'],
                         'file_ext' => $splitName[1],
                         'url' => $datanew['name'],
@@ -407,6 +413,8 @@ class DocumentController extends Controller
                         'public' => 0,
                         'owner_id' => $this->getUserDir(),
                         'author_id' => $author['id'],
+                        'document_type_id' => $number['document_type_id'],
+                        'document_num_id' => $number['id'],
                         'unit_id' => $unit['id']
                     ]);
                     $docnew->save();
@@ -422,6 +430,7 @@ class DocumentController extends Controller
             }    
         }
 
+        $his = $this->insertUserHis($doc->name, 'update');
         return ['message' => 'Updated the doc info'];
     }
 
@@ -435,7 +444,7 @@ class DocumentController extends Controller
     {
         //
         if (Storage::delete('/public/uploads/' . $this->getUserDir() . '/' . $id)) {
-
+            $his = $this->insertUserHis($id, 'delete');
             return response()->json([
                 'success' => true
             ], 200);
@@ -455,6 +464,8 @@ class DocumentController extends Controller
                 $doc->history()->detach();
                 $doc->reference()->detach();
                 $doc->delete();
+
+                $his = $this->insertUserHis($doc->name, 'delete');
                 return response()->json([
                     'success' => true
                 ], 200);
@@ -463,6 +474,8 @@ class DocumentController extends Controller
             $doc->history()->detach();
             $doc->reference()->detach();
             $doc->delete();
+
+            $his = $this->insertUserHis($doc->name, 'delete');
             return response()->json([
                 'success' => true
             ], 200);
@@ -474,16 +487,62 @@ class DocumentController extends Controller
         ], 500);
     }
 
-    public function download($id)
+    public function downloadfile($id)
     {
         //
-        $doc = Document::findOrFail($id);
-        return response()->download(storage_path('/public/uploads/' . $this->getUserDir() . '/' . $doc->name));
+        $doc = Document::findOrFail(63);
+        //$file_path = storage_path('public') . '\\uploads\\' . $doc->owner_id . '\\' . $doc->realname;
+        $file_path2 = storage_path('app/public/uploads/' . $doc->owner_id . '/' . $doc->realname);
+        $headers = [
+            'Content-Type' => 'application/pdf',
+         ];
+        //return response()->download(storage_path('/public/uploads/' . $doc->owner_id . '/' . $doc->name));
+        //return response()->download($file_path2);
+        return response()->download($file_path2, $doc->realname, $headers);
+        //return Response::download($file_path);
+    }
+
+    public function urldownloadfile($id)
+    {
+        //
+        $userku = User::findOrFail($this->getUserDir())->increment('downloads',1);
+       
+        //return  $file_path2;
+        return response()->json([
+            'success' => true
+        ], 200);
+    }
+
+    public function countdownloadfile()
+    {
+        //
+        $userku = User::findOrFail($this->getUserDir())->increment('downloads',1);
+       
+        //return  $file_path2;
+        return response()->json([
+            'success' => true
+        ], 200);
     }
 
     private function getUserDir()
     {
         return Auth::id();
+    }
+
+    private function insertUserHis($ket,$action)
+    {
+        $user = User::findOrFail($this->getUserDir());
+        $usrhis = new UsersHistory([
+            'user_id' => $user->id,
+            'user_name' => $user->email,
+            'description' => $ket,
+            'ip' =>  \Request::ip(),
+            'action' => $action,
+            'status' => 1
+        ]);
+        $usrhis->save();
+
+        return $user->id;
     }
 
     private function formatSizeUnits($bytes)

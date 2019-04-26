@@ -18,11 +18,30 @@ class DocumentTypeController extends Controller
         $this->middleware('auth:api');
     }
     
+    // public function index()
+    // {
+    //     if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
+    //         return DocumentType::latest()->paginate(5);
+    //     }
+    // }
+
     public function index()
     {
-        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
-            return DocumentType::latest()->paginate(5);
+        $query = DocumentType::query();
+        if ($filter = \Request::get('filter')) {
+            $query->where('name','LIKE',"%$filter%")
+            ->orWhere('description','LIKE',"%$filter%");
         }
+
+        if ($order = \Request::get('sort')) {
+            $splitOrder = explode('|',  $order);
+            $query->orderBy($splitOrder[0], $splitOrder[1]);
+        }else{
+            $query->latest();
+        }
+
+        $qry = $query->paginate(10);
+        return $qry;
     }
 
     // Document Type
