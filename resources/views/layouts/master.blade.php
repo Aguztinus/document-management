@@ -50,7 +50,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <router-link to="/profile" class="dropdown-item" >
       <i class="nav-icon fas fa-user mr-2 float-left"></i>
       <p>
-      My Profile
+      Profile
       </p>
       </router-link>
       <div class="dropdown-divider"></div>

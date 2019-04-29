@@ -251,7 +251,8 @@
             <div class="container-fluid">
               <div class="row">
                 <div class="col-md-12">
-                  <PreviewDoc :jenis="detail.file_ext" :url="geturl()"></PreviewDoc>
+                  <!-- <PreviewDoc :jenis="detail.file_ext" :url="geturl()"></PreviewDoc> -->
+                  <pdf ref="myPdfComponent" :src="urlpdf"></pdf>
                 </div>
               </div>
             </div>
@@ -269,6 +270,7 @@ import DocUpload from "./documents/DocumentUpload";
 import FilterBarDoc from "./documents/FilterBarDoc";
 import DocumentDetail from "./documents/DocumentDetail";
 import SendEmail from "./emails/SendEmail";
+import pdf from "vue-pdf";
 
 Vue.component("custom-actions", {
   template: [
@@ -299,7 +301,8 @@ export default {
     FilterBarDoc,
     DocUpload,
     SendEmail,
-    DocumentDetail
+    DocumentDetail,
+    pdf
   },
   data() {
     return {
@@ -307,6 +310,7 @@ export default {
       isMine: false,
       visible: false,
       judul: "Upload File",
+      urlpdf: "",
       isUploadNew: 0,
       detail: {},
       cetak: {},
@@ -492,7 +496,16 @@ export default {
       });
     },
     SeeDetail() {
-      this.cetak = this.detail;
+      //this.cetak = this.detail;
+      //this.urlpdf = "download/" + this.detail.id;
+      setTimeout(() => {
+        this.urlpdf = "download/" + this.detail.id;
+      }, 500);
+
+      //this.$refs.myPdfComponent.print(100, 1);
+      //this.$events.fire("print-pdf");
+      //Vue.nextTick(() => this.$refs.myPdfComponent.print());
+      console.log("print" + this.detail.id);
       $("#seeDoc").modal("show");
     },
     closeModal() {
@@ -531,6 +544,9 @@ export default {
     "filter-reset"() {
       this.moreParams = {};
       Vue.nextTick(() => this.$refs.vuetable.refresh());
+    },
+    "print-pdf"() {
+      Vue.nextTick(() => this.$refs.myPdfComponent.print());
     }
   },
   created() {
