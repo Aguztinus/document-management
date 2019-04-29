@@ -38,6 +38,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
       </div>
     </div>
+
+    <div class="navbar-nav ml-auto">
+    <ul class="nav navbar-nav">
+      <li class="dropdown user user-menu">
+      <a href="#" class="dropdown-toggle d-block" data-toggle="dropdown" aria-expanded="false">
+      <img src="{{asset('img/profile/').'/'.Auth::user()->photo}}" class="img-circle mr-1" style="width: 2.1rem;height: auto;" alt="User Image">
+      <span class="hidden-xs"> {{Auth::user()->name}} </span>
+      </a>
+      <div class="dropdown-menu" role="menu">
+      <router-link to="/profile" class="dropdown-item" >
+      <i class="nav-icon fas fa-user mr-2 float-left"></i>
+      <p>
+      My Profile
+      </p>
+      </router-link>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="{{ route('logout') }}"
+      onclick="event.preventDefault();
+      document.getElementById('logout-form').submit();">
+      <i class="nav-icon fa fa-power-off red mr-2 float-left"></i>
+      <p>
+      {{ __('Logout') }}
+      </p>
+      </a>
+
+      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+      @csrf
+      </form>
+      </div>
+      </li>
+    </ul>
+    </div>
   </nav>
   <!-- /.navbar -->
 

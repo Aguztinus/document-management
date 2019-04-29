@@ -24,7 +24,8 @@ class DocumentNumController extends Controller
     public function index()
     {
         //
-        $query = DocumentNum::query();
+        $query = DocumentNum::query()
+            ->where('user_id', '=', $this->getUserDir());
         if ($filter = \Request::get('filter')) {
             $query->where('number','LIKE',"%$filter%")
             ->orWhere('name','LIKE',"%$filter%");
@@ -44,7 +45,8 @@ class DocumentNumController extends Controller
     public function allDocNum()
     {
         //
-        return DocumentNum::where('used',0)->get();
+        return DocumentNum::where('used',0)
+            ->where('user_id', '=', $this->getUserDir())->get();
     }
 
     /**
@@ -73,7 +75,8 @@ class DocumentNumController extends Controller
                 'number' => $request['number'],
                 'name' => $request['name'],
                 'used' => 0,
-                'document_type_id' => $jenis['id']
+                'document_type_id' => $jenis['id'],
+                'user_id' => $this->getUserDir()
             ]);
             DB::commit();
         } catch (\Illuminate\Database\QueryException $e) {

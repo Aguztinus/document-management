@@ -10,7 +10,7 @@ class DocumentNum extends Model
     //
 
     protected $fillable = [
-        'number', 'name', 'used','document_type_id'
+        'number', 'name', 'used','document_type_id','user_id'
     ];
 
     public function document()

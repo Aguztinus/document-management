@@ -61,6 +61,14 @@ body {
 .content-header h1 {
     font-size: 1.6rem;
 }
+.user-menu {
+    a {
+        &:hover {
+            text-decoration: none;
+        }
+    }
+}
+
 @media print {
     .nav.nav-tabs li:not(.active) {
         display: none;
