@@ -122,6 +122,39 @@ class DocumentNumController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request,[
+            'name' => 'required|string|max:191'
+        ]);
+
+        $docnum = DocumentNum::findOrFail($id);
+
+        try {
+            if($docnum->used == 0){
+                $docnum->name = $request['name'];
+                $docnum->save();
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => 'err, documment already used'
+                ], 500);
+            }
+           
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'err qry,' . $e
+            ], 500);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'err app,' . $e
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $request['name']
+        ], 200);
     }
 
     /**

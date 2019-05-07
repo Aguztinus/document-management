@@ -275,10 +275,11 @@ class DocumentController extends Controller
     {
         $file = $request->file('file');
         $filename = $file->getClientOriginalName();
-        if (Document::where('name', $filename)->exists()) {
+        if (Document::where('owner_id', $this->getUserDir())
+                    ->where('realname', $filename)->exists()) {
             return response()->json([
                 'success' => false,
-                'massage' => 'File Already Exists' 
+                'massage' => 'File Already Exists, Please rename your file name.' 
             ], 500);
          }
 
@@ -337,6 +338,7 @@ class DocumentController extends Controller
     {
         //
         $doc = Document::findOrFail($id);
+        $docnum = DocumentNum::findOrFail($doc->document_num_id);
         $user = User::findOrFail($this->getUserDir());
         $number = $request['selectdocnum'];
         $author = $request['author'];
@@ -353,7 +355,7 @@ class DocumentController extends Controller
                     $slugFin = $slug . '.' . $splitName[1];
                     //$unitid = $user->unit_id;
                     
-                    $doc->name = $data['name'];
+                    $doc->realname = $data['name'];
                     $doc->description = $request['description'];
                     $doc->file_ext = $splitName[1];
                     $doc->url = $data['name'];
@@ -365,14 +367,19 @@ class DocumentController extends Controller
                     $doc->author_id = $author['id'];
                     $doc->unit_id = $unit['id'];
                     $doc->save();
+
                 }
             }else { //jika tidak upload file baru
+                $doc->name = $request['name'];
                 $doc->description = $request['description'];
                 $doc->public = 0;
                 $doc->author_id = $author['id'];
                 $doc->unit_id = $unit['id'];
                 $doc->status = 'edited';
                 $doc->save();
+
+                $docnum->name = $request['name'];
+                $docnum->save();
             }
     
             foreach($request['refDoc'] as $dataref)

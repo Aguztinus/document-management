@@ -79,6 +79,7 @@ class UserController extends Controller
                 'type' => $request['type'],
                 'bio' => $request['bio'],
                 'unit_id' => 1,
+                'downloads' => 0,
                 'password' => Hash::make($request['password']),
             ]);
             $usr->save();

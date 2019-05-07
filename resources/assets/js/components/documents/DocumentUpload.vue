@@ -93,7 +93,12 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>File Name</label>
-                    <input type="text" class="form-control" v-model="form.name" disabled>
+                    <input
+                      type="text"
+                      class="form-control"
+                      v-model="form.name"
+                      :disabled="isEdit == false || isUploadNew == 1"
+                    >
                     <input type="hidden" class="form-control" v-model="form.id">
                   </div>
                   <div class="form-group">
@@ -419,7 +424,12 @@ export default {
         this.form.id = this.doc.id;
         this.form.name = this.doc.name;
         this.form.description = this.doc.description;
-        this.form.selectdocnum = this.doc.documentnum;
+        if (this.form.isUploadNew == 1) {
+          this.form.selectdocnum = "";
+        } else {
+          this.form.selectdocnum = this.doc.documentnum;
+        }
+
         this.form.units = this.doc.unit;
 
         this.form.author = this.doc.documentautor;
@@ -495,8 +505,10 @@ export default {
       this.form.isUploadNew = newValue;
       if (this.form.isUploadNew == 1) {
         this.form.selectdocnum = "";
+      } else {
+        this.form.selectdocnum = this.doc.documentnum;
       }
-      //console.log(this.form.isUploadNew + 2);
+      //console.log(this.form.isUploadNew);
     },
     isEdit: function(newValue) {
       //console.log(newValue);
@@ -508,6 +520,7 @@ export default {
   },
   created() {
     this.$Progress.start();
+    console.log("created");
     this.loadDocNum();
     this.loadAuthor();
     this.loadUnits();

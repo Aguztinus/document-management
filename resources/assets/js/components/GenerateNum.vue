@@ -293,8 +293,12 @@ export default {
           this.$Progress.finish();
           Fire.$emit("LoadTable");
         })
-        .catch(() => {
+        .catch(error => {
           this.$Progress.fail();
+          toast({
+            type: "error",
+            title: "There was something wrong, " + error.response.data.message
+          });
         });
     },
     editModal(unit) {
