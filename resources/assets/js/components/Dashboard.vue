@@ -146,7 +146,7 @@ export default {
           sortField: "created_at",
           titleClass: "center aligned",
           dataClass: "center aligned",
-          callback: "formatDate|DD-MM-YYYY"
+          callback: "formatDate|DD-MM-YYYY H:mm:ss"
         },
         {
           name: "__component:custom-actions",
@@ -203,6 +203,11 @@ export default {
     },
     nameWithId({ id, name }) {
       return `[${id}] — ${name}`;
+    },
+    formatDate(value, fmt = "D MMM YYYY H:mm:ss") {
+      return value == null
+        ? ""
+        : moment(value, "YYYY-MM-DD H:mm:ss").format(fmt);
     },
     MoreDetail(data) {
       this.detail = data;
