@@ -42,4 +42,6 @@ class HomeController extends Controller
          ];
         return response()->download($file_path2, $doc->realname, $headers);
     }
+
+    
 }

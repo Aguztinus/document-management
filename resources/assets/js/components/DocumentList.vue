@@ -25,7 +25,14 @@
         <div class="card-header">
           <div class="container-fluid">
             <div class="row mb-2">
-              <div class="col-md-4"></div>
+              <div class="col-md-4">
+                <div class="mt-2" v-show="visible">
+                  <h3 class="card-title">
+                    <i class="fa fa-book mr-1"></i>
+                    Selected: {{ detail.number }}
+                  </h3>
+                </div>
+              </div>
               <!-- Tombol Header -->
               <div class="col-md-8">
                 <div v-show="!visible">
@@ -252,7 +259,25 @@
               <div class="row">
                 <div class="col-md-12">
                   <!-- <PreviewDoc :jenis="detail.file_ext" :url="geturl()"></PreviewDoc> -->
-                  <pdf ref="myPdfComponent" :src="urlpdf"></pdf>
+                  <a v-if="currentPage > 1" href="#" @click="prev">
+                    <i class="fa fa-chevron-left"></i> Prev
+                  </a>
+                  {{currentPage}} / {{pageCount}}
+                  <a
+                    v-if="currentPage < pageCount"
+                    href="#"
+                    @click="next"
+                  >
+                    Next
+                    <i class="fa fa-chevron-right"></i>
+                  </a>
+                  <pdf
+                    ref="myPdfComponent"
+                    :src="urlpdf"
+                    :page="currentPage"
+                    @num-pages="pageCount = $event"
+                    @page-loaded="currentPage = $event"
+                  ></pdf>
                 </div>
               </div>
             </div>
@@ -312,6 +337,8 @@ export default {
       judul: "Upload File",
       urlpdf: "",
       isUploadNew: 0,
+      currentPage: 1,
+      pageCount: 0,
       detail: {},
       cetak: {},
       docTypes: {},
@@ -377,6 +404,8 @@ export default {
       return value.toUpperCase();
     },
     onCellClicked(data, field, event) {
+      this.currentPage = 1;
+      this.pageCount = 0;
       this.selectdoc = data.id;
       this.isMine = data.is_mine;
       this.visible = true;
@@ -384,11 +413,17 @@ export default {
       this.detail = data;
     },
     countDown() {
-      console.log("tes");
-      axios.post("api/countdownloadfile").then(response => {
+      // console.log("tes");
+      axios.post("api/countdownloadfile/" + this.detail.id).then(response => {
         console.log(response);
       });
       window.location.assign("/download/" + this.detail.id);
+    },
+    next() {
+      this.currentPage = this.currentPage + 1;
+    },
+    prev() {
+      this.currentPage = this.currentPage - 1;
     },
     rowClassCB(data, index) {
       if (this.selectdoc == data.id) {
@@ -496,16 +531,12 @@ export default {
       });
     },
     SeeDetail() {
-      //this.cetak = this.detail;
-      //this.urlpdf = "download/" + this.detail.id;
+      this.$Progress.start();
       setTimeout(() => {
         this.urlpdf = "download/" + this.detail.id;
       }, 500);
-
-      //this.$refs.myPdfComponent.print(100, 1);
-      //this.$events.fire("print-pdf");
-      //Vue.nextTick(() => this.$refs.myPdfComponent.print());
-      console.log("print" + this.detail.id);
+      this.$Progress.finish();
+      //console.log("print" + this.detail.id);
       $("#seeDoc").modal("show");
     },
     closeModal() {
@@ -574,6 +605,9 @@ export default {
 </script>
 
 <style>
+.vuetable-body {
+  cursor: pointer;
+}
 .dokdtl svg {
   text-align: center;
   height: 50%;

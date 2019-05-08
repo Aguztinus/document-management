@@ -520,11 +520,12 @@ class DocumentController extends Controller
         ], 200);
     }
 
-    public function countdownloadfile()
+    public function countdownloadfile($id)
     {
         //
+        $doc = Document::findOrFail($id);
         $userku = User::findOrFail($this->getUserDir())->increment('downloads',1);
-       
+        $his = $this->insertUserHis($doc->name, 'download');
         //return  $file_path2;
         return response()->json([
             'success' => true

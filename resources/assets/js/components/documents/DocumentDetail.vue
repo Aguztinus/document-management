@@ -140,8 +140,8 @@ export default {
       return url;
     },
     countDown() {
-      console.log("tes");
-      axios.post("api/countdownloadfile").then(response => {
+      //console.log("tes");
+      axios.post("api/countdownloadfile/" + this.detail.id).then(response => {
         console.log(response);
       });
       window.location.assign("/download/" + this.detail.id);

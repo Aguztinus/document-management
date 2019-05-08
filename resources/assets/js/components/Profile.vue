@@ -79,43 +79,40 @@
                     <li class="time-label"></li>
                     <!-- /.timeline-label -->
                     <!-- timeline item -->
-                    <li
-                      v-for="(hi, index) in his"
-                      :key="hi.id"
-                      v-bind:class="[(index === 0 || hi.created_at !== his[index].created_at) ? ' time-label' : '']"
-                    >
-                      <span
-                        v-if="(index === 0 || hi.created_at !== his[index].created_at)"
-                        class="bg-danger"
-                      >{{hi.created_at | myDateshort}}</span>
-
-                      <i
-                        v-if="!(index === 0 || hi.created_at !== his[index].created_at)"
-                        class="fa fa-envelope bg-primary"
-                      ></i>
-
-                      <div
-                        v-if="!(index === 0 || hi.created_at !== his[index].created_at)"
-                        class="timeline-item"
+                    <template v-for="(hi, index) in his">
+                      <li
+                        :key="hi.id"
+                        v-if="(index === 0 || formatDate(hi.created_at) !== formatDate(his[index-1].created_at))"
+                        class="time-label"
                       >
-                        <span class="time">
-                          <i class="fa fa-clock-o"></i>
-                          {{hi.time_ago}}
-                        </span>
+                        <span class="bg-danger">{{hi.created_at | myDateshort}}</span>
+                      </li>
+                      <li :key="'A'+ hi.id">
+                        <i v-if="hi.action == 'download'" class="fa fa-download bg-info"></i>
+                        <i v-if="hi.action == 'upload'" class="fa fa-upload bg-purple"></i>
+                        <i v-if="hi.action == 'delete'" class="fa fa-times bg-danger"></i>
+                        <i v-if="hi.action == 'update'" class="fa fa-cog bg-warning"></i>
+                        <i v-if="hi.action == 'create'" class="fa fa-check bg-primary"></i>
+                        <div class="timeline-item">
+                          <span class="time">
+                            <i class="fa fa-clock-o"></i>
+                            {{hi.time_ago}}
+                          </span>
 
-                        <h3 class="timeline-header">
-                          <a href="#">{{hi.user_name}}</a>
-                          {{hi.action}}
-                        </h3>
+                          <h3 class="timeline-header">
+                            <a href="#">{{hi.user_name}}</a>
+                            {{hi.action}}
+                          </h3>
 
-                        <div class="timeline-body">{{hi.description}}</div>
-                        <div class="timeline-footer">
-                          <a href="#" class="btn btn-primary btn-sm">Read more</a>
+                          <div class="timeline-body">{{hi.description}}</div>
+                          <div class="timeline-footer">
+                            <a href="#" class="btn btn-primary btn-sm">Read more</a>
+                          </div>
                         </div>
-                      </div>
-                    </li>
+                      </li>
+                    </template>
                     <!-- END timeline item -->
-                   
+
                     <!-- END timeline item -->
                     <li>
                       <i class="fa fa-clock-o bg-gray"></i>
@@ -275,6 +272,11 @@ export default {
     },
     setIsNewDate(index) {
       return index === 0 || hi.created_at !== his[index].created_at;
+    },
+    formatDate(value, fmt = "D MMM YYYY") {
+      return value == null
+        ? ""
+        : moment(value, "YYYY-MM-DD H:mm:ss").format(fmt);
     },
     updateInfo() {
       this.$Progress.start();

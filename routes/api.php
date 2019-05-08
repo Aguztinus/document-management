@@ -49,7 +49,7 @@ Route::get('findDoc', 'API\DocumentController@searchDoc');
 Route::get('sortDoc', 'API\DocumentController@sortDoc');
 Route::get('filterDoc', 'API\DocumentController@filterDoc');
 Route::get('downloadfile', 'API\DocumentController@downloadfile');
-Route::post('countdownloadfile', 'API\DocumentController@countdownloadfile');
+Route::post('countdownloadfile/{id}', 'API\DocumentController@countdownloadfile');
 Route::get('urldownloadfile/{id}', 'API\DocumentController@urldownloadfile');
 Route::get('getref/{id}', 'API\DocumentController@getref');
 Route::get('gethistory/{id}', 'API\DocumentController@gethistory');
