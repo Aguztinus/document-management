@@ -27,6 +27,84 @@
           </h5>
         </div>
 
+        <div class="row">
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>{{countup}}</h3>
+
+                <p>Upload</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-upload"></i>
+              </div>
+              <a href="/documentlist" class="small-box-footer">
+                More info
+                <i class="fa fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>{{countdown}}</h3>
+
+                <p>Donwload</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-download"></i>
+              </div>
+              <a href="/documentlist" class="small-box-footer">
+                More info
+                <i class="fa fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>{{ sumdownload }}</h3>
+
+                <p>My Document Size</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-hdd"></i>
+              </div>
+              <a href="/documentlist" class="small-box-footer">
+                More info
+                <i class="fa fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>{{ countlogin }}</h3>
+
+                <p>Login Count</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-user"></i>
+              </div>
+              <a href="/profile" class="small-box-footer">
+                More info
+                <i class="fa fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+
         <div class="card card-primary card-outline">
           <div class="card-header">
             <h3 class="card-title">My Documment</h3>
@@ -122,6 +200,10 @@ export default {
   data() {
     return {
       myname: "",
+      countup: 0,
+      countdown: 0,
+      sumdownload: 0,
+      countlogin: 0,
       fields: [
         {
           name: "number",
@@ -209,6 +291,15 @@ export default {
         ? ""
         : moment(value, "YYYY-MM-DD H:mm:ss").format(fmt);
     },
+    getCount() {
+      axios.get("api/getUtilprofile").then(response => {
+        this.countup = response.data.countup;
+        this.countdown = response.data.countdown;
+        this.sumdownload = response.data.sizedok;
+        this.countlogin = response.data.logincount;
+        //console.log(response);
+      });
+    },
     MoreDetail(data) {
       this.detail = data;
       //console.log(this.detail.name);
@@ -232,6 +323,7 @@ export default {
   },
   created() {
     axios.get("api/profile").then(({ data }) => (this.myname = data.name));
+    this.getCount();
 
     Fire.$on("Detail", data => {
       this.MoreDetail(data);

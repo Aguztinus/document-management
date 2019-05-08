@@ -581,6 +581,6 @@ class DocumentController extends Controller
         }
 
         return $bytes;
-}
+    }
 
 }

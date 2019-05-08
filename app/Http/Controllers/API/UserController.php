@@ -237,11 +237,15 @@ class UserController extends Controller
     {
         $user = auth('api')->user();
         $countupload = Document::where('owner_id', $user->id)->count();
-        
+        $sumupload = Document::where('owner_id', $user->id)->sum('size_int');
+        $formatsize = $this->formatSizeUnits($sumupload);
+
         return response()->json([
             'success' => true,
             'countup' => $countupload,
-            'countdown' => $user->downloads
+            'countdown' => $user->downloads,
+            'sizedok' => $formatsize,
+            'logincount' => $user->logincount
        ], 200);
     }
 
@@ -258,5 +262,35 @@ class UserController extends Controller
         //
         $user =User::find($id)->units()->get();
         return $user;
+    }
+
+    private function formatSizeUnits($bytes)
+    {
+        if ($bytes >= 1073741824)
+        {
+            $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        }
+        elseif ($bytes >= 1048576)
+        {
+            $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        }
+        elseif ($bytes >= 1024)
+        {
+            $bytes = number_format($bytes / 1024, 2) . ' KB';
+        }
+        elseif ($bytes > 1)
+        {
+            $bytes = $bytes . ' bytes';
+        }
+        elseif ($bytes == 1)
+        {
+            $bytes = $bytes . ' byte';
+        }
+        else
+        {
+            $bytes = '0 bytes';
+        }
+
+        return $bytes;
     }
 }
