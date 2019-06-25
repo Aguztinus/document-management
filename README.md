@@ -1,6 +1,6 @@
 # Document Management
 
-<b> Here are the things you will learn in this series and what the repo include out of the box: </b>
+<b> This repo include: </b>
 
 -   How use Vue Router with Laravel
 -   How to Install AdminLTE 3
@@ -17,7 +17,6 @@
 -   Axios and Ajax Request
 -   ACL in Laravel
 -   Online Users list
--   And much more...
 
 ## Installation
 
