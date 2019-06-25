@@ -20,7 +20,7 @@
 
 ## Installation
 
-It's just like any other Laravel project. Basically here is how you use it for yourself. (it's not completed yet)
+It's just like any other Laravel project:
 
 -   Clone the repo `https://gitlab.com/Aguztinus/document-management.git`
 -   `cd` to project folder.
