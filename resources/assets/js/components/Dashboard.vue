@@ -26,7 +26,6 @@
             Welcome, {{ myname }}
           </h5>
         </div>
-
         <div class="row">
           <!-- ./col -->
           <div class="col-lg-3 col-6">
@@ -91,7 +90,7 @@
               <div class="inner">
                 <h3>{{ countlogin }}</h3>
 
-                <p>Login Count</p>
+                <p>Login</p>
               </div>
               <div class="icon">
                 <i class="fa fa-user"></i>
@@ -292,6 +291,7 @@ export default {
         : moment(value, "YYYY-MM-DD H:mm:ss").format(fmt);
     },
     getCount() {
+      this.$Progress.start();
       axios.get("api/getUtilprofile").then(response => {
         this.countup = response.data.countup;
         this.countdown = response.data.countdown;
@@ -299,6 +299,7 @@ export default {
         this.countlogin = response.data.logincount;
         //console.log(response);
       });
+      this.$Progress.finish();
     },
     MoreDetail(data) {
       this.detail = data;

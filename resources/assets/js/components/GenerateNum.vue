@@ -327,12 +327,18 @@ export default {
           this.form
             .delete("api/documentnum/" + id)
             .then(() => {
-              swal("Deleted!", "Your author has been deleted.", "success");
+              swal("Deleted!", "Your dokumen number has been deleted.", "success");
               Fire.$emit("LoadTable");
             })
-            .catch(() => {
-              swal("Failed!", "There was something wronge.", "warning");
+            .catch(error => {
+          if (error.response) {
+            console.log(error.response);
+            toast({
+              type: "error",
+              title: "There was something wrong," + error.response.data.message
             });
+          }
+        });
         }
       });
     },

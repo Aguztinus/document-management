@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\DocumentType;
 
+
 class DocumentTypeController extends Controller
 {
     /**

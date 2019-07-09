@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\DocumentNum;
+use App\Document;
 use App\Counter;
 use App\User;
 
@@ -166,6 +167,34 @@ class DocumentNumController extends Controller
     public function destroy($id)
     {
         //
+        $docnum = DocumentNum::findOrFail($id);
+      
+        if ($docnum->used == 1){
+            $query = Document::with('documentnum')
+            ->where('number', $docnum->number)->first();
+            if (!$query) { 
+                // delete
+                $docnum->delete();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Dokumen Number Deleted'
+                ], 200);
+             }
+        }else{
+            $docnum->delete();
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Dokumen Number Deleted'
+                ], 200);
+        }
+        
+       
+         return response()->json([
+            'success' => false,
+            'message' => 'err app, Dokumen number Used'
+        ], 500);
+        //return ['message' => 'User Deleted'];
+      
     }
 
     private function getUserDir()

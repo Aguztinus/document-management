@@ -473,9 +473,6 @@ class DocumentController extends Controller
                 $doc->delete();
 
                 $his = $this->insertUserHis($doc->name, 'delete');
-                return response()->json([
-                    'success' => true
-                ], 200);
             }
         }else {
             $doc->history()->detach();
@@ -483,15 +480,15 @@ class DocumentController extends Controller
             $doc->delete();
 
             $his = $this->insertUserHis($doc->name, 'delete');
-            return response()->json([
-                'success' => true
-            ], 200);
         }
-      
+
+        $docnum = DocumentNum::where('number',$doc->number)->firstOrFail();
+        $docnum->used = 0;
+        $docnum->save();
        
         return response()->json([
-            'success' => false
-        ], 500);
+            'success' => true
+        ], 200);
     }
 
     public function downloadfile($id)
