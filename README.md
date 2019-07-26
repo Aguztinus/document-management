@@ -1,22 +1,28 @@
 # Document Management
 
+> File manager for Laravel - Frontend - Vue.js
+> Backend - Laravel 5 package
+
 <b> This repo include: </b>
 
--   How use Vue Router with Laravel
--   How to Install AdminLTE 3
--   How to Use Font Awesome 5 on Laravel
--   How integrate mailchimp with laravel
--   How to use Laravel Socialite
--   How to Login Using Social Media
--   How to Use API in Laravel
--   Api Auth with Laravel Passport
+-   Use AdminLTE 3 for Dashboard
+-   Font Awesome 5
+-   REST API Laravel
+-   API Auth Oauth2 with Laravel Passport
 -   JWT with Laravel Passport and JavaScript Request
+-   Axios and Ajax Request
+-   Vue Router
+-   Vue-progressbar
 -   Vue Custom Events
 -   Vue form with Laravel
--   Relational Database with Laravel
--   Axios and Ajax Request
+-   Vuetable 2 for Table view datatable
+-   Vue-clip for Document Upload
+-   Vue-clickaway for Auto Logout
+-   Vue-multiselect for dropdown select form
+-   Vue-pdf for view PDF in vue
 -   ACL in Laravel
--   Online Users list
+-   Document list
+-   Users list
 
 ## Installation
 
